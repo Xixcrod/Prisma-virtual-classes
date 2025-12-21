@@ -57,7 +57,6 @@ class Profesor(models.Model):
         editable=False
     )
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
-    carreras = models.ManyToManyField(Carrera)
     activo = models.BooleanField(default=True)
 
     def __str__(self):
