@@ -121,7 +121,7 @@ USE_I18N = True
 USE_TZ = True
 
 #modelos de autentificacion de usuario
-AUTH_USER_MODEL = 'core.Usuarios'
+AUTH_USER_MODEL = 'core.Usuario'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/

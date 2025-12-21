@@ -6,7 +6,6 @@ import uuid
 
 # Usuarios generico
 
-
 class Usuario(AbstractUser):
     id = models.UUIDField(
         primary_key=True,   # Lo convierte en el identificador principal
