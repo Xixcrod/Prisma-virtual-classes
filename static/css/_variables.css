@@ -1,0 +1,13 @@
+:root {
+    /* Paleta de Colores */
+    --color-primary: #0d6efd;
+    --color-secondary: #6c757d;
+    --color-success: #198754;
+    --color-bg-body: #f8f9fa;
+    
+}
+
+[data-theme="dark"] {
+    --color-bg-body: #212529;
+    /* Redefinir colores para modo oscuro */
+}
