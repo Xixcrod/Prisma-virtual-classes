@@ -1,0 +1,21 @@
+<h1>Login</h1>
+{% load static %}
+
+{# Existe variable llamada error y variable llamada success #}
+
+{% if success %}
+<div>{{ success }}</div>
+{% endif %}
+
+{% if error %}
+<div>{{ error }}</div>
+{% endif %}
+
+<form action="{% url 'login-process' %}" method="POST">
+    {% csrf_token %}
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" /><br /><br />
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" /><br /><br />
+    <input type="submit" value="Login" />
+</form>

@@ -17,8 +17,15 @@ class Usuario(AbstractUser):
     telefono = models.CharField(max_length=11)
     cedula = models.CharField(max_length=8, unique=True)
 
+    # Esto le dice a Django: "Usa la cédula para el login en lugar del username"
+    USERNAME_FIELD = 'cedula'
+
+    # Estos campos se pedirán obligatoriamente al crear un superusuario por consola (createsuperuser)
+    # Nota: 'username' pasa a ser un campo secundario, pero Django lo requiere por defecto en AbstractUser
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'email']
+
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
+        return self.first_name + ' ' + self.last_name + ' - ' + self.cedula
 
 
 # Carreras
