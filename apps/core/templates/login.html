@@ -1,12 +1,5 @@
 <h1>Login</h1>
-{% load static %}
-
-{# Existe variable llamada error y variable llamada success #}
-
-{% if success %}
-<div>{{ success }}</div>
-{% endif %}
-
+{% load static %} {# Existe variable llamada error y variable llamada success #}
 {% if error %}
 <div>{{ error }}</div>
 {% endif %}
@@ -17,5 +10,13 @@
     <input type="text" id="username" name="username" /><br /><br />
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" /><br /><br />
+
+    <div>
+        <a href="{% url 'recuperar_contrasena' %}">¿Olvidaste tu contraseña?</a>
+    </div>
     <input type="submit" value="Login" />
+
+    {% if success == True %}
+        <div>La contraseña ha sido recuperada correctamente por favor revise su correo.</div>
+    {% endif %}
 </form>

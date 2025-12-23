@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Esto carga las variables del archivo .env a os.environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -73,6 +76,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'apps.core.utils.context_processors.roles_usuario',
+                'apps.core.utils.context_processors.notificaciones_context',
             ],
         },
     },
@@ -130,5 +134,20 @@ AUTH_USER_MODEL = 'core.Usuario'
 
 
 STATIC_URL = 'static/'
+
+# Le dice a django que busque primero en la carpeta static del proyecto si no lo encuentra va hacia la carpeta static de cada app
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'), 
+]
+
+# Para el envio de correos por parte del sistema
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('PRISMA_GMAIL_ADDRESS') #dirección de correo electrónico
+EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD') #contraseña de correo electrónico
+DEFAULT_FROM_EMAIL = os.environ.get('PRISMA_GMAIL_ADDRESS') # Correo que aparecerá como remitente
+SITE_NAME = 'Prisma' # Nombre del sitio web para usar en los correos
 
 

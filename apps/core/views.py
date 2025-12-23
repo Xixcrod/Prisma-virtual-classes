@@ -16,7 +16,10 @@ def signin(request):
 @login_required
 def signout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('login'))
+    return HttpResponseRedirect(reverse('login'), {'success': False})
+
+def recuperar_contrasena(request):
+    return render(request, 'recuperar_contrasena.html')
 
 #Ruta de prueba para el admin
 def adminp(request):
