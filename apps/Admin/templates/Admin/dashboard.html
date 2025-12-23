@@ -1,0 +1,26 @@
+{% extends 'Admin/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Admin - Prisma{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-grid">
+        <a href="{% url 'registrar_usuario' %}" class="admin-card card-orange">
+            <span>Registrar usuario</span>
+        </a>
+
+        <a href="#" class="admin-card card-red">
+            <span>Registrar carreras<br>y materias</span>
+        </a>
+
+        <a href="#" class="admin-card card-purple">
+            <span>Asignar carreras,<br>materias y eliminar<br>profesores</span>
+        </a>
+
+        <a href="#" class="admin-card card-green">
+            <span>Eliminar cursos</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -95,7 +95,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -140,7 +139,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'), 
 ]
 
-# Para el envio de correos por parte del sistema
+
+# Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -149,5 +149,6 @@ EMAIL_HOST_USER = os.environ.get('PRISMA_GMAIL_ADDRESS') #dirección de correo e
 EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD') #contraseña de correo electrónico
 DEFAULT_FROM_EMAIL = os.environ.get('PRISMA_GMAIL_ADDRESS') # Correo que aparecerá como remitente
 SITE_NAME = 'Prisma' # Nombre del sitio web para usar en los correos
+
 
 
