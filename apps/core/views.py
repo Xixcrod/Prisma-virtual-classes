@@ -18,6 +18,7 @@ def signout(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'), {'success': False})
 
+@login_excluded
 def recuperar_contrasena(request):
     return render(request, 'recuperar_contrasena.html')
 

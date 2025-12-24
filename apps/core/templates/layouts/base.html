@@ -32,36 +32,6 @@
     </div>
     <a href="{% url 'logout' %}">Cerrar Sesión</a>
 
-    <div class="dropdown" style="display: inline-block; margin-left: 15px;">
-        <button class="btn btn-light position-relative" type="button" id="notifButton" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            🔔
-            {% if notif_count > 0 %}
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{ notif_count }}
-            </span>
-            {% endif %}
-        </button>
-
-        <ul class="dropdown-menu dropdown-menu-end shadow" style="width: 320px; max-height: 400px; overflow-y: auto;">
-            <li class="p-2 border-bottom"><strong>Notificaciones</strong></li>
-            {% for n in notificaciones %}
-            <li class="p-3 border-bottom {% if not n.leido %}bg-light{% endif %}">
-                <div class="d-flex justify-content-between">
-                    <small class="text-primary fw-bold">{{ n.emisor.get_full_name }}</small>
-                    <small class="text-muted">{{ n.fecha_creacion|timesince }}</small>
-                </div>
-                <p class="mb-0 small text-dark">{{ n.mensaje }}</p>
-            </li>
-            {% empty %}
-            <li class="p-3 text-center text-muted">No tienes mensajes nuevos</li>
-            {% endfor %}
-            <li class="text-center p-2">
-                <a href="#" class="small text-decoration-none">Ver todas</a>
-            </li>
-        </ul>
-    </div>
-
     {# --- VISTA PROFESOR --- #}
     {% elif es_profesor %}
     <div>
@@ -150,6 +120,20 @@
     <!-- Bloque de Django para insertar el contenido de la pagina. -->
     {% block content %} {% load static %} {% endblock content %}
 
+    {% if es_profesor or es_estudiante %}
+    <footer>
+        <div>
+            <p>
+                Esta es una plataforma dedicada a la gestión de clases virtuales.
+                Transformando ideas en realidades digitales.
+            </p>
+
+            <div>
+                <p>&copy; 2026 Prisma. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    {% endif %}
     <!-- <script src="{% static "node_modules/bootstrap/dist/js/bootstrap.min.js" %}"></script> -->
 </body>
 

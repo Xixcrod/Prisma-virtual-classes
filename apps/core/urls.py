@@ -7,6 +7,6 @@ urlpatterns = [
     path('login-process/', loginValidation.loginProcess, name="login-process"), #Ruta para procesar el inicio de sesión
     path('logout/', views.signout, name="logout"), #Ruta para cerrar sesión
     path('adminprueba/', views.adminp, name="adminp"), #Ruta de prueba para el admin
-    path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contrasena'),
+    path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contrasena'),#Ruta para la página de recuperación de contraseña
     path('processing_password/', recover_password.recovering_password, name="processing_password"), #Ruta para procesar la solicitud de recuperación de contraseña
 ]
