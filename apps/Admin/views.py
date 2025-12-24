@@ -1,10 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
-from apps.core.models import Usuario, Estudiante, Profesor, Carrera
+from django.http import JsonResponse
 import secrets
 import string
+
+# Importaciones consolidadas de tus modelos
+from apps.core.models import Usuario, Estudiante, Profesor, Carrera, Materia, Curso
 
 def admin(request):
     return render(request, "Admin/dashboard.html")
@@ -23,7 +26,6 @@ def registrar_usuario(request):
         password_plana = ''.join(secrets.choice(alphabet) for i in range(8))
 
         try:
-            # Verificar si ya existe un usuario con esa cédula o correo antes de intentar guardar
             if Usuario.objects.filter(cedula=cedula).exists():
                 messages.error(request, "Error: Ya existe un usuario registrado con esta cédula.")
                 return redirect('registrar_usuario')
@@ -51,9 +53,9 @@ def registrar_usuario(request):
                     carrera_obj = Carrera.objects.get(id=carrera_id)
                     Estudiante.objects.create(usuario=nuevo_usuario, carrera=carrera_obj)
 
-            # Envío de correo real
+            # Envío de correo
             asunto = 'Tus credenciales de Prisma'
-            mensaje = f'Hola {nombres} {apellidos},\n\nTu cuenta ha sido creada exitosamente.\nTu contraseña es: {password_plana}'
+            mensaje = f'Hola {nombres} {apellidos},\ntu cuenta ha sido creada exitosamente.\nTu contraseña es: {password_plana}'
             
             send_mail(
                 asunto,
@@ -63,7 +65,7 @@ def registrar_usuario(request):
                 fail_silently=False,
             )
 
-            messages.success(request, f"Usuario registrado con éxito. La contraseña ha sido enviada a {correo}")
+            messages.success(request, f"Usuario registrado con éxito. Contraseña enviada a {correo}")
             return redirect('dashboard')
 
         except Exception as e:
@@ -71,3 +73,54 @@ def registrar_usuario(request):
             return redirect('registrar_usuario')
 
     return render(request, "Admin/registrar_usuario.html", {"carreras": carreras})
+
+def lista_profesores(request):
+    profesores = Profesor.objects.filter(activo=True) 
+    return render(request, "Admin/lista_profesores.html", {'profesores': profesores})
+
+def gestionar_materias_profesor(request, profesor_id):
+    profesor_obj = get_object_or_404(Profesor, id=profesor_id)
+    carreras = Carrera.objects.all()
+    
+    # Obtenemos las materias que ya tiene asignadas para marcarlas en el checklist
+    materias_actuales = Curso.objects.filter(profesor=profesor_obj).values_list('materia_id', flat=True)
+
+    if request.method == 'POST':
+        materias_seleccionadas = request.POST.getlist('materias_ids')
+        
+        # Eliminamos las asignaciones anteriores para sobrescribir con las nuevas
+        Curso.objects.filter(profesor=profesor_obj).delete()
+        
+        for m_id in materias_seleccionadas:
+            materia_obj = Materia.objects.get(id=m_id)
+            Curso.objects.create(
+                profesor=profesor_obj,
+                materia=materia_obj,
+                activo=True,
+                descripcion=f"Asignado el {materia_obj.nombre}" 
+            )
+        messages.success(request, "Asignación actualizada correctamente.")
+        return redirect('lista_profesores')
+
+    return render(request, 'Admin/asignar_materias.html', {
+        'profesor': profesor_obj,
+        'carreras': carreras,
+        'materias_actuales': list(materias_actuales)
+    })
+
+def eliminar_profesor(request, profesor_id):
+    profesor = get_object_or_404(Profesor, id=profesor_id)
+    profesor.activo = False
+    profesor.save()          # Guarda en la base de datos
+    
+    messages.warning(request, f"El profesor {profesor.usuario.first_name} ha sido desactivado.")
+    return redirect('lista_profesores')
+
+def obtener_materias_por_carrera(request, carrera_id, semestre):
+    # carrera_id llegará como un UUID válido
+    materias = Materia.objects.filter(
+        carrera_id=carrera_id, 
+        semestre=semestre
+    ).values('id', 'nombre')
+    
+    return JsonResponse(list(materias), safe=False)

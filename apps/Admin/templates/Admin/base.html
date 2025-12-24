@@ -16,7 +16,9 @@
 <body>
     <header class="admin-header">
         <div class="logo-container">
-            <div class="logo-placeholder">PRISMA ICON</div>
+            <a href="{% url 'dashboard' %}" style="text-decoration: none;">
+                <div class="logo-placeholder">PRISMA ICON</div>
+            </a>
         </div>
         <div class="header-actions">
             <a href="{% url 'logout' %}" class="logout-btn">Cerrar sesión</a>

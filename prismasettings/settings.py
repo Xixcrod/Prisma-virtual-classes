@@ -139,6 +139,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'), 
 ]
 
+# URL a la que se redirige después de un login exitoso
+LOGIN_REDIRECT_URL = '/adminuser/'  # Esta debe coincidir con el path de tu app Admin
+
+# URL a la que se redirige después de cerrar sesión
+LOGOUT_REDIRECT_URL = 'login'
+
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -149,6 +155,12 @@ EMAIL_HOST_USER = os.environ.get('PRISMA_GMAIL_ADDRESS') #dirección de correo e
 EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD') #contraseña de correo electrónico
 DEFAULT_FROM_EMAIL = os.environ.get('PRISMA_GMAIL_ADDRESS') # Correo que aparecerá como remitente
 SITE_NAME = 'Prisma' # Nombre del sitio web para usar en los correos
+
+# Redirige al dashboard de tu app Admin después de loguearse
+LOGIN_REDIRECT_URL = '/adminuser/'
+
+# Redirige al login después de cerrar sesión
+LOGOUT_REDIRECT_URL = 'login'
 
 
 

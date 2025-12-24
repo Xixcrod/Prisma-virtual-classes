@@ -1,0 +1,45 @@
+{% extends 'Admin/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Gestión de Profesores</h2>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in profesores %}
+                <tr>
+                    <td>{{ p.usuario.cedula }}</td>
+                    <td>{{ p.usuario.first_name }} {{ p.usuario.last_name }}</td>
+                    <td>
+                        {% if p.activo %}
+                        <span class="badge bg-success">Activo</span>
+                        {% else %}
+                        <span class="badge bg-danger">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'gestionar_materias_profesor' p.id %}" class="btn btn-sm btn-primary">
+                            Asignar carreras
+                        </a>
+
+                        {% if p.activo %}
+                        <a href="{% url 'eliminar_profesor' p.id %}" class="btn btn-sm btn-outline-danger"
+                            onclick="return confirm('¿Desactivar a este profesor?')">
+                            Eliminar
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

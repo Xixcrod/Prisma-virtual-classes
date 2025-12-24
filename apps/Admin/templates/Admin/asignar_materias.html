@@ -1,0 +1,97 @@
+{% extends 'Admin/base.html' %}
+
+{% block content %}
+<div class="admin-bg-dark">
+    <a href="{% url 'lista_profesores' %}" class="btn-back-circle">VOLVER</a>
+
+    <div class="assignment-card">
+        <h2 class="mb-1">Asignar carrera</h2>
+        <p class="small mb-4" style="opacity: 0.8;">Profesor: {{ profesor.usuario.get_full_name }}</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <select name="carrera_id" id="carrera-select" class="prisma-select" required>
+                <option value="" disabled selected>Carrera</option>
+                {% for c in carreras %}
+                <option value="{{ c.id }}">{{ c.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="semestre" id="semestre-select" class="prisma-select" required disabled>
+                <option value="" disabled selected>Semestre</option>
+            </select>
+
+            <div class="materias-list" id="materias-container">
+                <p class="text-center text-white-50 mt-2">Seleccione carrera y semestre</p>
+            </div>
+
+            <button type="submit" class="btn-save-prisma">Guardar</button>
+        </form>
+    </div>
+</div>
+
+{{ materias_actuales|json_script:"materias-data" }}
+
+<script>
+    const carreraSelect = document.getElementById('carrera-select');
+    const semestreSelect = document.getElementById('semestre-select');
+    const materiasContainer = document.getElementById('materias-container');
+    const materiasActuales = JSON.parse(document.getElementById('materias-data').textContent);
+
+    // 1. Función para llenar los semestres
+    function cargarSemestres() {
+        const carreraId = carreraSelect.value;
+        if (carreraId) {
+            semestreSelect.disabled = false;
+            semestreSelect.innerHTML = '<option value="" disabled selected>Semestre</option>';
+            for (let i = 1; i <= 10; i++) {
+                semestreSelect.innerHTML += `<option value="${i}">Semestre ${i}</option>`;
+            }
+        }
+    }
+
+    // 2. Evento manual cuando el usuario cambia la carrera
+    carreraSelect.addEventListener('change', cargarSemestres);
+
+    // 3. Ejecutar automáticamente al cargar la página si ya hay una carrera elegida
+    document.addEventListener('DOMContentLoaded', function () {
+        if (carreraSelect.value) {
+            cargarSemestres();
+        }
+    });
+
+    // 4. Lógica para buscar materias vía AJAX al elegir semestre
+    semestreSelect.addEventListener('change', function () {
+        const carreraId = carreraSelect.value;
+        const semestre = this.value;
+
+        materiasContainer.innerHTML = '<p class="text-center">Buscando materias...</p>';
+
+        fetch(`/adminuser/obtener-materias/${carreraId}/${semestre}/`)
+            .then(response => response.json())
+            .then(data => {
+                materiasContainer.innerHTML = '';
+                if (data.length === 0) {
+                    materiasContainer.innerHTML = '<p class="text-center">No hay materias en este semestre.</p>';
+                } else {
+                    data.forEach(m => {
+                        // Comparación de IDs (funciona con Strings/UUIDs)
+                        const isChecked = materiasActuales.includes(m.id) ? 'checked' : '';
+
+                        materiasContainer.innerHTML += `
+                            <div class="materia-item">
+                                <input type="checkbox" name="materias_ids" value="${m.id}" id="m-${m.id}" ${isChecked}>
+                                <label for="m-${m.id}" style="cursor:pointer; width:100%; margin-bottom:0;">${m.nombre}</label>
+                            </div>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                materiasContainer.innerHTML = '<p class="text-center text-danger">Error de conexión.</p>';
+            });
+    });
+</script>
+{% endblock %}
