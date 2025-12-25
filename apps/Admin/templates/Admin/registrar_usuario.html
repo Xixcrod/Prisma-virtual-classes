@@ -1,0 +1,88 @@
+{% extends 'Admin/base.html' %}
+{% load static %}
+
+{% block title %}Registrar Usuario - Prisma{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <a href="{% url 'dashboard' %}" class="back-link">← Volver</a>
+            <h2>Registrar Nuevo Usuario</h2>
+            <p>La contraseña se generará automáticamente y se enviará al correo proporcionado.</p>
+        </div>
+
+        <form method="POST" class="admin-form">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="nombres">Nombres</label>
+                    <input type="text" id="nombres" name="nombres" required maxlength="20" placeholder="Wilmer Rony">
+                </div>
+
+                <div class="input-group">
+                    <label for="apellidos">Apellidos</label>
+                    <input type="text" id="apellidos" name="apellidos" required maxlength="20"
+                        placeholder="Mujica Fernandez">
+                </div>
+
+                <div class="input-group">
+                    <label for="cedula">Cédula</label>
+                    <input type="text" id="cedula" name="cedula" required maxlength="8" placeholder="12345678">
+                </div>
+
+                <div class="input-group">
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" id="correo" name="correo" required placeholder="correo@ejemplo.com">
+                </div>
+
+                <div class="input-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="text" id="telefono" name="telefono" required maxlength="11" placeholder="04121234567">
+                </div>
+
+                <div class="input-group">
+                    <label for="rol">Tipo de Usuario</label>
+                    <select id="rol" name="rol" required onchange="toggleStudentFields()">
+                        <option value="" disabled selected>Seleccione un rol</option>
+                        <option value="estudiante">Estudiante</option>
+                        <option value="profesor">Profesor</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="carrera-group" class="input-group full-width" style="display: none; margin-top: 20px;">
+                <label for="carrera">Carrera</label>
+                <select id="carrera" name="carrera">
+                    <option value="" disabled selected>Seleccione la carrera</option>
+                    {% for carrera in carreras %}
+                    <option value="{{ carrera.id }}">{{ carrera.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-footer">
+                <button type="submit" class="submit-btn">Registrar Usuario</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleStudentFields() {
+        const rol = document.getElementById('rol').value;
+        const carreraGroup = document.getElementById('carrera-group');
+        const carreraSelect = document.getElementById('carrera');
+
+        if (rol === 'estudiante') {
+            carreraGroup.style.display = 'block';
+            carreraSelect.required = true;
+        } else {
+            carreraGroup.style.display = 'none';
+            carreraSelect.required = false;
+            carreraSelect.value = "";
+        }
+    }
+</script>
+{% endblock %}

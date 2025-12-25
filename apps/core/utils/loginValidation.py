@@ -30,7 +30,7 @@ def loginProcess(request):
 
             # 1. Si es Superusuario / Administrador
             if user.is_superuser or user.is_staff:
-                return redirect('adminp')
+                return redirect('dashboard')
 
             # 2. Si es Profesor (Verificamos la relación OneToOne)
             elif hasattr(user, 'profesor'):

@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin - Prisma{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'Admin/css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="logo-container">
+            <a href="{% url 'dashboard' %}" style="text-decoration: none;">
+                <div class="logo-placeholder">PRISMA ICON</div>
+            </a>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'logout' %}" class="logout-btn">Cerrar sesión</a>
+        </div>
+    </header>
+
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+            <button class="close-alert" onclick="this.parentElement.style.display='none'">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
