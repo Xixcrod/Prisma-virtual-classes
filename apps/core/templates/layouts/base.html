@@ -40,7 +40,7 @@
     <a href="">Inicio</a>
     <a href="">Mis Cursos</a>
     <a href="">Solicitudes</a>
-    <a href="">Cerrar Sesión</a>
+    <a href="{% url 'logout' %}">Cerrar Sesión</a>
 
     <div class="dropdown" style="display: inline-block; margin-left: 15px;">
         <button class="btn btn-light position-relative" type="button" id="notifButton" data-bs-toggle="dropdown"
@@ -80,7 +80,7 @@
     <a href="">Inicio</a>
     <a href="">Catálogo</a>
     <a href="">Favoritos</a>
-    <a href="">Cerrar Sesión</a>
+    <a href="{% url 'logout' %}">Cerrar Sesión</a>
 
     <div class="dropdown" style="display: inline-block; margin-left: 15px;">
         <button class="btn btn-light position-relative" type="button" id="notifButton" data-bs-toggle="dropdown"
