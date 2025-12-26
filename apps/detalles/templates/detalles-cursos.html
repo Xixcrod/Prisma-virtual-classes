@@ -1,0 +1,63 @@
+{% extends 'layouts/base.html' %} 
+{% load static %} 
+
+{% block content %}
+<div class="container curso-detalle">
+    <header class="curso-header">
+        <h2>{{ curso.materia.nombre|upper }}</h1>
+        <div class="meta-info">
+            <span class="profesor-tag">
+                <strong>Profesor:</strong> {{ curso.profesor.usuario.get_full_name }}
+            </span>
+        </div>
+    </header>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="curso-card-img">
+                {% if curso.imagen %}
+                    <img src="{{ curso.imagen.url }}" alt="Imagen de {{ curso.materia.nombre }}" class="img-fluid rounded">
+                {% else %}
+                    <img src="{% static 'img/default-curso.png' %}" alt="Sin imagen" class="img-fluid rounded">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h3>Descripción del curso</h3>
+            <p class="text-muted">{{ curso.descripcion|linebreaks }}</p>
+        </div>
+    </div>
+
+    <br>
+
+    <section class="curso-contenido">
+        <h3>Contenido Programático</h3>
+        
+        {% if tiene_acceso %}
+            <div class="list-group">
+                {% for tema in temas %}
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ forloop.counter }}. {{ tema.titulo }}</h5>
+                            <small class="text-secondary">{{ tema.fecha_creacion|date:"d M Y" }}</small>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="alert alert-info">Aún no se han cargado temas para este curso.</p>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card border-warning mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-warning">Acceso Restringido</h5>
+                    <p class="card-text">Debes estar inscrito para ver el contenido detallado y los materiales de este curso.</p>
+                    <a href="#" class="btn btn-primary">Solicitar Acceso</a>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock content %}
