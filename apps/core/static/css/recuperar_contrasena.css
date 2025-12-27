@@ -1,0 +1,136 @@
+        /* --- ESTILOS BASE (Mantenidos de tu diseño original) --- */
+        body {
+            background: url('../img/fondo.jpg' ) no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            overflow: hidden; /* Esto elimina la barra y también impide el movimiento */
+        }
+
+        .ambient-lights {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('../img/lucesbordes.png') no-repeat center center;
+            background-size: cover;
+            mix-blend-mode: screen;
+            opacity: 0.6;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2; /* Incrementado para asegurar clic en inputs */
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 3rem;
+            margin-top: -50px;
+        }
+
+        .logo-img {
+            max-width: 350px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+        }
+
+        .login-box {
+            position: relative;
+            padding: 3.5rem 2.5rem;
+            color: white;
+            width: 100%;
+            max-width: 420px;
+            margin: auto;
+            aspect-ratio: 3 / 4;
+        }
+
+        .login-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url('../img/cuadro.png') no-repeat center;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        .login-title {
+            color: #ff004c;
+            position: relative;
+            margin-bottom: 2rem;
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* --- INPUTS --- */
+        .custom-input {
+            background: linear-gradient(to right, #2a2a35, #3b3b4f);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: white;
+            padding: 10px 12px;
+            width: 100%;
+            margin-bottom: 1.2rem;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        /* --- BOTÓN --- */
+        .btn-recuperar {
+            background-size: cover;
+            background-color: #ff004c; ;
+            border: none;
+            width: 100%;
+            height: 45px;
+            color:  white; /* Cambiado a blanco si quieres que el texto "Recuperar" se vea, o transparent si tu imagen ya tiene texto */
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-recuperar:active {
+            background-size: cover;
+            transform: scale(0.95);
+        }
+
+        .label-custom {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #ddd;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: #ff004c;
+        }
+
+        @media (max-width: 768px) {
+            .logo-container { margin-top: 20px; }
+            .login-box { aspect-ratio: auto; padding: 2.5rem 1.5rem; }
+        }

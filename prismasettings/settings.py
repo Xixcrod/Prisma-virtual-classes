@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'apps.detalles.apps.DetallesConfig',
     'apps.Profesores.apps.ProfesoresConfig',
     'apps.estudiantes.apps.EstudiantesConfig',
+    'django_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -133,6 +134,12 @@ AUTH_USER_MODEL = 'core.Usuario'
 
 
 STATIC_URL = 'static/'
+
+# 2. Esto le dice a Django que busque en las carpetas "static" de cada APP
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 # Le dice a django que busque primero en la carpeta static del proyecto si no lo encuentra va hacia la carpeta static de cada app
 STATICFILES_DIRS = [

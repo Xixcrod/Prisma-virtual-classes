@@ -1,0 +1,219 @@
+        /* --- ESTILOS BASE --- */
+        body {
+            /* 1. Fondo base: Los polígonos oscuros */
+            background: url('../img/fondo.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            overflow: hidden; /* Esto elimina la barra y también impide el movimiento */
+            /* Necesario para posicionar el overlay de luces */
+        }
+
+        /* --- NUEVO: CAPA DE LUCES AMBIENTALES --- */
+        .ambient-lights {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('../img/lucesbordes.png') no-repeat center center;
+            background-size: cover;
+            mix-blend-mode: screen;
+            /* Hace que los colores brillen sobre el fondo oscuro */
+            opacity: 0.6;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Aseguramos que el contenido principal flote ENCIMA de las luces */
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- LOGO SUPERIOR --- */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 3rem;
+            margin-top: -50px;
+        }
+
+        .logo-img {
+            max-width: 350px;
+            height: auto;
+            /* Opcional: un pequeño filtro para que el logo brille más con el nuevo fondo */
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+        }
+
+        /* --- CAJA DE LOGIN (IZQUIERDA) --- */
+        .login-box {
+            position: relative;
+            padding: 3.5rem 2.5rem;
+            color: white;
+            width: 100%;
+            max-width: 420px;
+            margin: auto;
+            
+        }
+
+        .login-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url('../img/cuadro.png') no-repeat center;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        .login-box {
+            aspect-ratio: 3 / 4;
+            /* ejemplo */
+        }
+
+        .login-title {
+            color: #ff004c;
+            position: relative;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            padding-top: 2rem;
+            /* BAJA el texto dentro del marco */
+            text-align: center;
+        }
+
+        /* --- INPUTS --- */
+        .custom-input {
+            background: linear-gradient(to right, #2a2a35, #3b3b4f);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: white;
+            padding: 10px 12px;
+            width: 100%;
+            /* Se mantiene al 100% del espacio interno de la caja */
+            margin-bottom: 1.2rem;
+            box-sizing: border-box;
+            /* CLAVE: El input no se saldrá de la caja */
+            transition: all 0.3s;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        .custom-input::placeholder {
+            color: #aaa;
+        }
+
+        /* BOTÓN DE ENTRAR */
+        .btn-entrar {
+            /* Usamos tu imagen de botón */
+            background: url('../img/botonentrar.png') no-repeat center center;
+            background-size: cover;
+            border: none;
+            width: 100%;
+            height: 40px;
+            /* Ajusta según tu imagen */
+            color: transparent;
+            /* Ocultamos el texto real para ver el de la imagen */
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-entrar:active {
+            /* Cambio a imagen presionada */
+            background: url('../img/botonpresionado.png') no-repeat center center;
+            background-size: contain;
+            background-size: cover;
+            border: none;
+            width: 100%;
+            height: 40px;
+            /* Ajusta según tu imagen */
+            color: transparent;
+            /* Ocultamos el texto real para ver el de la imagen */
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 1rem;
+            transform: scale(0.95);
+        }
+
+        /* --- LINKS --- */
+        .forgot-pass-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-pass {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .forgot-pass:hover {
+            color: #ff004c;
+        }
+
+        /* --- PRISMA --- */
+        .prisma-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -30px;
+        }
+
+        .prisma-img {
+            max-width: 150%;
+            height: auto;
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.4));
+        }
+
+        /* --- ALERTAS --- */
+        .alert-custom {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #ffadad;
+            padding: 8px;
+            /* Reducimos un poco el padding para ganar espacio */
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .success-custom {
+            background: rgba(25, 135, 84, 0.2);
+            border: 1px solid #198754;
+            color: #75b798;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .logo-container {
+                margin-top: 20px;
+                margin-bottom: 2rem;
+            }
+
+            .login-box {
+                margin-bottom: 3rem;
+                max-width: 100%;
+            }
+
+            .prisma-container {
+                margin-top: 0;
+            }
+
+            .prisma-img {
+                max-width: 70%;
+            }
+        }
