@@ -76,7 +76,7 @@
         }
 
         .login-title {
-            color: #ff004c;
+            color: var(--color-primary);
             position: relative;
             margin-top: 0;
             margin-bottom: 2rem;
