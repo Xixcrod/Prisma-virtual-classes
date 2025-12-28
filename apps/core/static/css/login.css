@@ -3,12 +3,11 @@
             /* 1. Fondo base: Los polígonos oscuros */
             background: url('../img/fondo.jpg') no-repeat center center fixed;
             background-size: cover;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             display: flex;
             align-items: center;
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
             position: relative;
             overflow: hidden; /* Esto elimina la barra y también impide el movimiento */
             /* Necesario para posicionar el overlay de luces */
@@ -77,8 +76,6 @@
 
         .login-title {
             color: var(--color-primary);
-            position: relative;
-            margin-top: 0;
             margin-bottom: 2rem;
             padding-top: 2rem;
             /* BAJA el texto dentro del marco */
@@ -121,7 +118,7 @@
             color: transparent;
             /* Ocultamos el texto real para ver el de la imagen */
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, background 0.2s;
             margin-top: 1rem;
         }
 
@@ -198,22 +195,104 @@
             text-align: center;
         }
 
-        @media (max-width: 768px) {
-            .logo-container {
-                margin-top: 20px;
-                margin-bottom: 2rem;
-            }
+/* ========================= */
+/*      RESPONSIVIDAD        */
+/* ========================= */
 
-            .login-box {
-                margin-bottom: 3rem;
-                max-width: 100%;
-            }
+/* Tablets y pantallas medianas */
+@media (max-width: 992px) {
 
-            .prisma-container {
-                margin-top: 0;
-            }
+    .logo-container {
+        margin-bottom: 2rem;
+        margin-top: 50px;
+    }
 
-            .prisma-img {
-                max-width: 70%;
-            }
-        }
+    .logo-img {
+        max-width: 280px;
+    }
+
+    .login-box {
+        max-width: 380px;
+        padding: 3rem 2rem;
+    }
+
+    .login-title {
+        font-size: 1.4rem;
+        padding-top: 1.5rem;
+    }
+
+    .prisma-img {
+        max-width: 130%;
+    }
+}
+
+/* Móviles */
+@media (max-width: 576px) {
+
+    body {
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+
+    .logo-container {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+    }
+
+    .logo-img {
+        max-width: 220px;
+    }
+
+    .login-box {
+        max-width: 100%;
+        padding: 2.5rem 1.5rem;
+        aspect-ratio: auto; /* 🔑 CLAVE: evita cortes */
+    }
+
+    .login-box::before {
+        background-size: contain;
+    }
+
+    .login-title {
+        font-size: 1.2rem;
+        padding-top: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .custom-input {
+        font-size: 0.9rem;
+        padding: 9px 10px;
+    }
+
+    .btn-entrar {
+        height: 38px;
+    }
+
+    .forgot-pass {
+        font-size: 0.85rem;
+    }
+
+    .prisma-container {
+        margin-top: -15px;
+    }
+
+    .prisma-img {
+        max-width: 120%;
+    }
+}
+
+/* Pantallas muy pequeñas (ej: 360px) */
+@media (max-width: 380px) {
+
+    .logo-img {
+        max-width: 190px;
+    }
+
+    .login-box {
+        padding: 2rem 1.2rem;
+    }
+
+    .login-title {
+        font-size: 1.1rem;
+    }
+}
