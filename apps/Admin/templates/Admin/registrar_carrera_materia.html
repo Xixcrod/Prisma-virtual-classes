@@ -1,0 +1,143 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Registrar Carreras y Materias{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="row">
+        <!-- Columna Izquierda: Registrar Carrera -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Registrar Carrera</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="registrar_carrera">
+                        <div class="mb-3">
+                            <label for="nombre_carrera" class="form-label">Nombre de la Carrera</label>
+                            <input type="text" class="form-control" id="nombre_carrera" name="nombre" placeholder="Ej: Ingeniería de Sistemas" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cantidad_semestres" class="form-label">Cantidad de Semestres</label>
+                            <input type="number" class="form-control" id="cantidad_semestres" name="cantidad_semestres" min="1" max="12" placeholder="Ej: 10" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" name="btn_carrera" class="btn btn-primary">Guardar Carrera</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna Derecha: Registrar Materia -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0">Registrar Materia</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="registrar_materia">
+                        
+                        <div class="mb-3">
+                            <label for="carrera" class="form-label">Carrera</label>
+                            <select class="form-select" id="carrera" name="carrera" required>
+                                <option value="" selected disabled>Seleccione una carrera...</option>
+                                {% for carrera in carreras %}
+                                    <option value="{{ carrera.id }}">{{ carrera.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nombre_materia" class="form-label">Nombre de la Materia</label>
+                            <input type="text" class="form-control" id="nombre_materia" name="nombre" placeholder="Ej: Cálculo I" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="semestre" class="form-label">Semestre</label>
+                            <input type="number" class="form-control" id="semestre" name="semestre" min="1" max="12" placeholder="Ej: 1" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" name="btn_materia" class="btn btn-secondary">Guardar Materia</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Listado de Carreras y Materias -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3 class="mb-3">Carreras y Materias Registradas</h3>
+            <div class="accordion" id="accordionCarreras">
+                {% for item in carreras_data %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                            <strong>{{ item.info.nombre }}</strong>
+                        </button>
+                    </h2>
+                    <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionCarreras">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-end mb-3">
+                                <a href="{% url 'editar_carrera' item.info.id %}" class="btn btn-sm btn-warning me-2">Editar Nombre Carrera</a>
+                                <a href="{% url 'eliminar_carrera' item.info.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro? Se eliminarán todas las materias asociadas.');">Eliminar Carrera</a>
+                            </div>
+                            
+                            {% if item.semestres %}
+                                {% for semestre, materias in item.semestres.items %}
+                                    <div class="card mb-3">
+                                        <div class="card-header bg-light">
+                                            <strong>Semestre {{ semestre }}</strong>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            {% for materia in materias %}
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ materia.nombre }}
+                                                    <div>
+                                                        <a href="{% url 'editar_materia' materia.id %}" class="btn btn-sm btn-outline-primary me-2">
+                                                            <i class="bi bi-pencil"></i> Editar
+                                                        </a>
+                                                        <a href="{% url 'eliminar_materia' materia.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar esta materia?');">
+                                                            <i class="bi bi-trash"></i> Eliminar
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted">No hay materias registradas para esta carrera.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-info">No hay carreras registradas aún.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-dark">Volver al Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
