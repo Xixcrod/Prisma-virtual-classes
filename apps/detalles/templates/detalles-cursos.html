@@ -29,6 +29,11 @@
             <h3>Descripción del curso</h3>
             <p class="text-muted">{{ curso.descripcion|linebreaks }}</p>
         </div>
+        {% if es_profesor %}
+        <div class="col-md-8">
+          <h3>{{ cantidad_estudiantes }} estudiantes inscritos.</h3>
+        </div>
+        {% endif %}
     </div>
 
     <br>
@@ -41,8 +46,10 @@
                 {% for tema in temas %}
                     <div class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ forloop.counter }}. {{ tema.titulo }}</h5>
-                            <small class="text-secondary">{{ tema.fecha_creacion|date:"d M Y" }}</small>
+                           <a href="{% url "detalles-temas" tema.id %}">
+                              <h5 class="mb-1">{{ forloop.counter }}. {{ tema.titulo }}</h5>
+                              <small class="text-secondary">{{ tema.fecha_creacion|date:"d M Y" }}</small>
+                           </a>
                         </div>
                     </div>
                 {% empty %}
@@ -54,7 +61,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title text-warning">Acceso Restringido</h5>
                     <p class="card-text">Debes estar inscrito para ver el contenido detallado y los materiales de este curso.</p>
-                    <a href="#" class="btn btn-primary">Solicitar Acceso</a>
+                    <a href="{% url "solicitar-acceso" request.user.id curso.profesor.usuario.id %}" class="btn btn-primary">Solicitar Acceso</a> {# No redirige a nada, la ruta es meramente de prueba. #}
                 </div>
             </div>
         {% endif %}

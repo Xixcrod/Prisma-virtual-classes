@@ -7,4 +7,8 @@ urlpatterns = [
         views.CoursesDetails.as_view(),
         name="detalles-cursos",
     ),
+    path("tema/<uuid:id_tema>/", views.ThemesDetails.as_view(), name="detalles-temas"),
+    path(
+        "video/<uuid:id_video>/", views.VideoDetails.as_view(), name="detalles-videos"
+    ),
 ]
