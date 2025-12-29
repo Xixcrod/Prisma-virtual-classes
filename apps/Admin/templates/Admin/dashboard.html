@@ -1,6 +1,17 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+        <button class="close-alert" onclick="this.parentElement.style.display='none'">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 <h1>Panel de Administración</h1>
 <hr>
 

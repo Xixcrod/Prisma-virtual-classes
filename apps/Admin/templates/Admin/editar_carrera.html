@@ -3,6 +3,17 @@
 {% block title %}Editar Carrera{% endblock %}
 
 {% block content %}
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+        <button class="close-alert" onclick="this.parentElement.style.display='none'">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -15,11 +26,13 @@
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre de la Carrera</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ carrera.nombre }}" required>
+                            <input type="text" class="form-control" id="nombre" name="nombre"
+                                value="{{ carrera.nombre }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="cantidad_semestres" class="form-label">Cantidad de Semestres</label>
-                            <input type="number" class="form-control" id="cantidad_semestres" name="cantidad_semestres" value="{{ carrera.cantidad_semestres }}" min="1" max="12" required>
+                            <input type="number" class="form-control" id="cantidad_semestres" name="cantidad_semestres"
+                                value="{{ carrera.cantidad_semestres }}" min="1" max="12" required>
                         </div>
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Actualizar</button>
