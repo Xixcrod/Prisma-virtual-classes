@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 from django.views.generic import DetailView
 from apps.core.models import Curso, Tema, Video, Usuario, Profesor, Acceso
 from .mixins import AuthorizationsMixin
@@ -33,16 +34,20 @@ class CoursesDetails(AuthorizationsMixin, DetailView):
         roles = roles_usuario(self.request)
         # Llamada a método padre de obtención de contextos para opbtener los contextos base.
         context = super().get_context_data(**kwargs)
+        # context["url_retorno"] = reverse("dashboard")   #TEST: Meramente de prueba, esto se debe cambiar una vez culminada la sección de catálogo.
 
         # Si se trata de un estudiante sin acceso a ese curso, entonces no retornará en el contexto la información de los temas.
-        if (
-            roles["es_estudiante"]
-            and not Acceso.objects.filter(
-                curso=self.object, estudiante=self.request.user.estudiante, estado="AP"
-            ).exists()
-        ):
-            context["tiene_acceso"] = False
-            return context
+        if roles["es_estudiante"]:
+            # Obtención del acceso correspondiente.
+            acceso = Acceso.objects.filter(
+                curso=self.object, estudiante=self.request.user.estudiante
+            ).first()
+            # Verificación de la existencia y aprobación del acceso
+            if not acceso or acceso.estado != "AP":
+                context["tiene_acceso"] = False
+                # Envío del estado actual del acceso.
+                context["estado_acceso"] = acceso.estado if acceso else None
+                return context
         # Si se trata de un profesor, se contará la cantidad de estudiantes inscritos en el curso.
         if roles["es_profesor"]:
             context["cantidad_estudiantes"] = Acceso.objects.filter(
@@ -74,6 +79,10 @@ class ThemesDetails(AuthorizationsMixin, DetailView):
         context = super().get_context_data(**kwargs)
         # Agragación al contexto el nuevo campo para los videos del tema.
         context["videos"] = Video.objects.filter(tema=tema)
+        # URL de retorno a la vista anterior.
+        context["url_retorno"] = reverse(
+            "detalles-cursos", kwargs={"id_curso": tema.curso.id}
+        )
         # Retorno del contexto junto con los videos del tema.
         return context
 
@@ -89,6 +98,14 @@ class VideoDetails(AuthorizationsMixin, DetailView):
     # De dónde se pretende recibir el parámetro de la uuid desde la url.
     pk_url_kwarg = "id_video"
     context_object_name = "video"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # URL de retotno ala vista anterior.
+        context["url_retorno"] = reverse(
+            "detalles-temas", kwargs={"id_tema": self.object.tema.id}
+        )
+        return context
 
 
 # Método deshabilitado (por AuthorizationsMixin). A espera de más pruebas.

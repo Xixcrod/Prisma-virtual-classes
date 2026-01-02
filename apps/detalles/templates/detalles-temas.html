@@ -1,7 +1,9 @@
 {% extends 'layouts/base.html' %} 
 {% load static %} 
 {% block content %} 
-
+<a href="{{ url_retorno }}" class="btn btn-secondary">
+   Volver
+</a>
 <div class="container tema-detalle">
   <header class="tema-header">
     <h2>{{ tema.titulo|upper }}</h1>

@@ -2,6 +2,9 @@
 {% load static %} 
 
 {% block content %}
+<a href="{{ url_retorno }}" class="btn btn-secondary">
+   Volver
+</a>
 <div class="container curso-detalle">
     <header class="curso-header">
         <h2>{{ curso.materia.nombre|upper }}</h1>
@@ -57,13 +60,8 @@
                 {% endfor %}
             </div>
         {% else %}
-            <div class="card border-warning mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title text-warning">Acceso Restringido</h5>
-                    <p class="card-text">Debes estar inscrito para ver el contenido detallado y los materiales de este curso.</p>
-                    <a href="{% url "solicitar-acceso" request.user.id curso.profesor.usuario.id %}" class="btn btn-primary">Solicitar Acceso</a> {# No redirige a nada, la ruta es meramente de prueba. #}
-                </div>
-            </div>
+        {# Llamada al macro donde se encapsula lógica del manejo de accesos #}
+        {% include "partials/_card-acceso.html" with estado=estado_acceso curso_id=curso.id%} 
         {% endif %}
     </section>
 </div>

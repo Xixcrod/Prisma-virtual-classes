@@ -1,0 +1,23 @@
+<div class="card border-warning mb-3">
+  <div class="card-body text-center">
+    <h5 class="card-title text-warning">Acceso Restringido</h5>
+    <p class="card-text">Debes estar inscrito para ver el contenido.</p>
+  {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+    {% if estado == "RE" %}
+    <button class="btn btn-danger" disabled>ACCESO RECHAZADO</button>
+    {% elif estado == "PE" %}
+    <button class="btn btn-secondary" disabled>PENDIENTE</button>
+    {% else %}
+    <form action="{% url 'solicitar-acceso' curso.id %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Solicitar Acceso</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
