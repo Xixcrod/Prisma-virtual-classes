@@ -58,3 +58,20 @@
     font-weight: 900;
     font-style: italic;
 }
+
+/* Definimos variables para que sea fácil cambiar la fuente en el futuro */
+:root {
+    --font-main: "Poppins", sans-serif, Tahoma, sans-serif;
+}
+
+/* Aplicamos la fuente a toda la aplicación */
+html, body {
+    font-family: var(--font-main) !important;
+    -webkit-font-smoothing: antialiased; /* Mejora la legibilidad en navegadores basados en Chrome */
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Aseguramos que los inputs y botones también la hereden (no lo hacen por defecto) */
+input, button, textarea, select {
+    font-family: var(--font-main);
+}

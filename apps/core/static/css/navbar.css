@@ -3,28 +3,42 @@
     background: transparent !important;
     /* Línea inferior degradada (Fucsia a Morado) como tu diseño */
     border-bottom: 3px solid;
-    border-image: linear-gradient(to right, #ff004c, #8a2be2) 1;
+    border-image: linear-gradient(to right, var(--color-secondary), var(--color-fourth)) 1;
     padding-top: 15px;
     padding-bottom: 15px;
 }
 
 /* Logo tamaño ajustado */
 .nav-logo {
-    height: 45px;
+    max-height: 45px;
     width: auto;
+}
+
+/* Asegura que el botón de logout no se estire al 100% en móviles */
+.navbar-nav .nav-item .btn-logout {
+    font-weight: 600 !important;
+    display: inline-block;
+    /* Importante para que respete el padding y borde */
+    text-align: center;
+}
+
+/* Ajuste para móvil: Centrar todo el contenido del menú desplegado */
+.navbar-collapse {
+    text-align: center;
+    /* Centra textos y botones */
 }
 
 /* Links del Menú (Naranja para el activo, blanco para el resto) */
 .prisma-nav .nav-link {
     color: rgba(255, 255, 255, 0.9) !important;
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-weight: 600 !important;
     margin: 0 10px;
 }
 
-.prisma-nav .nav-link.active, 
+.prisma-nav .nav-link.active,
 .prisma-nav .nav-link:hover {
-    color: #ff7b00 !important; /* Naranja neón */
+    color: var(--color-tertiary) !important;
+    /* Naranja neón */
 }
 
 /* Campana de Notificación */
@@ -37,12 +51,18 @@
     transform: scale(1.1);
 }
 
+/* Asegurar que el icono de notificaciones esté alineado verticalmente */
+.notifications-wrapper {
+    display: flex;
+    align-items: center;
+}
+
 /* Contador (Burbuja blanca con número negro) */
 .badge-count {
     position: absolute;
     top: -5px;
     right: -5px;
-    background: #ffffff;
+    background: var(--color-white);
     color: #000;
     font-size: 0.7rem;
     font-weight: bold;
@@ -52,12 +72,12 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    border: 1px solid #ff7b00;
+    border: 1px solid var(--color-tertiary);
 }
 
 /* Botón de Logout transparente */
 .btn-logout {
-    color: white;
+    color: var(--color-white);
     text-decoration: none;
     border: 1px solid rgba(255, 255, 255, 0.4);
     padding: 6px 20px;
@@ -68,27 +88,28 @@
 }
 
 .btn-logout:hover {
-    background: #ff004c;
-    border-color: #ff004c;
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
     color: white;
 }
 
 /* Menú Dropdown Notificaciones (Oscuro y translúcido) */
 .notif-menu {
     background: rgba(10, 10, 26, 0.95) !important;
-    backdrop-filter: blur(10px); /* Efecto borroso detrás */
-    border: 1px solid #ff004c !important;
+    backdrop-filter: blur(10px);
+    /* Efecto borroso detrás */
+    border: 1px solid var(--color-secondary) !important;
     width: 300px;
 }
 
 /* Texto general del dropdown */
 .notif-menu {
-    color: #ffffff !important;
+    color: var(--color-white) !important;
 }
 
 /* Título "Notificaciones" */
 .notif-menu .dropdown-header {
-    color: #ffffff !important;
+    color: var(--color-white) !important;
     font-weight: 600;
 }
 
@@ -99,11 +120,11 @@
 
 /* Mensajes normales */
 .notif-menu p {
-    color: #ffffff !important;
+    color: var(--color-white) !important;
 }
 
 .text-orange {
-    color: #ff7b00;
+    color: var(--color-tertiary);
 }
 
 .notif-link.dropdown-toggle::after {

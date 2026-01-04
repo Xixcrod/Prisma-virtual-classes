@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/_variables.css' %}">
     <link rel="stylesheet" href="{% static 'css/recuperar_contrasena.css' %}">
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"> 
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
 </head>
 
 <body>
@@ -25,7 +26,7 @@
         </div>
 
         <div class="row align-items-center justify-content-center">
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-5 mb-4 mb-md-0">
                 <div class="login-box">
                     <h2 class="login-title">Recuperar Contraseña</h2>
 
@@ -35,7 +36,7 @@
                         <label class="label-custom" for="username">Cédula</label>
                         <input type="text" id="username" name="username" class="custom-input" placeholder="Ingrese su cédula" required />
 
-                        <label class="label-custom" for="email">Correo Electrónico</label>
+                        <label class="label-custom" for="email">Correo</label>
                         <input type="email" id="email" name="email" class="custom-input" placeholder="ejemplo@correo.com" required />
 
                         <button type="submit" class="btn-recuperar">Enviar Solicitud</button>

@@ -1,298 +1,339 @@
-        /* --- ESTILOS BASE --- */
-        body {
-            /* 1. Fondo base: Los polígonos oscuros */
-            background: url('../img/fondo.jpg') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            position: relative;
-            overflow: hidden; /* Esto elimina la barra y también impide el movimiento */
-            /* Necesario para posicionar el overlay de luces */
-        }
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
 
-        /* --- NUEVO: CAPA DE LUCES AMBIENTALES --- */
-        .ambient-lights {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('../img/lucesbordes.png') no-repeat center center;
-            background-size: cover;
-            mix-blend-mode: screen;
-            /* Hace que los colores brillen sobre el fondo oscuro */
-            opacity: 0.6;
-            z-index: 1;
-            pointer-events: none;
-        }
 
-        /* Aseguramos que el contenido principal flote ENCIMA de las luces */
-        .container {
-            position: relative;
-            z-index: 1;
-        }
+/* --- ESTILOS BASE --- */
+body {
+    /* 1. Fondo base: Los polígonos oscuros */
+    background: url('../img/fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    /* Esto elimina la barra y también impide el movimiento */
+    /* Necesario para posicionar el overlay de luces */
+}
 
-        /* --- LOGO SUPERIOR --- */
-        .logo-container {
-            text-align: center;
-            margin-bottom: 3rem;
-            margin-top: -50px;
-        }
+/* --- NUEVO: CAPA DE LUCES AMBIENTALES --- */
+.ambient-lights {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../img/lucesbordes.png') no-repeat center center;
+    background-size: cover;
+    mix-blend-mode: screen;
+    /* Hace que los colores brillen sobre el fondo oscuro */
+    opacity: 0.6;
+    z-index: 1;
+    pointer-events: none;
+}
 
-        .logo-img {
-            max-width: 350px;
-            height: auto;
-            /* Opcional: un pequeño filtro para que el logo brille más con el nuevo fondo */
-            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
-        }
+/* Aseguramos que el contenido principal flote ENCIMA de las luces */
+.container {
+    position: relative;
+    z-index: 1;
+}
 
-        /* --- CAJA DE LOGIN (IZQUIERDA) --- */
-        .login-box {
-            position: relative;
-            padding: 3.5rem 2.5rem;
-            color: white;
-            width: 100%;
-            max-width: 420px;
-            margin: auto;
-            
-        }
+/* --- LOGO SUPERIOR --- */
+.logo-container {
+    text-align: center;
+    margin-bottom: 3rem;
+    margin-top: -50px;
+}
 
-        .login-box::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: url('../img/cuadro.png') no-repeat center;
-            background-size: cover;
-            z-index: -1;
-        }
+.logo-img {
+    max-width: 500px;
+    margin-top: 20px;
+    height: auto;
+    /* Opcional: un pequeño filtro para que el logo brille más con el nuevo fondo */
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+}
 
-        .login-box {
-            aspect-ratio: 3 / 4;
-            /* ejemplo */
-        }
+/* --- CAJA DE LOGIN (IZQUIERDA) --- */
+.login-box {
+    position: relative;
+    padding: 2.5rem;
+    /* Ajustado para mejor balance visual */
+    color: var(--color-white);
+    width: 100%;
+    max-width: 420px;
+    margin: 20px auto;
+    z-index: 10;
+    /* Evita que la caja sea demasiado alta en pantallas pequeñas */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-        .login-title {
-            color: var(--color-primary);
-            margin-bottom: 2rem;
-            padding-top: 2rem;
-            /* BAJA el texto dentro del marco */
-            text-align: center;
-        }
+    /* 1. FONDO TRANSPARENTE OSCURO */
+    background: rgba(20, 20, 35, 0.1);
 
-        /* --- INPUTS --- */
-        .custom-input {
-            background: linear-gradient(to right, #2a2a35, #3b3b4f);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            color: white;
-            padding: 10px 12px;
-            width: 100%;
-            /* Se mantiene al 100% del espacio interno de la caja */
-            margin-bottom: 1.2rem;
-            box-sizing: border-box;
-            /* CLAVE: El input no se saldrá de la caja */
-            transition: all 0.3s;
-        }
+    /* 2. EFECTO CRISTAL Y RESPLANDOR BLANCO INTERIOR */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 8px;
+    /* Bordes más rectos según la imagen */
 
-        .custom-input:focus {
-            outline: none;
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-        }
+    /* 3. BRILLO BLANCO EN LOS BORDES (Inset shadow) */
+    /* El primer shadow es el resplandor blanco interno, el segundo es la sombra exterior oscura */
+    box-shadow:
+        inset 0 0 15px rgba(255, 255, 255, 0.1),
+        0 10px 30px rgba(0, 0, 0, 0.5);
 
-        .custom-input::placeholder {
-            color: #aaa;
-        }
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* Línea blanca muy fina opcional */
+    overflow: visible;
+    /* Para permitir que el brillo exterior se vea */
+}
 
-        /* BOTÓN DE ENTRAR */
-        .btn-entrar {
-            /* Usamos tu imagen de botón */
-            background: url('../img/botonentrar.png') no-repeat center center;
-            background-size: cover;
-            border: none;
-            width: 100%;
-            height: 40px;
-            /* Ajusta según tu imagen */
-            color: transparent;
-            /* Ocultamos el texto real para ver el de la imagen */
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-            margin-top: 1rem;
-        }
+/* --- ANIMACIÓN DE ROTACIÓN --- */
+@keyframes rotate-border {
+    to {
+        --angle: 360deg;
+    }
+}
 
-        .btn-entrar:active {
-            /* Cambio a imagen presionada */
-            background: url('../img/botonpresionado.png') no-repeat center center;
-            background-size: contain;
-            background-size: cover;
-            border: none;
-            width: 100%;
-            height: 40px;
-            /* Ajusta según tu imagen */
-            color: transparent;
-            /* Ocultamos el texto real para ver el de la imagen */
-            cursor: pointer;
-            transition: transform 0.2s;
-            margin-top: 1rem;
-            transform: scale(0.95);
-        }
+.login-box::before,
+.login-box::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    z-index: -1;
+    border: 5px solid transparent;
+    border-radius: 12px;
 
-        /* --- LINKS --- */
-        .forgot-pass-container {
-            text-align: center;
-            margin-top: 15px;
-        }
+    /* Cambiamos a conic-gradient para que la línea de color "gire" */
+    /* Usamos la variable --angle que definimos arriba */
+    background: conic-gradient(from var(--angle), var(--color-primary), var(--color-secondary), var(--color-pink), var(--color-primary)) border-box;
 
-        .forgot-pass {
-            color: #ddd;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
+    -webkit-mask:
+        linear-gradient(var(--color-white) 0 0) padding-box,
+        linear-gradient(var(--color-white) 0 0);
+    -webkit-mask-composite: destination-out;
+    /* Versión ESTÁNDAR para Firefox y compatibilidad futura */
+    mask:
+        linear-gradient(var(--color-white) 0 0) padding-box,
+        linear-gradient(var(--color-white) 0 0);
+    mask-composite: exclude;
+    /* Nota: en la versión estándar 'destination-out' se llama 'exclude' */
 
-        .forgot-pass:hover {
-            color: #ff004c;
-        }
+    /* APLICAR ANIMACIÓN: 3 segundos, lineal, infinita */
+    animation: rotate-border 3s linear infinite;
+}
 
-        /* --- PRISMA --- */
-        .prisma-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: -30px;
-        }
+/* El ::before mantiene el brillo desenfocado */
+.login-box::before {
+    filter: blur(15px);
+    opacity: 0.7;
+}
 
-        .prisma-img {
-            max-width: 150%;
-            height: auto;
-            mix-blend-mode: screen;
-            filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.4));
-        }
+/* El ::after mantiene la línea nítida */
+.login-box::after {
+    filter: none;
+    opacity: 1;
+    /* Importante: Misma animación para que el brillo y la línea se muevan juntos */
+    animation: rotate-border 3s linear infinite;
+}
 
-        /* --- ALERTAS --- */
-        .alert-custom {
-            background: rgba(220, 53, 69, 0.2);
-            border: 1px solid #dc3545;
-            color: #ffadad;
-            padding: 8px;
-            /* Reducimos un poco el padding para ganar espacio */
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-            text-align: center;
-        }
+.login-title {
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+    /* BAJA el texto dentro del marco */
+    text-align: center;
+}
 
-        .success-custom {
-            background: rgba(25, 135, 84, 0.2);
-            border: 1px solid #198754;
-            color: #75b798;
-            padding: 10px;
-            border-radius: 4px;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            text-align: center;
-        }
+/* --- INPUTS --- */
+.custom-input {
+    background: linear-gradient(to right, #2a2a35, #3b3b4f);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: var(--color-white);
+    padding: 10px 12px;
+    width: 100%;
+    /* Se mantiene al 100% del espacio interno de la caja */
+    margin-bottom: 1.2rem;
+    box-sizing: border-box;
+    /* CLAVE: El input no se saldrá de la caja */
+    transition: all 0.3s;
+}
+
+.custom-input:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.custom-input::placeholder {
+    color: #aaa;
+}
+
+/* BOTÓN DE ENTRAR */
+.btn-entrar {
+    /* Usamos tu imagen de botón */
+    background: url('../img/botonentrar.png') no-repeat center center;
+    background-size: cover;
+    border: none;
+    width: 100%;
+    height: 40px;
+    /* Ajusta según tu imagen */
+    color: transparent;
+    /* Ocultamos el texto real para ver el de la imagen */
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    margin-top: 1rem;
+}
+
+.btn-entrar:active {
+    /* Cambio a imagen presionada */
+    background: url('../img/botonpresionado.png') no-repeat center center;
+    background-size: contain;
+    background-size: cover;
+    border: none;
+    width: 100%;
+    height: 40px;
+    /* Ajusta según tu imagen */
+    color: transparent;
+    /* Ocultamos el texto real para ver el de la imagen */
+    cursor: pointer;
+    transition: transform 0.2s;
+    transform: scale(0.95);
+}
+
+/* --- LINKS --- */
+.forgot-pass-container {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.forgot-pass {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.forgot-pass:hover {
+    color: var(--color-primary)
+}
+
+/* --- PRISMA --- */
+.prisma-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -30px;
+}
+
+.prisma-img {
+    max-width: 150%;
+    height: auto;
+    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.4));
+}
+
+/* --- ALERTAS --- */
+.alert-custom {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid var(--color-secondary);
+    color: #ffadad;
+    padding: 8px;
+    /* Reducimos un poco el padding para ganar espacio */
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.success-custom {
+    background: rgba(25, 135, 84, 0.2);
+    border: 1px solid #198754;
+    color: #75b798;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+}
 
 /* ========================= */
 /*      RESPONSIVIDAD        */
 /* ========================= */
 
-/* Tablets y pantallas medianas */
-@media (max-width: 992px) {
+/* Tablets y Móviles (Pantallas menores a 992px) */
+@media (max-width: 991px) {
 
-    .logo-container {
-        margin-bottom: 2rem;
-        margin-top: 50px;
+    /* 1. OCULTAR EL PRISMA DECORATIVO */
+    /* Esto hace que el formulario se centre automáticamente en el espacio restante */
+    .prisma-container {
+        display: none !important;
     }
 
-    .logo-img {
-        max-width: 280px;
-    }
-
-    .login-box {
-        max-width: 380px;
-        padding: 3rem 2rem;
-    }
-
-    .login-title {
-        font-size: 1.4rem;
-        padding-top: 1.5rem;
-    }
-
-    .prisma-img {
-        max-width: 130%;
-    }
-}
-
-/* Móviles */
-@media (max-width: 576px) {
-
+    /* 2. CENTRAR FORMULARIO Y LOGO */
     body {
-        align-items: flex-start;
-        padding-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto;
+        /* Permite scroll si el teclado del móvil se abre */
+        padding: 20px;
     }
 
     .logo-container {
         margin-top: 0;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
     }
 
     .logo-img {
-        max-width: 220px;
+        max-width: 250px;
+        /* Tamaño equilibrado para móviles */
+    }
+
+    /* 3. MEJORAR EL BOTÓN EN MÓVIL */
+    .btn-entrar {
+        height: 55px;
+        /* Aumentamos la altura para que sea fácil de tocar */
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 100%;
+        margin-top: 1.5rem;
     }
 
     .login-box {
         max-width: 100%;
-        padding: 2.5rem 1.5rem;
-        aspect-ratio: auto; /* 🔑 CLAVE: evita cortes */
-    }
-
-    .login-box::before {
-        background-size: contain;
-    }
-
-    .login-title {
-        font-size: 1.2rem;
-        padding-top: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .custom-input {
-        font-size: 0.9rem;
-        padding: 9px 10px;
-    }
-
-    .btn-entrar {
-        height: 38px;
-    }
-
-    .forgot-pass {
-        font-size: 0.85rem;
-    }
-
-    .prisma-container {
-        margin-top: -15px;
-    }
-
-    .prisma-img {
-        max-width: 120%;
+        /* Ocupa el ancho disponible */
+        padding: 2rem;
     }
 }
 
-/* Pantallas muy pequeñas (ej: 360px) */
-@media (max-width: 380px) {
-
+/* Pantallas muy pequeñas (Smartphones compactos) */
+@media (max-width: 480px) {
     .logo-img {
-        max-width: 190px;
+        max-width: 300px;
     }
 
     .login-box {
-        padding: 2rem 1.2rem;
+        padding: 1.5rem 1rem;
     }
 
     .login-title {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-entrar {
+        height: 50px;
+        /* Ajuste fino para pantallas pequeñas */
     }
 }

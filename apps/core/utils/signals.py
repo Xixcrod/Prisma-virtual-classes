@@ -15,9 +15,12 @@ def crear_notificacion_acceso(sender, instance, created, **kwargs):
     # CASO 2: Profesor cambia el estado (Aprobado/Rechazado)
     else:
         # Aquí notificamos al estudiante sobre la decisión del profesor
-        estado_texto = dict(Acceso.PERMISOS).get(instance.estado)
-        Notificacion.objects.create(
-            emisor=instance.curso.profesor.usuario,
-            receptor=instance.estudiante.usuario,
-            mensaje=f"Tu solicitud para el curso {instance.curso.materia.nombre} ha sido cambiada a: {estado_texto}."
-        )
+        # Seguridad de que se modifique solo el campo "estado".
+        update_fields = kwargs.get("update_fields") or set()
+        if "estado" in update_fields:
+            estado_texto = dict(Acceso.PERMISOS).get(instance.estado)
+            Notificacion.objects.create(
+                emisor=instance.curso.profesor.usuario,
+                receptor=instance.estudiante.usuario,
+                mensaje=f"Tu solicitud para el curso {instance.curso.materia.nombre} ha sido cambiada a: {estado_texto}.",
+            )

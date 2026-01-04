@@ -6,7 +6,7 @@
     background-size: cover;
     background-position: center top;
 
-    color: #ffffff;
+    color: var(--color-white);
     padding: 10px 10px 10px;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .footer-links a:hover {
-    color: #ff9933; /* Naranja al pasar el mouse */
+    color: var(--color-tertiary); /* Naranja al pasar el mouse */
 }
 
 /* --- Copyright --- */
