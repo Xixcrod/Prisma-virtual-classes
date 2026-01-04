@@ -51,8 +51,7 @@ INSTALLED_APPS = [
     'apps.Profesores.apps.ProfesoresConfig',
     'apps.estudiantes.apps.EstudiantesConfig',
     'django_bootstrap5',
-    'django_cleanup.apps.CleanupConfig', # Módulo para limpiar en disco las actualizaciones de archivos cuando se les reemplaza por otro. 
-
+    'django_cleanup.apps.CleanupConfig', # Módulo para limpiar en disco las actualizaciones de archivos cuando se les reemplaza por otro.
 ]
 
 MIDDLEWARE = [
@@ -157,6 +156,3 @@ EMAIL_HOST_USER = os.environ.get('PRISMA_GMAIL_ADDRESS') #dirección de correo e
 EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD') #contraseña de correo electrónico
 DEFAULT_FROM_EMAIL = os.environ.get('PRISMA_GMAIL_ADDRESS') # Correo que aparecerá como remitente
 SITE_NAME = 'Prisma' # Nombre del sitio web para usar en los correos
-
-
-

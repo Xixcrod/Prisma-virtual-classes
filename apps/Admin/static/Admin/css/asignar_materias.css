@@ -1,0 +1,131 @@
+/* Estilos para Asignar Carreras y Materias a Profesores */
+.admin-bg-dark {
+    background: url('../../img/fondo_admin.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: calc(100vh - 80px);
+    padding: 3rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn-back-circle {
+    align-self: flex-start;
+    color: var(--color-white);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+.btn-back-circle:hover {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: white;
+    transform: translateX(-5px);
+}
+
+.assignment-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.assignment-card h2 {
+    color: var(--color-tertiary);
+    font-weight: 800;
+}
+
+.prisma-select {
+    width: 100%;
+    background: rgba(10, 10, 26, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.prisma-select:focus {
+    outline: none;
+    border-color: var(--color-fourth);
+}
+
+.prisma-select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Lista de Materias */
+.materias-list {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.materia-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s;
+}
+
+.materia-item:last-child {
+    border-bottom: none;
+}
+
+.materia-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.materia-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-secondary);
+    cursor: pointer;
+}
+
+.materia-item label {
+    margin-bottom: 0;
+    color: var(--color-white);
+    font-size: 0.95rem;
+    flex-grow: 1;
+}
+
+.btn-save-prisma {
+    width: 100%;
+    background: linear-gradient(135deg, var(--color-fourth), #7000ff);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-save-prisma:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(78, 2, 251, 0.4);
+    filter: brightness(1.1);
+}

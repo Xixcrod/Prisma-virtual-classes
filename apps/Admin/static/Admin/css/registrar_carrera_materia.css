@@ -1,0 +1,75 @@
+/* Estilos para Registrar Carreras y Materias */
+.admin-bg-dark {
+    background: url('../../img/fondo_admin.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    padding: 3rem 1rem;
+    color: white;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.form-control,
+.form-select {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-color: var(--color-tertiary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(var(--color-tertiary-rgb), 0.25) !important;
+}
+
+.accordion-item {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
+}
+
+.accordion-button {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background: rgba(var(--color-tertiary-rgb), 0.2) !important;
+    color: white !important;
+}
+
+.list-group-item {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
+}
+
+.btn-back-circle {
+    display: inline-block;
+    color: var(--color-white);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+.btn-back-circle:hover {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: white;
+    transform: translateX(-5px);
+}

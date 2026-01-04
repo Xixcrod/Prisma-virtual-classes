@@ -1,0 +1,214 @@
+.registration-page {
+    /* Fondo geométrico oscuro con ruta relativa corregida */
+    background: url('../../img/fondo_admin.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: calc(100vh - 80px);
+    /* Restamos la altura estimada del nav */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+/* Capa de oscuridad si el fondo es muy claro */
+.registration-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    /* Ajustar según la imagen real */
+    z-index: 1;
+}
+
+/* Titulo fuera del box */
+.page-title {
+    position: relative;
+    z-index: 10;
+    color: var(--color-tertiary);
+    margin-top: 1rem;
+    padding: 1rem;
+}
+
+/* Caja del formulario */
+.form-card {
+    position: relative;
+    z-index: 10;
+
+    /* Fondo oscuro semi-transparente */
+    background: rgba(20, 10, 20, 0.6);
+    /* Tono rojizo muy oscuro y transparente */
+    backdrop-filter: blur(10px);
+
+    border-radius: 0;
+    /* La imagen muestra bordes rectos/sutilmente redondeados, probemos rectos */
+    padding: 2.5rem 3rem;
+    width: 100%;
+    max-width: 500px;
+
+    /* El borde gradiente rojo/naranja tipo 'glow' */
+    /* Usamos box-shadow para simular el resplandor rojo de la imagen */
+    box-shadow:
+        0 0 30px rgba(255, 0, 0, 0.2),
+        /* Glow general */
+        inset 0 0 50px rgba(255, 0, 0, 0.1);
+    /* Glow interno */
+
+    /* Bordes sutiles */
+    border: 1px solid rgba(255, 100, 100, 0.2);
+
+    /* Fondo con degradado sutil rojo en las esquinas */
+    background-image: radial-gradient(circle at top left, rgba(255, 0, 0, 0.15), transparent 40%),
+        radial-gradient(circle at bottom right, rgba(255, 100, 0, 0.1), transparent 40%);
+}
+
+/* Estilos para soportar SVGs decorativos */
+.glow-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../../img/recuadro iluminado.svg') no-repeat center center;
+    background-size: 100% 100%;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.8;
+}
+
+/* --- Radio Buttons para Rol (Actualizado para SVGs) --- */
+.role-selector {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.radio-container {
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.radio-container input {
+    display: none;
+}
+
+.radio-container input:checked~.label-text {
+    color: var(--color-tertiary);
+    text-shadow: 0 0 8px rgba(255, 112, 0, 0.4);
+}
+
+.selector-svg {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.2s ease;
+}
+
+.radio-container:hover .selector-svg {
+    transform: scale(1.1);
+}
+
+/* --- Línea Colorida Decorativa --- */
+.divider-container {
+    width: 100%;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.linea-colorida {
+    width: 100%;
+    max-height: 4px;
+    object-fit: cover;
+}
+
+/* --- Inputs --- */
+.inputs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-wrapper input,
+.custom-select {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    /* Gris translúcido */
+    border: none;
+    padding: 15px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: background 0.3s;
+}
+
+.input-wrapper input:focus,
+.custom-select:focus {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.input-wrapper input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Select especial para carrera */
+.custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.custom-select option {
+    background-color: #333;
+    /* Para que las opciones sean legibles */
+    color: white;
+}
+
+/* --- Botón Registrar --- */
+.submit-btn {
+    background-color: var(--color-tertiary);
+    /* Naranja fuerte */
+    color: white;
+    font-weight: 800;
+    border: none;
+    width: 50%;
+    padding: 5px;
+    /* Aumenté un poco el padding para que no se vea tan delgado */
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.3s, transform 0.2s;
+    text-transform: uppercase;
+}
+
+.submit-btn:hover {
+    background-color: #e66a00;
+    /* Un poco más oscuro */
+    transform: scale(1.02);
+}
+
+/* Link Volver simple */
+.back-link-simple {
+    display: block;
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.back-link-simple:hover {
+    color: white;
+}

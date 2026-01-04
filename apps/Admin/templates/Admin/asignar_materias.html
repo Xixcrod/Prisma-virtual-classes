@@ -1,17 +1,11 @@
 {% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'Admin/css/asignar_materias.css' %}">
+{% endblock %}
 
 {% block content %}
-{% if messages %}
-<div class="messages-container">
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-        {{ message }}
-        <button class="close-alert" onclick="this.parentElement.style.display='none'">&times;</button>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
 <div class="admin-bg-dark">
     <a href="{% url 'lista_profesores' %}" class="btn-back-circle">VOLVER</a>
 

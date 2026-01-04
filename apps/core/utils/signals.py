@@ -25,4 +25,3 @@ def crear_notificacion_acceso(sender, instance, created, **kwargs):
                 receptor=instance.estudiante.usuario,
                 mensaje=f"Tu solicitud para el curso {instance.curso.materia.nombre} ha sido cambiada a: {estado_texto}.",
             )
-
