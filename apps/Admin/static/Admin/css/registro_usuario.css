@@ -1,214 +1,229 @@
+html,
+body {
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Fondo de la página */
 .registration-page {
-    /* Fondo geométrico oscuro con ruta relativa corregida */
-    background: url('../../img/fondo_admin.jpg') no-repeat center center fixed;
-    background-size: cover;
-    min-height: calc(100vh - 80px);
-    /* Restamos la altura estimada del nav */
+    height: calc(100vh - 80px);
+    /* Changed from min-height to fixed height */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 0.5rem;
     position: relative;
-    width: 100%;
 }
 
-/* Capa de oscuridad si el fondo es muy claro */
-.registration-page::before {
-    content: '';
+/* Contenedor del Botón Volver */
+.back-button-container {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 20px;
+    left: 40px;
+    z-index: 10;
+}
+
+.btn-back-circle {
+    display: inline-block;
+    color: var(--color-white);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 8px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-back-circle:hover {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: white;
+    transform: translateX(-5px);
+}
+
+/* Título naranja arriba de la caja */
+.page-title {
+    color: var(--color-tertiary);
+    font-weight: 700;
+    font-size: 1.5rem;
+    /* Further reduced */
+    margin-bottom: 0.5rem;
+    /* Further reduced */
+    text-align: center;
+    text-shadow: 0 0 10px rgba(255, 112, 0, 0.3);
+}
+
+/* Tarjeta Principal usando el Recuadro Iluminado */
+.registration-card {
+    background: url('../img/recuadro iluminado.svg') no-repeat center center;
+    background-size: 100% 100%;
+    border: none;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    /* Ajustar según la imagen real */
+    max-width: 420px;
+    padding: 2.2rem 2.8rem;
+    max-height: 420px;
+    /* Corrected padding to contain all elements perfectly */
+    position: relative;
     z-index: 1;
 }
 
-/* Titulo fuera del box */
-.page-title {
-    position: relative;
-    z-index: 10;
-    color: var(--color-tertiary);
-    margin-top: 1rem;
-    padding: 1rem;
-}
-
-/* Caja del formulario */
-.form-card {
-    position: relative;
-    z-index: 10;
-
-    /* Fondo oscuro semi-transparente */
-    background: rgba(20, 10, 20, 0.6);
-    /* Tono rojizo muy oscuro y transparente */
-    backdrop-filter: blur(10px);
-
-    border-radius: 0;
-    /* La imagen muestra bordes rectos/sutilmente redondeados, probemos rectos */
-    padding: 2.5rem 3rem;
+/* Encabezado con Selector de Rol */
+.card-header-roles {
+    margin-bottom: 0.5rem;
     width: 100%;
-    max-width: 500px;
-
-    /* El borde gradiente rojo/naranja tipo 'glow' */
-    /* Usamos box-shadow para simular el resplandor rojo de la imagen */
-    box-shadow:
-        0 0 30px rgba(255, 0, 0, 0.2),
-        /* Glow general */
-        inset 0 0 50px rgba(255, 0, 0, 0.1);
-    /* Glow interno */
-
-    /* Bordes sutiles */
-    border: 1px solid rgba(255, 100, 100, 0.2);
-
-    /* Fondo con degradado sutil rojo en las esquinas */
-    background-image: radial-gradient(circle at top left, rgba(255, 0, 0, 0.15), transparent 40%),
-        radial-gradient(circle at bottom right, rgba(255, 100, 0, 0.1), transparent 40%);
 }
 
-/* Estilos para soportar SVGs decorativos */
-.glow-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('../../img/recuadro iluminado.svg') no-repeat center center;
-    background-size: 100% 100%;
-    pointer-events: none;
-    z-index: -1;
-    opacity: 0.8;
-}
-
-/* --- Radio Buttons para Rol (Actualizado para SVGs) --- */
-.role-selector {
+.separator-container {
+    width: calc(100% + 5.6rem);
+    /* Compensa el padding de 2.8rem de cada lado */
+    margin-left: -2.8rem;
+    margin-right: -2.8rem;
     display: flex;
     justify-content: center;
-    gap: 3rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
 }
 
-.radio-container {
-    color: white;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
+.separator-line {
+    width: 100%;
+    max-width: none;
+    /* Permite que la línea se extienda totalmente */
+    height: auto;
+    opacity: 0.4;
+    /* Agregada transparencia sutil */
+}
+
+.role-options {
+    display: flex;
+    justify-content: space-around;
+    padding: 0 0.2rem;
+}
+
+.role-radio {
     display: flex;
     align-items: center;
-    gap: 12px;
-}
-
-.radio-container input {
-    display: none;
-}
-
-.radio-container input:checked~.label-text {
-    color: var(--color-tertiary);
-    text-shadow: 0 0 8px rgba(255, 112, 0, 0.4);
-}
-
-.selector-svg {
-    width: 22px;
-    height: 22px;
-    transition: transform 0.2s ease;
-}
-
-.radio-container:hover .selector-svg {
-    transform: scale(1.1);
-}
-
-/* --- Línea Colorida Decorativa --- */
-.divider-container {
-    width: 100%;
-    margin-bottom: 2rem;
-    display: flex;
-    justify-content: center;
-}
-
-.linea-colorida {
-    width: 100%;
-    max-height: 4px;
-    object-fit: cover;
-}
-
-/* --- Inputs --- */
-.inputs-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.input-wrapper input,
-.custom-select {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    /* Gris translúcido */
-    border: none;
-    padding: 15px;
-    color: white;
-    font-size: 1rem;
-    outline: none;
-    transition: background 0.3s;
-}
-
-.input-wrapper input:focus,
-.custom-select:focus {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.input-wrapper input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-/* Select especial para carrera */
-.custom-select {
-    appearance: none;
-    -webkit-appearance: none;
+    gap: 8px;
     cursor: pointer;
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.role-radio input[type="radio"] {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--color-tertiary);
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+}
+
+.role-radio input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-tertiary);
+    border-radius: 50%;
+}
+
+.role-radio.active {
+    color: var(--color-tertiary);
+}
+
+/* Campos de entrada estilo bloque oscuro */
+.custom-input,
+.custom-select {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border: none !important;
+    border-radius: 2px !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    padding: 5px 10px !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 0px !important;
+    width: 100%;
+    height: auto;
+    margin-top: 18px;
+    /* Balanced spacing */
+    transition: background-color 0.3s ease;
+}
+
+/* Reduce spacing for bootstrap divs inside form */
+.card-body-form .mb-3 {
+    margin-bottom: 0.3rem !important;
+}
+
+/* Move group inside card */
+.card-body-form {
+    margin-top: 0.5rem;
+}
+
+/* Reduce gap above button container */
+.card-body-form .mt-4 {
+    margin-top: 1rem !important;
+}
+
+.custom-input::placeholder,
+.custom-select {
+    color: rgba(146, 144, 144, 0.8) !important;
+    font-weight: 700;
 }
 
 .custom-select option {
-    background-color: #333;
-    /* Para que las opciones sean legibles */
-    color: white;
+    font-weight: normal;
 }
 
-/* --- Botón Registrar --- */
-.submit-btn {
-    background-color: var(--color-tertiary);
-    /* Naranja fuerte */
+.custom-input:focus,
+.custom-select:focus {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+    /* Brighter on focus */
+    box-shadow: none !important;
+    /* Clean look */
+    outline: 1px solid rgba(255, 112, 0, 0.5) !important;
+}
+
+/* Botón de Registro Naranja */
+.btn-register {
+    background: var(--color-tertiary);
     color: white;
-    font-weight: 800;
-    border: none;
-    width: 50%;
-    padding: 5px;
-    /* Aumenté un poco el padding para que no se vea tan delgado */
-    margin-top: 2rem;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: background 0.3s, transform 0.2s;
+    font-weight: 600;
     text-transform: uppercase;
-}
-
-.submit-btn:hover {
-    background-color: #e66a00;
-    /* Un poco más oscuro */
-    transform: scale(1.02);
-}
-
-/* Link Volver simple */
-.back-link-simple {
+    border: none;
+    border-radius: 4px;
+    padding: 2px;
+    /* Further reduced */
+    width: 155px;
+    /* Further reduced */
+    margin: 0 auto;
+    /* Removed top margin */
+    /* Further reduced */
     display: block;
-    margin-top: 15px;
-    color: rgba(255, 255, 255, 0.5);
-    text-decoration: none;
     font-size: 0.9rem;
+    /* Further reduced */
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 112, 0, 0.3);
 }
 
-.back-link-simple:hover {
-    color: white;
+.btn-register:hover {
+    background-color: #e66a00;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 112, 0, 0.5);
+}
+
+/* Select de Carrera ajustes */
+.custom-select option {
+    background-color: #1a1a1a;
+    color: var(--color-white);
+}
+
+/* Quitar bordes de Bootstrap */
+.form-control:focus {
+    border: none;
 }

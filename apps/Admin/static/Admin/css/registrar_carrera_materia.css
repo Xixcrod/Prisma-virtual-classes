@@ -1,7 +1,5 @@
 /* Estilos para Registrar Carreras y Materias */
 .admin-bg-dark {
-    background: url('../../img/fondo_admin.jpg') no-repeat center center fixed;
-    background-size: cover;
     min-height: 100vh;
     padding: 3rem 1rem;
     color: white;

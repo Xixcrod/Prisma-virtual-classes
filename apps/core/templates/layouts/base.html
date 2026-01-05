@@ -20,9 +20,15 @@
     <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
     {% block extra_css %}{% endblock %}
 
-    <!--<link rel="icon" href="{% static 'images/Icon.ico' %}"> -->
-
-
+    <style>
+        body {
+            background: url("{% block body_background %}{% static 'img/fondo.jpg' %}{% endblock %}") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,7 +42,7 @@
             <div class="d-flex align-items-center ms-auto me-3 order-lg-last">
                 {% if user.is_authenticated %}
                 {% if es_profesor or es_estudiante %}
-                <div class="dropdown">
+                <div class="dropdown me-3">
                     <a class="notif-link position-relative dropdown-toggle" href="#" id="notifDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{% static 'img/notificacionencendido.png' %}" alt="Notificaciones" class="notif-icon">
@@ -65,6 +71,9 @@
                     </ul>
                 </div>
                 {% endif %}
+                <a href="{% url 'logout' %}" class="btn-logout">Cerrar Sesión</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn-logout">Iniciar Sesión</a>
                 {% endif %}
             </div>
 
