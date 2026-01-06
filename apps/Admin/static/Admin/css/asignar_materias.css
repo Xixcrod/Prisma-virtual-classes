@@ -1,27 +1,27 @@
-/* Modal Overlay */
+/* Superposición del modal */
 .modal-overlay {
     display: none;
-    /* Hidden by default */
+    /* Oculto por defecto */
     position: fixed;
-    /* Stay in place */
+    /* Se mantiene en su lugar */
     z-index: 1000;
-    /* Sit on top */
+    /* Se posiciona encima */
     left: 0;
     top: 0;
     width: 100%;
-    /* Full width */
+    /* Ancho completo */
     height: 100%;
-    /* Full height */
+    /* Altura completa */
     overflow: auto;
-    /* Enable scroll if needed */
+    /* Habilita el desplazamiento si es necesario */
     background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/ opacity */
+    /* Negro con opacidad */
     backdrop-filter: blur(5px);
     align-items: center;
     justify-content: center;
 }
 
-/* Modal Content Box */
+/* Caja de contenido del modal */
 .assignment-modal {
     background: url('../img/recuadro iluminado.svg') no-repeat center center;
     background-size: 100% 100%;
@@ -34,7 +34,7 @@
     align-items: center;
 }
 
-/* Header */
+/* Cabecera del modal */
 .modal-header-custom {
     text-align: center;
     width: 100%;
@@ -51,7 +51,7 @@
     padding-top: 40px;
 }
 
-/* Separator Line */
+/* Contenedor de la línea separadora */
 .separator-container {
     width: 125%;
     display: flex;
@@ -65,7 +65,7 @@
     opacity: 0.8;
 }
 
-/* Form Styles */
+/* Estilos de formulario del modal */
 .modal-form {
     width: 100%;
     display: flex;
@@ -73,7 +73,7 @@
     gap: 15px;
 }
 
-/* Custom Selects */
+/* Selectores personalizados del modal */
 .custom-select-modal {
     background-color: rgba(255, 255, 255, 0.1) !important;
     border: none !important;
@@ -86,7 +86,7 @@
     cursor: pointer;
     font-weight: 700;
     appearance: none;
-    /* Remove default arrow */
+    /* Elimina la flecha predeterminada */
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff7000'%3e%3cpath d='M6 9l6 6 6-6H6z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 10px center;
@@ -104,13 +104,13 @@
     padding: 10px;
 }
 
-/* Materias Container (simulating visual from design but allowing content) */
+/* Contenedor de materias (simula lo visual del diseño pero permite contenido) */
 .materias-wrapper {
     position: relative;
     width: 100%;
 }
 
-/* When showing checkboxes, we might want a container that expands or scrolling */
+/* Al mostrar casillas de verificación, se utiliza un contenedor que se expande o desplaza */
 .materias-dropdown-content {
     background-color: rgba(30, 30, 30, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -118,7 +118,7 @@
     max-height: 150px;
     overflow-y: auto;
     display: none;
-    /* Toggle via JS */
+    /* Se alterna mediante JS */
     position: absolute;
     width: 100%;
     z-index: 10;
@@ -146,16 +146,16 @@
     accent-color: #ff7000;
 }
 
-/* Button */
+/* Botón de guardar */
 .btn-save-modal {
     background-color: white;
     color: #e66a00;
-    /* Orange text as in screenshot */
+    /* Texto naranja como en la captura de pantalla */
     font-weight: 800;
     text-transform: uppercase;
     border: none;
     border-radius: 4px;
-    /* Slightly rounded */
+    /* Ligeramente redondeado */
     padding: 10px 0;
     width: 150px;
     margin: 1.5rem auto 0;
@@ -170,7 +170,7 @@
     box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
-/* Scrollbar for materias */
+/* Barra de desplazamiento para materias */
 .materias-dropdown-content::-webkit-scrollbar {
     width: 6px;
 }

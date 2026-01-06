@@ -7,9 +7,9 @@ body {
 /* Configura el contenedor principal y su altura */
 .container-fluid.admin-bg-dark {
     min-height: calc(100vh - 80px);
-    /* Ajustado para el área útil */
+    /* Se ajusta para el área útil */
     padding: 0.5rem 2rem;
-    /* Reducido de 1.5rem */
+    /* Reducido desde 1.5rem */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,9 +44,9 @@ body {
     /* Naranja */
     font-weight: 800;
     font-size: 1.2rem;
-    /* Reducido de 1.5rem */
+    /* Reducido desde 1.5rem */
     margin-bottom: 0.5rem;
-    /* Reducido de 1rem */
+    /* Reducido desde 1rem */
     text-shadow: 0 0 10px rgba(255, 112, 0, 0.4);
     text-transform: capitalize;
 }
@@ -117,10 +117,10 @@ body {
 .professor-content-box {
     position: relative;
     width: 90%;
-    /* Ajustado para llenar el ancho del contenedor padre */
+    /* Se ajusta para llenar el ancho del contenedor padre */
     max-width: 380px;
     padding: 110px;
-    /* Límite para que no se destartale en pantallas muy grandes */
+    /* Límite para evitar que se desajuste en pantallas muy grandes */
     height: 70px;
     margin-bottom: -165px;
     /* Altura equilibrada */
@@ -153,7 +153,7 @@ body {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     z-index: 2;
     text-align: center;
-    /*texto lineal*/
+    /* Ajuste de texto lineal */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -165,7 +165,7 @@ body {
 .item-actions {
     position: absolute;
     left: 102%;
-    /* Posicionado relativo al ancho de la caja (90% + padding frame) */
+    /* Se posiciona relativo al ancho de la caja (90% + padding frame) */
     bottom: 49%;
     transform: translateY(-50%);
     display: flex;
@@ -213,7 +213,7 @@ body {
     align-items: center;
     gap: 15px;
     margin-top: 0.5rem;
-    /* Reducido de 1rem */
+    /* Reducido desde 1rem */
 }
 
 /* Estilo de los números de página (círculos naranjas) */
@@ -222,15 +222,15 @@ body {
     align-items: center;
     justify-content: center;
     width: 28px;
-    /* Reducido de 32px */
+    /* Reducido desde 32px */
     height: 28px;
-    /* Reducido de 32px */
+    /* Reducido desde 32px */
     background-color: var(--color-tertiary);
     /* Naranja */
     color: black;
     font-weight: bold;
     font-size: 0.9rem;
-    /* Reducido de 1rem */
+    /* Reducido desde 1rem */
     border-radius: 50%;
     text-decoration: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
