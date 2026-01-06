@@ -12,6 +12,17 @@
     <h1>Funciones de administrador</h1>
     <hr>
 
+    {% if messages %}
+    <div class="container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="menu-grid">
         <a href="{% url 'registrar_usuario' %}" class="menu-item">
             <h3>Registrar Usuarios</h3>

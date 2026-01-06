@@ -1,13 +1,15 @@
+/* Define el estilo base del documento ocultando el desbordamiento y estableciendo el fondo administrativo */
 html,
 body {
     overflow: hidden;
     height: 100%;
+    background: url('/static/Admin/img/fondo_admin.jpg') no-repeat center center fixed;
+    background-size: cover;
 }
 
-/* Fondo de la página */
+/* Configura el diseño de la página de registro centrando el contenido en pantalla */
 .registration-page {
     height: calc(100vh - 80px);
-    /* Changed from min-height to fixed height */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,7 +18,7 @@ body {
     position: relative;
 }
 
-/* Contenedor del Botón Volver */
+/* Establece la posición absoluta para el contenedor del botón de retroceso */
 .back-button-container {
     position: absolute;
     top: 20px;
@@ -24,6 +26,7 @@ body {
     z-index: 10;
 }
 
+/* Define la apariencia del botón circular de retroceso con bordes suavizados y transparencia */
 .btn-back-circle {
     display: inline-block;
     color: var(--color-white);
@@ -37,6 +40,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
 }
 
+/* Aplica efectos de color y traslación al pasar el ratón sobre el botón de retroceso */
 .btn-back-circle:hover {
     background: var(--color-secondary);
     border-color: var(--color-secondary);
@@ -44,19 +48,17 @@ body {
     transform: translateX(-5px);
 }
 
-/* Título naranja arriba de la caja */
+/* Configura el estilo del título de la página con color resaltado y sombras */
 .page-title {
     color: var(--color-tertiary);
     font-weight: 700;
     font-size: 1.5rem;
-    /* Further reduced */
     margin-bottom: 0.5rem;
-    /* Further reduced */
     text-align: center;
     text-shadow: 0 0 10px rgba(255, 112, 0, 0.3);
 }
 
-/* Tarjeta Principal usando el Recuadro Iluminado */
+/* Define la tarjeta principal utilizando una imagen SVG de fondo iluminada */
 .registration-card {
     background: url('../img/recuadro iluminado.svg') no-repeat center center;
     background-size: 100% 100%;
@@ -65,20 +67,19 @@ body {
     max-width: 420px;
     padding: 2.2rem 2.8rem;
     max-height: 420px;
-    /* Corrected padding to contain all elements perfectly */
     position: relative;
     z-index: 1;
 }
 
-/* Encabezado con Selector de Rol */
+/* Establece el espaciado inferior para el encabezado de selección de roles */
 .card-header-roles {
     margin-bottom: 0.5rem;
     width: 100%;
 }
 
+/* Configura el contenedor del separador expandiéndolo para cubrir el ancho de la tarjeta */
 .separator-container {
     width: calc(100% + 5.6rem);
-    /* Compensa el padding de 2.8rem de cada lado */
     margin-left: -2.8rem;
     margin-right: -2.8rem;
     display: flex;
@@ -86,21 +87,22 @@ body {
     margin-bottom: 0.8rem;
 }
 
+/* Define el estilo de la línea separadora con transparencia sutil */
 .separator-line {
     width: 100%;
     max-width: none;
-    /* Permite que la línea se extienda totalmente */
     height: auto;
     opacity: 0.4;
-    /* Agregada transparencia sutil */
 }
 
+/* Establece la distribución de las opciones de rol en la cabecera */
 .role-options {
     display: flex;
     justify-content: space-around;
     padding: 0 0.2rem;
 }
 
+/* Configura el diseño de los radio buttons personalizados para la selección de rol */
 .role-radio {
     display: flex;
     align-items: center;
@@ -112,6 +114,7 @@ body {
     transition: all 0.3s ease;
 }
 
+/* Define la apariencia base circular del input de radio personalizado */
 .role-radio input[type="radio"] {
     appearance: none;
     width: 14px;
@@ -122,6 +125,7 @@ body {
     cursor: pointer;
 }
 
+/* Agrega un punto central decorativo cuando el radio button está seleccionado */
 .role-radio input[type="radio"]:checked::after {
     content: '';
     position: absolute;
@@ -134,11 +138,12 @@ body {
     border-radius: 50%;
 }
 
+/* Cambia el color del texto cuando la opción de rol está activa */
 .role-radio.active {
     color: var(--color-tertiary);
 }
 
-/* Campos de entrada estilo bloque oscuro */
+/* Define el estilo de los campos de entrada y selección con fondos semitransparentes */
 .custom-input,
 .custom-select {
     background-color: rgba(255, 255, 255, 0.15) !important;
@@ -151,45 +156,45 @@ body {
     width: 100%;
     height: auto;
     margin-top: 18px;
-    /* Balanced spacing */
     transition: background-color 0.3s ease;
 }
 
-/* Reduce spacing for bootstrap divs inside form */
+/* Reduce los márgenes inferiores de los grupos de control de Bootstrap */
 .card-body-form .mb-3 {
     margin-bottom: 0.3rem !important;
 }
 
-/* Move group inside card */
+/* Ajusta el margen superior del cuerpo del formulario dentro de la tarjeta */
 .card-body-form {
     margin-top: 0.5rem;
 }
 
-/* Reduce gap above button container */
+/* Reduce el espacio superior para el contenedor de botones de acción */
 .card-body-form .mt-4 {
     margin-top: 1rem !important;
 }
 
+/* Establece el color y peso de fuente para los marcadores de posición y selectores */
 .custom-input::placeholder,
 .custom-select {
     color: rgba(146, 144, 144, 0.8) !important;
     font-weight: 700;
 }
 
+/* Establece un peso de fuente normal para las opciones dentro de los selectores */
 .custom-select option {
     font-weight: normal;
 }
 
+/* Aplica efectos de iluminación y bordes cuando los campos obtienen el foco */
 .custom-input:focus,
 .custom-select:focus {
     background-color: rgba(255, 255, 255, 0.25) !important;
-    /* Brighter on focus */
     box-shadow: none !important;
-    /* Clean look */
     outline: 1px solid rgba(255, 112, 0, 0.5) !important;
 }
 
-/* Botón de Registro Naranja */
+/* Define el estilo del botón de registro con color corporativo y sombras proyectadas */
 .btn-register {
     background: var(--color-tertiary);
     color: white;
@@ -198,32 +203,64 @@ body {
     border: none;
     border-radius: 4px;
     padding: 2px;
-    /* Further reduced */
     width: 155px;
-    /* Further reduced */
     margin: 0 auto;
-    /* Removed top margin */
-    /* Further reduced */
     display: block;
     font-size: 0.9rem;
-    /* Further reduced */
     transition: all 0.3s;
     box-shadow: 0 4px 15px rgba(255, 112, 0, 0.3);
 }
 
+/* Aplica efectos de brillo y elevación al pasar el ratón sobre el botón de registro */
 .btn-register:hover {
     background-color: #e66a00;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 112, 0, 0.5);
 }
 
-/* Select de Carrera ajustes */
+/* Configura el fondo oscuro para las opciones de carrera en los selectores desplegables */
 .custom-select option {
     background-color: #1a1a1a;
     color: var(--color-white);
 }
 
-/* Quitar bordes de Bootstrap */
-.form-control:focus {
+/* Estilos para las alertas/mensajes de Django con efecto de desenfoque de fondo y bordes acentuados */
+.alert {
     border: none;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin: 10px auto 20px auto;
+    max-width: 420px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Define el color del borde izquierdo según el tipo de mensaje de éxito */
+.alert-success {
+    border-left: 5px solid #28a745;
+    background: rgba(40, 167, 69, 0.2);
+    text-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+/* Define el color del borde izquierdo según el tipo de mensaje de error o peligro */
+.alert-error,
+.alert-danger {
+    border-left: 5px solid #dc3545;
+    background: rgba(220, 53, 69, 0.2);
+    text-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+/* Define el color del borde izquierdo según el tipo de mensaje de advertencia */
+.alert-warning {
+    border-left: 5px solid #ffc107;
+    background: rgba(255, 193, 7, 0.2);
+    color: #fff;
+}
+
+/* Asegura que el botón de cierre de las alertas sea blanco para mantener el contraste */
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
 }

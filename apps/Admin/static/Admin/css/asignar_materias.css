@@ -1,131 +1,213 @@
-/* Estilos para Asignar Carreras y Materias a Profesores */
-.admin-bg-dark {
-    background: url('../img/fondo_admin.jpg') no-repeat center center fixed;
+/* Modal Overlay */
+.modal-overlay {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1000;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Black w/ opacity */
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Content Box */
+.assignment-modal {
+    background: url('../img/recuadro iluminado.svg') no-repeat center center;
     background-size: 100% 100%;
-    min-height: calc(100vh - 80px);
-    padding: 3rem 1rem;
+    width: 100%;
+    max-width: 450px;
+    padding: 3rem 2.8rem;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.btn-back-circle {
-    align-self: flex-start;
-    color: var(--color-white);
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.8rem;
-    padding: 10px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 30px;
-    margin-bottom: 2rem;
-    transition: all 0.3s ease;
-}
-
-.btn-back-circle:hover {
-    background: var(--color-secondary);
-    border-color: var(--color-secondary);
-    color: white;
-    transform: translateX(-5px);
-}
-
-.assignment-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 2.5rem;
+/* Header */
+.modal-header-custom {
+    text-align: center;
     width: 100%;
-    max-width: 600px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    margin-bottom: 1rem;
 }
 
-.assignment-card h2 {
-    color: var(--color-tertiary);
+.modal-title-custom {
+    color: white;
     font-weight: 800;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    margin: 0;
+    padding-top: 40px;
 }
 
-.prisma-select {
+/* Separator Line */
+.separator-container {
+    width: 125%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.separator-line {
     width: 100%;
-    background: rgba(10, 10, 26, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 14px;
-    border-radius: 10px;
-    margin-bottom: 1.2rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: border-color 0.3s;
+    height: auto;
+    opacity: 0.8;
 }
 
-.prisma-select:focus {
+/* Form Styles */
+.modal-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Custom Selects */
+.custom-select-modal {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: none !important;
+    border-radius: 2px !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 12px 15px !important;
+    font-size: 0.9rem !important;
+    width: 100%;
     outline: none;
-    border-color: var(--color-fourth);
+    cursor: pointer;
+    font-weight: 700;
+    appearance: none;
+    /* Remove default arrow */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff7000'%3e%3cpath d='M6 9l6 6 6-6H6z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 30px;
 }
 
-.prisma-select:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.custom-select-modal:focus {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 0 10px rgba(255, 112, 0, 0.3);
 }
 
-/* Lista de Materias */
-.materias-list {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    padding: 15px;
-    max-height: 300px;
+.custom-select-modal option {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 10px;
+}
+
+/* Materias Container (simulating visual from design but allowing content) */
+.materias-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* When showing checkboxes, we might want a container that expands or scrolling */
+.materias-dropdown-content {
+    background-color: rgba(30, 30, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: none;
+    max-height: 150px;
     overflow-y: auto;
-    margin-bottom: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: none;
+    /* Toggle via JS */
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+    padding: 10px;
 }
 
-.materia-item {
+.materias-dropdown-content.show {
+    display: block;
+}
+
+.materia-option {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: background 0.2s;
-}
-
-.materia-item:last-child {
-    border-bottom: none;
-}
-
-.materia-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.materia-item input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--color-secondary);
+    padding: 5px;
+    color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
 }
 
-.materia-item label {
-    margin-bottom: 0;
-    color: var(--color-white);
-    font-size: 0.95rem;
-    flex-grow: 1;
+.materia-option:hover {
+    background-color: rgba(255, 112, 0, 0.2);
 }
 
-.btn-save-prisma {
-    width: 100%;
-    background: linear-gradient(135deg, var(--color-fourth), #7000ff);
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 30px;
-    font-weight: 700;
+.materia-option input {
+    margin-right: 10px;
+    accent-color: #ff7000;
+}
+
+/* Button */
+.btn-save-modal {
+    background-color: white;
+    color: #e66a00;
+    /* Orange text as in screenshot */
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    border: none;
+    border-radius: 4px;
+    /* Slightly rounded */
+    padding: 10px 0;
+    width: 150px;
+    margin: 1.5rem auto 0;
+    display: block;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.btn-save-prisma:hover {
+.btn-save-modal:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(78, 2, 251, 0.4);
-    filter: brightness(1.1);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Scrollbar for materias */
+.materias-dropdown-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.materias-dropdown-content::-webkit-scrollbar-thumb {
+    background: #e66a00;
+    border-radius: 3px;
+}
+
+/* Estilos para las alertas/mensajes de Django */
+.alert {
+    border: none;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin: 10px auto 20px auto;
+    width: 90%;
+    max-width: 600px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.alert-success {
+    border-left: 5px solid #28a745;
+    background: rgba(40, 167, 69, 0.2);
+    text-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+.alert-error,
+.alert-danger {
+    border-left: 5px solid #dc3545;
+    background: rgba(220, 53, 69, 0.2);
+    text-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
 }

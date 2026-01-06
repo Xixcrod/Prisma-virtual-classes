@@ -1,11 +1,23 @@
-.container-fluid.admin-bg-dark {
-    background: url('../img/fondo_admin.jpg') no-repeat center center fixed;
-    background-size: 100% 100%;
-    min-height: 100vh;
-    padding: 3rem 2rem;
+/* Define el fondo de pantalla general */
+body {
+    background: url('/static/Admin/img/fondo_admin.jpg') no-repeat center center fixed;
+    background-size: cover;
 }
 
+/* Configura el contenedor principal y su altura */
+.container-fluid.admin-bg-dark {
+    min-height: calc(100vh - 80px);
+    /* Ajustado para el área útil */
+    padding: 0.5rem 2rem;
+    /* Reducido de 1.5rem */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Define el estilo del botón circular para regresar */
 .btn-back-circle {
+    align-self: flex-start;
     display: inline-block;
     color: var(--color-white);
     text-decoration: none;
@@ -18,6 +30,7 @@
     transition: all 0.3s ease;
 }
 
+/* Aplica efectos visuales al pasar el ratón sobre el botón de volver */
 .btn-back-circle:hover {
     background: var(--color-secondary);
     border-color: var(--color-secondary);
@@ -25,105 +38,253 @@
     transform: translateX(-5px);
 }
 
-h2 {
-    color: var(--color-white);
-    font-weight: 800;
-    margin-bottom: 2rem;
-    position: relative;
-    display: inline-block;
-}
-
-h2::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    width: 60px;
-    height: 4px;
-    background: var(--color-tertiary);
-    border-radius: 2px;
-}
-
-.table-responsive {
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    margin-top: 1rem;
-}
-
-.table {
-    color: rgba(255, 255, 255, 0.9) !important;
-    vertical-align: middle;
-}
-
-.table thead th {
-    background: transparent;
+/* Estila el título personalizado de la página */
+.page-title-custom {
     color: var(--color-tertiary);
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 15px;
+    /* Naranja */
+    font-weight: 800;
+    font-size: 1.2rem;
+    /* Reducido de 1.5rem */
+    margin-bottom: 0.5rem;
+    /* Reducido de 1rem */
+    text-shadow: 0 0 10px rgba(255, 112, 0, 0.4);
+    text-transform: capitalize;
 }
 
-.table tbody td {
-    padding: 18px 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+/* --- NUEVO DISEÑO DE LISTA --- */
+
+/* Configura el marco rojo contenedor de la lista */
+.professors-frame {
+    width: 650px;
+    height: 400px;
+    background: url('../img/recuadro de las carreras.svg') no-repeat center center;
+    background-size: 100% 100%;
+    position: relative;
+    padding: 45px 70px;
+    /* Padding generoso para contener los ítems lejos de los bordes del marco */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0 auto;
 }
 
-.table-hover tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.03) !important;
-    transition: background 0.3s ease;
+/* Define el contenedor desplazable de la lista de profesores */
+.professors-list {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centra los ítems internos */
+    gap: 12px;
 }
 
-/* Badges */
-.badge {
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    text-transform: uppercase;
+/* Personaliza la barra de desplazamiento (Scrollbar) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 12px;
 }
 
-.bg-success {
-    background-color: rgba(25, 135, 84, 0.2) !important;
-    color: #75b798 !important;
-    border: 1px solid rgba(25, 135, 84, 0.3);
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
 }
 
-.bg-danger {
-    background-color: rgba(220, 53, 69, 0.2) !important;
-    color: #ea868f !important;
-    border: 1px solid rgba(220, 53, 69, 0.3);
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-tertiary);
+    /* Barra naranja */
+    border-radius: 10px;
 }
 
-/* Botones de Acción */
-.btn-primary {
-    background: linear-gradient(135deg, var(--color-fourth), #7000ff);
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.3s ease;
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #e66a00;
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(78, 2, 251, 0.3);
+/* Configura el contenedor del ítem */
+.professor-item {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+    bottom: 50px;
+    /* Espacio entre filas */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.btn-outline-danger {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    border-radius: 8px;
-    font-weight: 600;
+/* Configura la caja de contenido con el fondo que abarca el nombre */
+.professor-content-box {
+    position: relative;
+    width: 90%;
+    /* Ajustado para llenar el ancho del contenedor padre */
+    max-width: 380px;
+    padding: 110px;
+    /* Límite para que no se destartale en pantallas muy grandes */
+    height: 70px;
+    margin-bottom: -165px;
+    /* Altura equilibrada */
+    background: url('../img/recuadro de cada carrera.png') no-repeat center center;
+    background-size: 100% 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: none;
+    cursor: pointer;
+    z-index: 2;
 }
 
-.btn-outline-danger:hover {
-    background-color: var(--color-primary);
+/* Aplica el cambio de fondo al pasar el ratón por la caja */
+.professor-content-box:hover,
+.professor-item:active .professor-content-box {
+    background: url('../img/recuadro de cada carrera encendido.png') no-repeat center center;
+    background-size: 100% 100%;
+    background-position-y: 13px;
+    transition: none;
+}
+
+/* Estila el nombre del profesor dentro del ítem */
+.professor-name {
     color: white;
-    transform: translateY(-2px);
+    font-weight: 700;
+    /* Peso aumentado */
+    font-size: 1.2rem;
+    /* Tamaño aumentado */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    text-align: center;
+    /*texto lineal*/
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+/* Configura el contenedor de acciones (botones) al final de la caja */
+.item-actions {
+    position: absolute;
+    left: 102%;
+    /* Posicionado relativo al ancho de la caja (90% + padding frame) */
+    bottom: 49%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    z-index: 3;
+}
+
+/* Enlace invisible para asignar que cubre todo el item (funcionalidad primaria) */
+.assign-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* Detrás de acciones específicas */
+}
+
+/* Estila el botón de eliminar con imagen */
+.btn-delete-custom img {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+.btn-delete-custom {
+    position: relative;
+    z-index: 4;
+    /* Por encima del enlace de edición */
+    padding: 5px;
+}
+
+.btn-delete-custom:hover img {
+    transform: scale(1.2);
+    filter: brightness(1.2);
+}
+
+/* --- PAGINACIÓN --- */
+
+/* Contenedor de la paginación */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 0.5rem;
+    /* Reducido de 1rem */
+}
+
+/* Estilo de los números de página (círculos naranjas) */
+.page-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    /* Reducido de 32px */
+    height: 28px;
+    /* Reducido de 32px */
+    background-color: var(--color-tertiary);
+    /* Naranja */
+    color: black;
+    font-weight: bold;
+    font-size: 0.9rem;
+    /* Reducido de 1rem */
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s, background 0.2s;
+}
+
+/* Estilo para el número de página activo o hover */
+.page-num.active,
+.page-num:hover {
+    background-color: #ff9f4d;
+    /* Naranja más claro */
+    transform: scale(1.1);
+}
+
+/* Estilo para las flechas de paginación */
+.page-arrow {
+    color: var(--color-tertiary);
+    font-size: 1.5rem;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0 10px;
+    transition: color 0.2s;
+}
+
+.page-arrow:hover {
+    color: white;
+}
+
+/* Estilos para las alertas/mensajes de Django */
+.alert {
+    border: none;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin: 10px auto 20px auto;
+    width: 90%;
+    max-width: 650px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.alert-success {
+    border-left: 5px solid #28a745;
+    background: rgba(40, 167, 69, 0.2);
+    text-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+.alert-warning {
+    border-left: 5px solid #ffc107;
+    background: rgba(255, 193, 7, 0.2);
+}
+
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
 }

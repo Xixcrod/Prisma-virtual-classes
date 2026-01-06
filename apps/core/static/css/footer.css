@@ -19,8 +19,10 @@
 
 .footer-top {
     display: flex;
-    flex-direction: column;   /* 👈 apila verticalmente */
-    align-items: flex-start;  /* 👈 alineados a la izquierda */
+    flex-direction: column;
+    /* 👈 apila verticalmente */
+    align-items: flex-start;
+    /* 👈 alineados a la izquierda */
     gap: 20px;
 }
 
@@ -31,15 +33,16 @@
 
 .logo-img {
     /* Ajusta este ancho según qué tan grande quieras el logo */
-    width: 180px; 
+    width: 180px;
     height: auto;
     display: block;
-    
+
     /* Opcional: Si tu logo tiene fondo blanco y quieres que se fusione un poco
        con el fondo oscuro, puedes probar descomentando la siguiente línea: */
-    /* mix-blend-mode: multiply; */ 
-    
-    border-radius: 4px; /* Un pequeño borde redondeado si queda muy cuadrado */
+    /* mix-blend-mode: multiply; */
+
+    border-radius: 4px;
+    /* Un pequeño borde redondeado si queda muy cuadrado */
 }
 
 /* --- Lista de Enlaces --- */
@@ -61,7 +64,8 @@
 }
 
 .footer-links a:hover {
-    color: var(--color-tertiary); /* Naranja al pasar el mouse */
+    color: var(--color-tertiary);
+    /* Naranja al pasar el mouse */
 }
 
 /* --- Copyright --- */

@@ -76,7 +76,20 @@ def registrar_usuario(request):
 
 def lista_profesores(request):
     profesores = Profesor.objects.filter(activo=True) 
-    return render(request, "Admin/lista_profesores.html", {'profesores': profesores})
+    carreras = Carrera.objects.all()
+    
+    # Creamos un diccionario con las materias de cada profesor para enviarlo al JS
+    asignaciones = {}
+    for p in profesores:
+        materias_ids = list(Curso.objects.filter(profesor=p).values_list('materia_id', flat=True))
+        # Convertir UUIDs a strings para el JSON
+        asignaciones[str(p.id)] = [str(m_id) for m_id in materias_ids]
+
+    return render(request, "Admin/lista_profesores.html", {
+        'profesores': profesores, 
+        'carreras': carreras,
+        'asignaciones_json': asignaciones
+    })
 
 def gestionar_materias_profesor(request, profesor_id):
     profesor_obj = get_object_or_404(Profesor, id=profesor_id)
@@ -87,9 +100,19 @@ def gestionar_materias_profesor(request, profesor_id):
 
     if request.method == 'POST':
         materias_seleccionadas = request.POST.getlist('materias_ids')
+        carrera_id = request.POST.get('carrera_id')
+        semestre = request.POST.get('semestre')
         
-        # Eliminamos las asignaciones anteriores para sobrescribir con las nuevas
-        Curso.objects.filter(profesor=profesor_obj).delete()
+        # Si vienen carrera y semestre, solo borramos lo de ese bloque para no borrar todo
+        if carrera_id and semestre:
+            Curso.objects.filter(
+                profesor=profesor_obj,
+                materia__carrera_id=carrera_id,
+                materia__semestre=semestre
+            ).delete()
+        else:
+            # Comportamiento anterior por si acaso
+            Curso.objects.filter(profesor=profesor_obj).delete()
         
         for m_id in materias_seleccionadas:
             materia_obj = Materia.objects.get(id=m_id)

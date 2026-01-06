@@ -4,17 +4,19 @@ html,
 body {
     overflow: hidden;
     height: 100%;
+    background: url('/static/Admin/img/fondo_admin.jpg') no-repeat center center fixed;
+    background-size: cover;
 }
 
 .dashboard-container {
     min-height: calc(100vh - 80px);
     padding: 3rem 2rem;
-    /* Ajuste manual del espacio superior */
+    /* Ajusta manualmente el espacio superior */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    /* Alineamos arriba */
+    /* Alinea el contenido en la parte superior */
     color: white;
     position: relative;
 }
@@ -118,7 +120,7 @@ body {
 }
 
 
-/* Hover Effects */
+/* Aplica efectos al pasar el ratón */
 .menu-item:hover {
     transform: translateY(-5px);
 }
@@ -147,7 +149,7 @@ body {
     opacity: 0.7;
 }
 
-/* Responsive */
+/* Define el diseño adaptativo */
 @media (max-width: 768px) {
     .menu-grid {
         grid-template-columns: 1fr;
@@ -161,4 +163,39 @@ body {
     .menu-item h3 {
         font-size: 1.2rem;
     }
+
+}
+
+/* Estilos para las alertas/mensajes de Django */
+.alert {
+    border: none;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin: 10px auto 20px auto;
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 100;
+}
+
+.alert-success {
+    border-left: 5px solid #28a745;
+    background: rgba(40, 167, 69, 0.2);
+    text-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+.alert-error,
+.alert-danger {
+    border-left: 5px solid #dc3545;
+    background: rgba(220, 53, 69, 0.2);
+    text-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
 }

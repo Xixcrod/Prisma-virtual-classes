@@ -7,6 +7,22 @@
 
 {% block content %}
 <div class="registration-page">
+
+    <div class="back-button-container">
+        <a href="{% url 'dashboard' %}" class="btn-back-circle">VOLVER</a>
+    </div>
+
+    {% if messages %}
+    <div class="container mt-2">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <h2 class="page-title">Registro de Usuario</h2>
 
     <div class="form-card">

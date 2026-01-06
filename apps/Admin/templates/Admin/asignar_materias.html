@@ -9,29 +9,44 @@
 <div class="admin-bg-dark">
     <a href="{% url 'lista_profesores' %}" class="btn-back-circle">VOLVER</a>
 
-    <div class="assignment-card">
-        <h2 class="mb-1">Asignar carrera</h2>
-        <p class="small mb-4" style="opacity: 0.8;">Profesor: {{ profesor.usuario.get_full_name }}</p>
+    {% if messages %}
+    <div class="container text-center mt-2">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-        <form method="POST">
+    <div class="assignment-card">
+        <h2>Asignar Carrera</h2>
+        <p class="prof-info">Profesor: {{ profesor.usuario.get_full_name }}</p>
+
+        <form method="POST" class="w-100">
             {% csrf_token %}
 
-            <select name="carrera_id" id="carrera-select" class="prisma-select" required>
-                <option value="" disabled selected>Carrera</option>
-                {% for c in carreras %}
-                <option value="{{ c.id }}">{{ c.nombre }}</option>
-                {% endfor %}
-            </select>
+            <div class="form-row">
+                <select name="carrera_id" id="carrera-select" class="prisma-select" required>
+                    <option value="" disabled selected>Carrera</option>
+                    {% for c in carreras %}
+                    <option value="{{ c.id }}">{{ c.nombre }}</option>
+                    {% endfor %}
+                </select>
 
-            <select name="semestre" id="semestre-select" class="prisma-select" required disabled>
-                <option value="" disabled selected>Semestre</option>
-            </select>
-
-            <div class="materias-list" id="materias-container">
-                <p class="text-center text-white-50 mt-2">Seleccione carrera y semestre</p>
+                <select name="semestre" id="semestre-select" class="prisma-select" required disabled>
+                    <option value="" disabled selected>Semestre</option>
+                </select>
             </div>
 
-            <button type="submit" class="btn-save-prisma">Guardar</button>
+            <div class="materias-list custom-scrollbar" id="materias-container">
+                <p class="text-center text-white-50 mt-4">Elija carrera y semestre</p>
+            </div>
+
+            <div class="text-center w-100">
+                <button type="submit" class="btn-save-prisma">Guardar</button>
+            </div>
         </form>
     </div>
 </div>
@@ -81,15 +96,26 @@
                     materiasContainer.innerHTML = '<p class="text-center">No hay materias en este semestre.</p>';
                 } else {
                     data.forEach(m => {
-                        // Comparación de IDs (funciona con Strings/UUIDs)
-                        const isChecked = materiasActuales.includes(m.id) ? 'checked' : '';
+                        const isChecked = materiasActuales.includes(m.id);
+                        const selectedClass = isChecked ? 'selected' : '';
 
-                        materiasContainer.innerHTML += `
-                            <div class="materia-item">
-                                <input type="checkbox" name="materias_ids" value="${m.id}" id="m-${m.id}" ${isChecked}>
-                                <label for="m-${m.id}" style="cursor:pointer; width:100%; margin-bottom:0;">${m.nombre}</label>
-                            </div>
+                        const item = document.createElement('div');
+                        item.className = `materia-item ${selectedClass}`;
+                        item.innerHTML = `
+                            <input type="checkbox" name="materias_ids" value="${m.id}" id="m-${m.id}" ${isChecked ? 'checked' : ''}>
+                            <label for="m-${m.id}">${m.nombre}</label>
                         `;
+
+                        // Alternar selección al hacer clic en el ítem
+                        item.addEventListener('click', function (e) {
+                            const checkbox = this.querySelector('input');
+                            if (e.target !== checkbox) {
+                                checkbox.checked = !checkbox.checked;
+                            }
+                            this.classList.toggle('selected', checkbox.checked);
+                        });
+
+                        materiasContainer.appendChild(item);
                     });
                 }
             })
