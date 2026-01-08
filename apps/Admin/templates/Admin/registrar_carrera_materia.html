@@ -1,164 +1,546 @@
-{% extends 'layouts/base.html' %}
+{% extends "layouts/base.html" %}
 {% load static %}
+
+{% block title %}Registro de Carreras y Materias{% endblock %}
 
 {% block body_background %}{% static 'Admin/img/fondo_admin.jpg' %}{% endblock %}
 
-{% block title %}Registrar Carreras y Materias{% endblock %}
-
 {% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{% static 'Admin/css/registrar_carrera_materia.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="admin-bg-dark">
-    <div class="container">
-        <a href="{% url 'dashboard' %}" class="btn-back-circle">VOLVER</a>
+<div class="container">
+    <a href="{% url 'dashboard' %}" class="btn-back-circle">VOLVER</a>
 
-        {% if messages %}
+    <!-- BLOQUE DE MENSAJES (FEEDBACK DEL BACKEND) -->
+    {% if messages %}
+    <div class="messages-container">
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{ message.tags }} glass-alert">
             {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
-        {% endif %}
-        <div class="row">
-            <!-- Columna Izquierda: Registrar Carrera -->
-            <div class="col-md-6 mb-4">
-                <div class="card shadow h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Registrar Carrera</h4>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="registrar_carrera">
-                            <div class="mb-3">
-                                <label for="nombre_carrera" class="form-label">Nombre de la Carrera</label>
-                                <input type="text" class="form-control" id="nombre_carrera" name="nombre"
-                                    placeholder="Ej: Ingeniería de Sistemas" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cantidad_semestres" class="form-label">Cantidad de Semestres</label>
-                                <input type="number" class="form-control" id="cantidad_semestres"
-                                    name="cantidad_semestres" min="1" max="12" placeholder="Ej: 10" required>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" name="btn_carrera" class="btn btn-primary">Guardar
-                                    Carrera</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    </div>
+    {% endif %}
 
-            <!-- Columna Derecha: Registrar Materia -->
-            <div class="col-md-6 mb-4">
-                <div class="card shadow h-100">
-                    <div class="card-header bg-secondary text-white">
-                        <h4 class="mb-0">Registrar Materia</h4>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="registrar_materia">
+    <!-- HEADER -->
+    <header class="header">
+        <h1 class="page-title">Registro de Carreras y Materias</h1>
+    </header>
 
-                            <div class="mb-3">
-                                <label for="carrera" class="form-label">Carrera</label>
-                                <select class="form-select" id="carrera" name="carrera" required>
-                                    <option value="" selected disabled>Seleccione una carrera...</option>
-                                    {% for carrera in carreras %}
-                                    <option value="{{ carrera.id }}">{{ carrera.nombre }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="nombre_materia" class="form-label">Nombre de la Materia</label>
-                                <input type="text" class="form-control" id="nombre_materia" name="nombre"
-                                    placeholder="Ej: Cálculo I" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="semestre" class="form-label">Semestre</label>
-                                <input type="number" class="form-control" id="semestre" name="semestre" min="1" max="12"
-                                    placeholder="Ej: 1" required>
-                            </div>
-
-                            <div class="d-grid">
-                                <button type="submit" name="btn_materia" class="btn btn-secondary">Guardar
-                                    Materia</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Listado de Carreras y Materias -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <h3 class="mb-3">Carreras y Materias Registradas</h3>
-                <div class="accordion" id="accordionCarreras">
-                    {% for item in carreras_data %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ forloop.counter }}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false"
-                                aria-controls="collapse{{ forloop.counter }}">
-                                <strong>{{ item.info.nombre }}</strong>
-                            </button>
-                        </h2>
-                        <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse"
-                            aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionCarreras">
-                            <div class="accordion-body">
-                                <div class="d-flex justify-content-end mb-3">
-                                    <a href="{% url 'editar_carrera' item.info.id %}"
-                                        class="btn btn-sm btn-warning me-2">Editar Nombre Carrera</a>
-                                    <a href="{% url 'eliminar_carrera' item.info.id %}" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Estás seguro? Se eliminarán todas las materias asociadas.');">Eliminar
-                                        Carrera</a>
-                                </div>
-
-                                {% if item.semestres %}
-                                {% for semestre, materias in item.semestres.items %}
-                                <div class="card mb-3">
-                                    <div class="card-header bg-light">
-                                        <strong>Semestre {{ semestre }}</strong>
-                                    </div>
-                                    <ul class="list-group list-group-flush">
-                                        {% for materia in materias %}
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {{ materia.nombre }}
-                                            <div>
-                                                <a href="{% url 'editar_materia' materia.id %}"
-                                                    class="btn btn-sm btn-outline-primary me-2">
-                                                    <i class="bi bi-pencil"></i> Editar
-                                                </a>
-                                                <a href="{% url 'eliminar_materia' materia.id %}"
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    onclick="return confirm('¿Estás seguro de eliminar esta materia?');">
-                                                    <i class="bi bi-trash"></i> Eliminar
-                                                </a>
-                                            </div>
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                                {% endfor %}
-                                {% else %}
-                                <p class="text-muted">No hay materias registradas para esta carrera.</p>
-                                {% endif %}
-                            </div>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
+        <!-- COLUMNA IZQUIERDA: LISTADO Y FORMULARIOS -->
+        <div class="left-column">
+            <!-- LISTADO DE CARRERAS -->
+            <section class="careers-section red-card">
+                <h2 class="section-title">Carreras Registradas</h2>
+                <ul class="careers-list" id="careersList">
+                    {% for carrera in carreras %}
+                    <li class="career-item">
+                        <div class="career-info">
+                            <span class="career-name">{{ carrera.nombre }}</span>
                         </div>
-                    </div>
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-edit open-edit-career-modal"
+                                data-nombre="{{ carrera.nombre }}" data-semestres="{{ carrera.cantidad_semestres }}"
+                                data-url="{% url 'editar_carrera' carrera.id %}">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                        </div>
+                    </li>
                     {% empty %}
-                    <div class="alert alert-info">No hay carreras registradas aún.</div>
+                    <li class="career-item" style="justify-content: center; opacity: 0.7;">
+                        No hay carreras registradas
+                    </li>
                     {% endfor %}
-                </div>
+                </ul>
+            </section>
+
+            <div class="buttons-container">
+                <button id="btnOpenCareerModal" class="btn-img-custom" type="button">
+                    <img src="{% static 'Admin/img/boton de añadir carreras.svg' %}" alt="Icono">
+                    <span>Añadir Carrera</span>
+                </button>
+
+                <button id="btnOpenDeleteCareerModal" class="btn-img-custom" type="button">
+                    <img src="{% static 'Admin/img/boton de eliminar.svg' %}" alt="Icono">
+                    <span>Eliminar Carrera</span>
+                </button>
+            </div>
+
+            <!-- SECCIÓN DE MATERIAS -->
+            <section class="subjects-section red-card">
+                <h2 class="section-title">Materias Registradas</h2>
+                <ul class="careers-list" id="subjectsList">
+                    {% for materia in materias %}
+                    <li class="career-item">
+                        <div class="career-info">
+                            <span class="career-name">{{ materia.nombre }}</span>
+                            <span class="career-details">
+                                {{ materia.carrera.nombre }}
+                            </span>
+                        </div>
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-edit open-edit-subject-modal"
+                                data-id="{{ materia.id }}" data-nombre="{{ materia.nombre }}"
+                                data-semestre="{{ materia.semestre }}" data-carrera="{{ materia.carrera.id }}"
+                                data-url="{% url 'editar_materia' materia.id %}">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="career-item" style="justify-content: center; opacity: 0.7;">
+                        No hay materias registradas
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <div class="buttons-container">
+                <button id="btnOpenSubjectModal" class="btn-img-custom" type="button">
+                    <img src="{% static 'Admin/img/boton de añadir materias.svg' %}" alt="Icono">
+                    <span>Añadir Materia</span>
+                </button>
+
+                <button id="btnOpenDeleteSubjectModal" class="btn-img-custom" type="button">
+                    <img src="{% static 'Admin/img/boton de eliminar.svg' %}" alt="Icono">
+                    <span>Eliminar Materia</span>
+                </button>
             </div>
         </div>
-
     </div>
 </div>
+
+<!-- MODAL PARA AÑADIR CARRERA -->
+<div id="careerModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="section-title">Añadir Nueva Carrera</h2>
+        <form id="addCareerForm" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="crear_carrera">
+            <div class="form-group">
+                <label class="form-label" for="careerName">Nombre de la Carrera</label>
+                <input type="text" id="careerName" name="nombre" class="form-control custom-input"
+                    placeholder="Ej: INGENIERÍA EN SISTEMAS" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="careerSemesters">Cantidad de Semestres</label>
+                <input type="number" id="careerSemesters" name="cantidad_semestres" class="form-control custom-input"
+                    placeholder="Ej: 10" min="1" max="12" value="10" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full-width" name="guardar_carrera">
+                <i class="fas fa-plus"></i> Guardar Carrera
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL PARA ELIMINAR CARRERA -->
+<div id="deleteCareerModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" style="color: #ffffff !important; opacity: 1;">&times;</span>
+        <h2 class="section-title" style="color: var(--color-accent);">Eliminar Carrera</h2>
+        <p style="margin-bottom: 20px; color: #ddd;">Seleccione la carrera que desea eliminar. <br><strong
+                style="color: #ff4081;">Advertencia:</strong> Se eliminarán también todas sus materias asociadas.</p>
+        <form id="deleteCareerForm">
+            <div class="form-group">
+                <label class="form-label" for="deleteCareerSelect">Seleccionar Carrera</label>
+                <select id="deleteCareerSelect" class="form-select custom-select" required>
+                    <option value="">-- Seleccione --</option>
+                    {% for carrera in carreras %}
+                    <option value="{{ carrera.id }}" data-url="{% url 'eliminar_carrera' carrera.id %}">{{ carrera.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-delete btn-full-width">
+                <i class="fas fa-trash"></i> Confirmar Eliminación
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL PARA AÑADIR MATERIA -->
+<div id="subjectModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="section-title">Añadir Nueva Materia</h2>
+        <form id="addSubjectForm" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="crear_materia">
+            <div class="form-group">
+                <label class="form-label" for="subjectCareer">Carrera</label>
+                <select id="subjectCareer" name="carrera" class="form-select custom-select" required>
+                    <option value="">Seleccione una carrera</option>
+                    {% for carrera in carreras %}
+                    <option value="{{ carrera.id }}" data-semestres="{{ carrera.cantidad_semestres }}">{{ carrera.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="subjectName">Nombre de la Materia</label>
+                <input type="text" id="subjectName" name="nombre" class="form-control custom-input"
+                    placeholder="Ej: PROGRAMACIÓN I" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="subjectSemester">Semestre</label>
+                <input type="number" id="subjectSemester" name="semestre" class="form-control custom-input"
+                    placeholder="Ej: 1" min="1" value="1" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full-width" name="guardar_materia">
+                <i class="fas fa-plus"></i> Añadir Materia
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL PARA ELIMINAR MATERIA -->
+<div id="deleteSubjectModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" style="color: #ffffff !important; opacity: 1;">&times;</span>
+        <h2 class="section-title" style="color: var(--color-accent);">Eliminar Materia</h2>
+        <p style="margin-bottom: 20px; color: #ddd;">Seleccione la materia que desea eliminar.</p>
+        <form id="deleteSubjectForm">
+            <div class="form-group">
+                <label class="form-label" for="deleteSubjectSelect">Seleccionar Materia</label>
+                <select id="deleteSubjectSelect" class="form-select custom-select" required>
+                    <option value="">-- Seleccione --</option>
+                    {% for materia in materias %}
+                    <option value="{{ materia.id }}" data-url="{% url 'eliminar_materia' materia.id %}">{{ materia.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-delete btn-full-width">
+                <i class="fas fa-trash"></i> Confirmar Eliminación
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL PARA EDITAR CARRERA -->
+<div id="editCareerModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" style="color: #ffffff !important; opacity: 1;">&times;</span>
+        <h2 class="section-title">Editar Carrera</h2>
+        <form id="editCareerForm" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label" for="editCareerName">Nombre de la Carrera</label>
+                <input type="text" id="editCareerName" name="nombre" class="form-control custom-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="editCareerSemesters">Cantidad de Semestres</label>
+                <input type="number" id="editCareerSemesters" name="cantidad_semestres"
+                    class="form-control custom-input" min="1" max="12" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full-width">
+                <i class="fas fa-save"></i> Actualizar Carrera
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL PARA EDITAR MATERIA -->
+<div id="editSubjectModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="section-title">Editar Materia</h2>
+        <form id="editSubjectForm" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label" for="editSubjectCareer">Carrera</label>
+                <select id="editSubjectCareer" name="carrera" class="form-select custom-select" required>
+                    {% for carrera in carreras %}
+                    <option value="{{ carrera.id }}">{{ carrera.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="editSubjectName">Nombre de la Materia</label>
+                <input type="text" id="editSubjectName" name="nombre" class="form-control custom-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="editSubjectSemester">Semestre</label>
+                <input type="number" id="editSubjectSemester" name="semestre" class="form-control custom-input" min="1"
+                    required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full-width">
+                <i class="fas fa-save"></i> Actualizar Materia
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Auto-ocultar mensajes de alerta después de 4 segundos
+        const alerts = document.querySelectorAll('.alert');
+        if (alerts.length > 0) {
+            setTimeout(() => {
+                alerts.forEach(alert => {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                });
+            }, 4000);
+        }
+
+        // Modal para añadir carrera
+        const modal = document.getElementById("careerModal");
+        const btn = document.getElementById("btnOpenCareerModal");
+        const span = document.querySelector("#careerModal .close-modal");
+
+        // Modal para eliminar carrera
+        const deleteModal = document.getElementById("deleteCareerModal");
+        const deleteBtn = document.getElementById("btnOpenDeleteCareerModal");
+        const deleteSpan = document.querySelector("#deleteCareerModal .close-modal");
+
+        // Modal para añadir materia
+        const subjectModal = document.getElementById("subjectModal");
+        const btnSubject = document.getElementById("btnOpenSubjectModal");
+        const spanSubject = document.querySelector("#subjectModal .close-modal");
+
+        // Modal para eliminar materia
+        const deleteSubjectModal = document.getElementById("deleteSubjectModal");
+        const btnDeleteSubject = document.getElementById("btnOpenDeleteSubjectModal");
+        const spanDeleteSubject = document.querySelector("#deleteSubjectModal .close-modal");
+
+        // Modal para editar carrera
+        const editModal = document.getElementById("editCareerModal");
+        const editSpan = document.querySelector("#editCareerModal .close-modal");
+        const editButtons = document.querySelectorAll(".open-edit-career-modal");
+        const editForm = document.getElementById("editCareerForm");
+
+        // Modal para editar materia
+        const editSubjectModal = document.getElementById("editSubjectModal");
+        const editSubjectSpan = document.querySelector("#editSubjectModal .close-modal");
+        const editSubjectButtons = document.querySelectorAll(".open-edit-subject-modal");
+        const editSubjectForm = document.getElementById("editSubjectForm");
+
+        // Añadir carrera: Mostrar modal al hacer clic en el botón
+        if (btn) {
+            btn.onclick = function () {
+                modal.style.display = "flex"; // Usamos flex para centrar gracias al CSS existente
+            }
+        }
+
+        // Cierra el modal al hacer click en X
+        if (span) {
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+        }
+
+        // Eliminar carrera: Mostrar modal
+        if (deleteBtn) {
+            deleteBtn.onclick = function () {
+                deleteModal.style.display = "flex";
+            }
+        }
+
+        // Eliminar carrera: Cerrar modal
+        if (deleteSpan) {
+            deleteSpan.onclick = function () {
+                deleteModal.style.display = "none";
+            }
+        }
+
+        // Añadir materia: Mostrar modal al hacer clic en el botón
+        if (btnSubject) {
+            btnSubject.onclick = function () {
+                subjectModal.style.display = "flex";
+            }
+        }
+
+        // Añadir materia: Cerrar modal
+        if (spanSubject) {
+            spanSubject.onclick = function () {
+                subjectModal.style.display = "none";
+            }
+        }
+
+        // Eliminar materia: Mostrar modal
+        if (btnDeleteSubject) {
+            btnDeleteSubject.onclick = function () {
+                deleteSubjectModal.style.display = "flex";
+            }
+        }
+
+        // Eliminar materia: Cerrar modal
+        if (spanDeleteSubject) {
+            spanDeleteSubject.onclick = function () {
+                deleteSubjectModal.style.display = "none";
+            }
+        }
+
+        // Editar carrera: Configurar todos los botones de edición
+        if (editButtons) {
+            editButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    // Obtiene datos del botón usando atributos data-*
+                    const nombre = this.getAttribute('data-nombre');
+                    const semestres = this.getAttribute('data-semestres');
+                    const url = this.getAttribute('data-url'); //url para enviar al formulario.
+
+                    // Llena los campos del formulario con los datos obtenidos
+                    document.getElementById('editCareerName').value = nombre;
+                    document.getElementById('editCareerSemesters').value = semestres;
+                    editForm.action = url; // Actualiza la acción del formulario
+
+                    // Muestra el modal
+                    editModal.style.display = "flex";
+                });
+            });
+        }
+        // Editar materia: Configurar, hace la misma funcion que el modal pasado asi que no hace falta especificar
+        if (editSubjectButtons) {
+            editSubjectButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const nombre = this.getAttribute('data-nombre');
+                    const semestre = this.getAttribute('data-semestre');
+                    const carreraId = this.getAttribute('data-carrera');
+                    const url = this.getAttribute('data-url');
+
+                    document.getElementById('editSubjectName').value = nombre;
+                    document.getElementById('editSubjectSemester').value = semestre;
+                    document.getElementById('editSubjectCareer').value = carreraId;
+                    editSubjectForm.action = url;
+
+                    editSubjectModal.style.display = "flex";
+                });
+            });
+        }
+
+        if (editSpan) {
+            editSpan.onclick = function () {
+                editModal.style.display = "none";
+            }
+        }
+
+        if (editSubjectSpan) {
+            editSubjectSpan.onclick = function () {
+                editSubjectModal.style.display = "none";
+            }
+        }
+
+        // Cerrar modales al hacer click afuera de ellos
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+            if (event.target == deleteModal) {
+                deleteModal.style.display = "none";
+            }
+            if (event.target == subjectModal) {
+                subjectModal.style.display = "none";
+            }
+            if (event.target == deleteSubjectModal) {
+                deleteSubjectModal.style.display = "none";
+            }
+            if (event.target == editModal) {
+                editModal.style.display = "none";
+            }
+            if (event.target == editSubjectModal) {
+                editSubjectModal.style.display = "none";
+            }
+        }
+
+        // Validación de formularios
+
+        // Validación del formulario de añadir carrera
+        const addCareerForm = document.getElementById('addCareerForm');
+        const addSubjectForm = document.getElementById('addSubjectForm');
+
+        if (addCareerForm) {
+            addCareerForm.addEventListener('submit', function (e) {
+                // Previene el envío si hay errores 
+                const nombre = document.getElementById('careerName').value.trim();
+                const semestres = document.getElementById('careerSemesters').value;
+                if (!nombre || !semestres) {
+                    e.preventDefault(); // Detiene el envío del formulario
+                    alert('Por favor complete todos los campos de la carrera');
+                    return false; // Devuelve falso para detener la acción por defecto
+                }
+                return true;  // Permite el envío
+            });
+        }
+
+        // Validación del formulario de añadir materia
+        if (addSubjectForm) {
+            addSubjectForm.addEventListener('submit', function (e) {
+                const carreraSelect = document.getElementById('subjectCareer');
+                const nombreInput = document.getElementById('subjectName');
+                const semestreInput = document.getElementById('subjectSemester');
+
+                const carrera = carreraSelect.value;
+                const nombre = nombreInput.value.trim();
+                const semestre = semestreInput.value;
+
+                if (!carrera) {
+                    e.preventDefault();
+                    alert('Por favor seleccione una carrera');
+                    return false;
+                }
+                if (!nombre) {
+                    e.preventDefault();
+                    alert('Por favor ingrese el nombre de la materia');
+                    return false;
+                }
+                if (!semestre) {
+                    e.preventDefault();
+                    alert('Por favor ingrese el semestre');
+                    return false;
+                }
+
+                // Validar que el semestre esté dentro del rango de la carrera
+                const selectedOption = carreraSelect.options[carreraSelect.selectedIndex];
+                const maxSemestres = parseInt(selectedOption.getAttribute('data-semestres'));
+
+                if (maxSemestres && parseInt(semestre) > maxSemestres) {
+                    e.preventDefault();
+                    alert(`La carrera seleccionada solo tiene ${maxSemestres} semestres.`);
+                    return false;
+                }
+
+                return true;
+            });
+        }
+
+        // Lógica para eliminar carrera
+        const deleteCareerForm = document.getElementById('deleteCareerForm');
+        if (deleteCareerForm) {
+            deleteCareerForm.addEventListener('submit', function (e) {
+                e.preventDefault(); // Evita el envío normal del formulario
+                // Obtiene la opción seleccionada en el select
+                const select = document.getElementById('deleteCareerSelect');
+                const selectedOption = select.options[select.selectedIndex];
+                const url = selectedOption.getAttribute('data-url'); // URL de eliminación
+
+                // Pide confirmación al admin
+                if (url && confirm('¿Está completamente seguro? Esta acción no se puede deshacer.')) {
+                    window.location.href = url;  // Redirige a la URL de eliminación
+                }
+            });
+        }
+
+        // Lógica para eliminar materia, la misma funcion en el modal anterior
+        const deleteSubjectForm = document.getElementById('deleteSubjectForm');
+        if (deleteSubjectForm) {
+            deleteSubjectForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const select = document.getElementById('deleteSubjectSelect');
+                const selectedOption = select.options[select.selectedIndex];
+                const url = selectedOption.getAttribute('data-url');
+
+                if (url && confirm('¿Está seguro de eliminar esta materia?')) {
+                    window.location.href = url;
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

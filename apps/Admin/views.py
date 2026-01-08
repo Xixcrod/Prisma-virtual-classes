@@ -141,16 +141,18 @@ def eliminar_profesor(request, profesor_id):
 
 def registrar_carrera_materia(request):
     carreras = Carrera.objects.all().order_by('nombre') # Obtiene todas las carreras ordenadas A-Z
+    materias = Materia.objects.all().select_related('carrera').order_by('carrera__nombre', 'semestre', 'nombre')
+
     if request.method == "POST":  # VERIFICACIÓN MÉTODO POST (formulario enviado)
         print("DEBUG POST:", request.POST) # Esto imprimirá los datos en tu consola para verificar
         action = request.POST.get('action')
         
         # Registrar Carrera
-        if action == 'registrar_carrera':
+        if action == 'crear_carrera':
             nombre = request.POST.get('nombre', '').strip()
-            cantidad_semestres = request.POST.get('cantidad_semestres')
-            if not nombre or not cantidad_semestres:  # VALIDACIÓN: Campos obligatorios
-                messages.error(request, "El nombre y la cantidad de semestres son obligatorios.")
+            cantidad_semestres = request.POST.get('cantidad_semestres', 10)
+            if not nombre:  # VALIDACIÓN: Campos obligatorios
+                messages.error(request, "El nombre de la carrera es obligatorio.")
             else:
                 try:
                     if Carrera.objects.filter(nombre__iexact=nombre).exists():
@@ -164,13 +166,17 @@ def registrar_carrera_materia(request):
                     messages.error(request, f"Error al registrar carrera: {str(e)}")
         
         # Registrar Materia
-        elif action == 'registrar_materia':
+        elif action == 'crear_materia':
             nombre = request.POST.get('nombre', '').strip()
-            semestre = request.POST.get('semestre')
+            semestre = request.POST.get('semestre', 1)
             carrera_id = request.POST.get('carrera')
             
-            if not nombre or not semestre or not carrera_id:
-                messages.error(request, "Todos los campos son obligatorios para registrar una materia.")
+            if not carrera_id:
+                messages.error(request, "Debe seleccionar una carrera.")
+            elif not nombre:
+                messages.error(request, "El nombre de la materia es obligatorio.")
+            elif not semestre:
+                messages.error(request, "El semestre es obligatorio.")
             else:
                 try:
                      # Obtiene objeto Carrera desde el ID
@@ -189,14 +195,14 @@ def registrar_carrera_materia(request):
                 except Exception as e:
                     messages.error(request, f"Error al registrar materia: {str(e)}")
 
-    # Preparar datos para el listado (Carreras -> Semestres -> Materias)
+   # Preparar datos para el listado (Carreras -> Semestres -> Materias)
     carreras_data = []
     for carrera in carreras:
          # Obtiene todas las materias de esta carrera, ordenadas por semestre y nombre
-        materias = Materia.objects.filter(carrera=carrera).order_by('semestre', 'nombre')
+        materias_carrera = Materia.objects.filter(carrera=carrera).order_by('semestre', 'nombre')
         # Diccionario para agrupar materias por semestre
         semestres_dict = {}
-        for materia in materias:
+        for materia in materias_carrera:
             sem = materia.semestre
             # Si el semestre no existe en el diccionario, crea lista vacía
             if sem not in semestres_dict:
@@ -215,6 +221,7 @@ def registrar_carrera_materia(request):
 # Renderiza template con datos organizados
     return render(request, "Admin/registrar_carrera_materia.html", {
         "carreras": carreras,
+        "materias": materias,
         "carreras_data": carreras_data
     })
 
@@ -228,13 +235,12 @@ def editar_carrera(request, carrera_id):
         carrera.save()
         messages.success(request, "Carrera actualizada correctamente.")
         return redirect('registrar_carrera_materia')
-     # Si es GET, muestra formulario con datos actuales
-    return render(request, "Admin/editar_carrera.html", {"carrera": carrera})
+    # Si es GET, redirigimos a la página principal 
+    return redirect('registrar_carrera_materia')
 
 def editar_materia(request, materia_id):
      # Busca materia por ID
     materia = get_object_or_404(Materia, id=materia_id)
-    carreras = Carrera.objects.all()
     if request.method == "POST":
         nombre = request.POST.get('nombre')
         semestre = request.POST.get('semestre')
@@ -256,9 +262,10 @@ def editar_materia(request, materia_id):
                 return redirect('registrar_carrera_materia')
         except Exception as e:
             messages.error(request, f"Error al actualizar materia: {str(e)}")
+            return redirect('registrar_carrera_materia')
 
-      # Si es GET, muestra formulario con datos actuales       
-    return render(request, "Admin/editar_materia.html", {"materia": materia, "carreras": carreras})
+    # Si es GET, redirigimos a la página principal
+    return redirect('registrar_carrera_materia')
 
 def eliminar_materia(request, materia_id):
     materia = get_object_or_404(Materia, id=materia_id)

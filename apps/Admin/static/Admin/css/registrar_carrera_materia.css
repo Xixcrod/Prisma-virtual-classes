@@ -1,60 +1,213 @@
-/* Estilos para Registrar Carreras y Materias */
-body {
-    background: url('/static/Admin/img/fondo_admin.jpg') no-repeat center center fixed;
-    background-size: cover;
+/* Variables de color*/
+:root {
+    --color-primary: #1a237e;
+    --color-tertiary: #ff7000;
+    --color-accent: #ff4081;
+    --color-white: #ffffff;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-.admin-bg-dark {
-    min-height: 100vh;
-    padding: 3rem 1rem;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Fuente moderna y legible */
+    color: var(--color-white);
+    /* Texto blanco por defecto */
+    background: url('/static/Admin/img/fondo_admin.jpg') no-repeat center center fixed;
+    background-size: cover;
+
+}
+
+.container {
+    max-width: 1200px;
+    /* Ancho máximo para pantallas grandes */
+    margin: 0 auto;
+    /* Centra el contenido horizontalmente */
+    padding: 20px;
+    /* Espaciado interno */
+    position: relative;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+}
+
+.page-title {
+    color: var(--color-tertiary);
+    /* Color naranja para títulos */
+    text-transform: uppercase;
+    /* Texto en mayúsculas */
+    font-weight: 800;
+    /* Peso de fuente extra-negrita */
+    letter-spacing: 1px;
+    text-shadow: 0 0 15px rgba(255, 112, 0, 0.3);
+    /* Sombra con brillo naranja */
+    margin-bottom: 10px;
+    margin-top: 50px;
+}
+
+.page-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Layout con GRID */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Una sola columna por defecto */
+    gap: 30px;
+    /* Espacio entre elementos */
+}
+
+.forms-grid {
+    display: grid;
+    /* Grid para formularios */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Responsive: se ajusta automáticamente */
+    gap: 20px;
+}
+
+/* Paneles */
+.glass-panel {
+    background: var(--glass-bg);
+    /* Fondo semitransparente */
+    backdrop-filter: blur(10px);
+    /* Efecto de desenfoque detrás */
+    border: 1px solid var(--glass-border);
+    /* Borde sutil */
+    border-radius: 15px;
+    /* Esquinas redondeadas */
+    padding: 25px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    margin-bottom: 30px;
+}
+
+.svg-card {
+    background-image: url('../img/recuadro naranja.svg');
+    background-size: 100% 100%;
+    /* Ajusta el SVG al tamaño del contenedor */
+    background-repeat: no-repeat;
+    /* No repite la imagen */
+    padding: 4rem 3rem;
+    /* Espaciado interno grande */
+    border: none;
+    background-color: transparent;
+    min-height: 400px;
+    /* Altura minima */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.red-card {
+    border: 2px solid #ff0000;
+    /* Borde rojo sólido */
+    border-radius: 20px;
+    /* Esquinas muy redondeadas */
+    padding: 2rem;
+    margin-bottom: 30px;
+    background: transparent;
+    /* Fondo transparente */
+}
+
+/* Títulos de sección */
+.section-title {
+    color: var(--color-tertiary);
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(255, 112, 0, 0.3);
+    /* Línea inferior naranja */
+    padding-bottom: 0.5rem;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.custom-input,
+.custom-select {
+    background: rgba(0, 0, 0, 0.2);
+    /* Fondo oscuro semitransparente */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    /* Texto blanco */
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+    /* Ocupa todo el ancho disponible */
+    display: block;
+}
+
+.custom-select option {
+    background-color: #333;
     color: white;
 }
 
-.card {
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: white !important;
+.custom-input:focus,
+.custom-select:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: var(--color-tertiary);
+    /* Borde naranja al enfocar */
+    box-shadow: 0 0 0 0.2rem rgba(255, 112, 0, 0.25);
+    /* Sombra naranja */
+    outline: none;
+    color: white;
 }
 
-.card-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+/* Botones */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+    text-decoration: none;
 }
 
-.form-control,
-.form-select {
-    background: rgba(0, 0, 0, 0.3) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: white !important;
+.btn-primary {
+    background: linear-gradient(45deg, #ff7000, #ff9100);
+    /* Gradiente naranja */
+    color: white;
+    /* Texto blanco */
+    border-radius: 25px;
+    /* Botón ovalado */
+    box-shadow: 0 4px 15px rgba(255, 112, 0, 0.3);
+    /* Sombra naranja */
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
-.form-control:focus,
-.form-select:focus {
-    background: rgba(0, 0, 0, 0.4) !important;
-    border-color: var(--color-tertiary) !important;
-    box-shadow: 0 0 0 0.25rem rgba(var(--color-tertiary-rgb), 0.25) !important;
+.btn-primary:hover {
+    background: linear-gradient(45deg, #e65100, #ff7000);
+    /* Gradiente más oscuro */
+    transform: translateY(-2px);
+    /* Efecto de elevación como vecna */
+    box-shadow: 0 6px 20px rgba(255, 112, 0, 0.4);
 }
 
-.accordion-item {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    color: white !important;
+.btn-full-width {
+    width: 100%;
 }
 
-.accordion-button {
-    background: rgba(255, 255, 255, 0.05) !important;
-    color: white !important;
-}
-
-.accordion-button:not(.collapsed) {
-    background: rgba(var(--color-tertiary-rgb), 0.2) !important;
-    color: white !important;
-}
-
-.list-group-item {
-    background: transparent !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    color: white !important;
+.mb-2 {
+    margin-bottom: 10px;
 }
 
 .btn-back-circle {
@@ -63,47 +216,357 @@ body {
     text-decoration: none;
     font-weight: 700;
     font-size: 0.8rem;
-    padding: 10px 20px;
+    padding: 8px 18px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 30px;
-    margin-bottom: 2rem;
+    /* Totalmente redondeado (círculo) */
     transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    /* Fondo semitransparente */
+    margin-bottom: 20px;
+    margin-left: -40px;
 }
 
 .btn-back-circle:hover {
-    background: var(--color-secondary);
-    border-color: var(--color-secondary);
+    background: var(--color-accent);
+    /* Fondo rosa al hover */
+    border-color: var(--color-accent);
     color: white;
     transform: translateX(-5px);
+    /* Se mueve ligeramente a la izquierda */
 }
 
-/* Estilos para las alertas/mensajes de Django */
-.alert {
-    border: none;
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
+/* Lista */
+.careers-list {
+    list-style: none;
+    /* Elimina viñetas por defecto */
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    /* Altura máxima para activar el scroll */
+    overflow-y: auto;
+    /* Habilita el scroll vertical */
+    padding-right: 10px;
+    /* Espacio para la barra */
+}
+
+/* Estilos para la barra de desplazamiento (Scrollbar) Naranja */
+.careers-list::-webkit-scrollbar {
+    width: 8px;
+    /* Ancho de la barra de scroll */
+}
+
+.careers-list::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.careers-list::-webkit-scrollbar-thumb {
+    background: var(--color-tertiary);
+    /* Color Naranja */
+    border-radius: 4px;
+}
+
+.careers-list::-webkit-scrollbar-thumb:hover {
+    background: #e65100;
+}
+
+/* Item de carrera */
+.career-item {
+    display: flex;
+    /* Usa flexbox para alinear nombre y botones */
+    justify-content: space-between;
+    /* Separa nombre y botones */
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: linear-gradient(to right, rgba(255, 0, 0, 0.3), rgba(255, 112, 0, 0.3));
+    /* Gradiente rojo-naranja */
+    border-radius: 8px;
+    border-left: 4px solid var(--color-tertiary);
+    /* Borde izquierdo naranja */
+    transition: transform 0.2s;
+}
+
+.career-item:hover {
+    transform: translateX(5px);
+    /* Se mueve a la derecha al pasar mouse */
+    background: linear-gradient(to right, rgba(255, 0, 0, 0.5), rgba(255, 112, 0, 0.5));
+    /* Gradiente más intenso */
+}
+
+.career-item:last-child {
+    margin-bottom: 0;
+}
+
+.career-name {
+    font-weight: 600;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Botones de editar/eliminar */
+.btn-edit {
+    background-color: rgba(0, 188, 212, 0.2);
+    /* Fondo cian semitransparente */
+    color: #00bcd4;
+    ;
+    /* Texto cian */
+    border: 1px solid #00bcd4;
+    ;
+    /* Borde cian */
+}
+
+.btn-delete {
+    background-color: rgba(255, 64, 129, 0.2);
+    /* Fondo rosa semitransparente */
+    color: var(--color-accent);
+    /* Texto rosa */
+    border: 1px solid var(--color-accent);
+    /* Borde rosa */
+}
+
+/* Modales */
+.modal {
+    display: none;
+    /* Oculto por defecto */
+    position: fixed;
+    /* Fijo en la pantalla */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    /* Fondo oscuro semitransparente */
+    backdrop-filter: blur(5px);
+    /* Desenfoque del contenido detrás */
+    z-index: 1000;
+    /* Por encima de todo */
+    justify-content: center;
+    /* Centra horizontalmente */
+    align-items: center;
+    /* Centra verticalmente */
+    overflow: auto;
+    /* Permite scroll si el contenido es muy alto */
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
+    /* Comienza arriba y transparente */
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Termina en posición normal */
+}
+
+.modal-content {
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    color: var(--color-tertiary);
+    margin: 0;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    transition: color 0.3s;
+}
+
+.close-modal:hover {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .svg-card {
+        padding: 2rem;
+    }
+
+    .red-card {
+        padding: 2rem;
+    }
+
+    .btn-back-circle {
+        margin-left: 0;
+    }
+}
+
+/* Línea inferior del navbar con gradiente rosado y morado */
+.navbar {
+    border-bottom: 4px solid transparent !important;
+    border-image: linear-gradient(to right, #ff4081, #7000ff) 1 !important;
+}
+
+/* Estilos para Alertas (Mensajes) */
+.messages-container {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
     color: white;
     font-weight: 600;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    margin: 10px auto 20px auto;
-    width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
 }
 
 .alert-success {
-    border-left: 5px solid #28a745;
-    background: rgba(40, 167, 69, 0.2);
-    text-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+    background-color: rgba(46, 204, 113, 0.9);
+    border: 1px solid #2ecc71;
 }
 
 .alert-error,
 .alert-danger {
-    border-left: 5px solid #dc3545;
-    background: rgba(220, 53, 69, 0.2);
-    text-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+    background-color: rgba(231, 76, 60, 0.9);
+    border: 1px solid #e74c3c;
 }
 
-.btn-close {
-    filter: invert(1) grayscale(100%) brightness(200%);
+.glass-alert {
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenedor para botones lado a lado */
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    /* Espacio entre botones */
+    margin: 10px 0 30px 0;
+}
+
+/* Botón de imagen personalizado */
+.btn-img-custom {
+    background: transparent;
+    border: none;
+
+    /* Posicionamiento en flujo normal */
+    position: relative;
+
+    width: 70px;
+    /* Tamaño más pequeño */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    /* El margen lo maneja el contenedor padre ahora */
+    cursor: pointer;
+    /* Manito al pasar mouse */
+    transition: transform 0.2s;
+}
+
+.btn-img-custom:hover {
+    transform: scale(1.1);
+    /* Agranda ligeramente al pasar mouse */
+}
+
+.btn-img-custom img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+    /* Sombra para resaltar */
+}
+
+.btn-img-custom span {
+    color: var(--color-tertiary);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    /* Texto ajustado al nuevo tamaño */
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    /* Sombra para legibilidad */
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Fondo oscuro semitransparente para el texto */
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Cambio de color específico para el botón de eliminar */
+#btnOpenDeleteCareerModal span,
+#btnOpenDeleteSubjectModal span {
+    color: #ffffff !important;
+}
+
+/* Filtro para volver blanco el icono de eliminar (SVG) */
+#btnOpenDeleteCareerModal img,
+#btnOpenDeleteSubjectModal img {
+    filter: brightness(0) invert(1) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5)) !important;
+}
+
+/* Estilos para el recuadro de carreras */
+.careers-section.red-card,
+.subjects-section.red-card {
+    border-radius: 0 !important;
+    /* Sin bordes redondeados */
+    border: none !important;
+    /* Sin borde */
+    box-shadow: none !important;
+    background-color: transparent !important;
+    background-image: url("../img/recuadro-de-las-carreras.svg");
+    background-size: 100% 100%;
+    /* Ajusta SVG al contenedor */
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 100px 260px;
+    /* Espacio aumentado significativamente para asegurar que todo quede dentro del marco */
+    height: 650px;
+    /* Altura fija para evitar que se encoja al eliminar elementos */
+}
+
+/* Ajuste para que la línea del título llegue hasta los bordes del recuadro (similar a los modales) */
+.careers-section.red-card .section-title,
+.subjects-section.red-card .section-title {
+    margin-left: -55px;
+    margin-right: -55px;
+    padding-left: 0;
+    text-align: center;
+}
+
+/* Ajuste para que la línea del título en los modales llegue a los bordes */
+.modal-content .section-title {
+    margin-left: -30px;
+    margin-right: -30px;
+    text-align: center;
 }
