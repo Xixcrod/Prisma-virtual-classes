@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'apps.detalles.apps.DetallesConfig',
     'apps.Profesores.apps.ProfesoresConfig',
     'apps.estudiantes.apps.EstudiantesConfig',
+    'django_cleanup.apps.CleanupConfig', # Módulo para limpiar en disco las actualizaciones de archivos cuando se les reemplaza por otro. 
 ]
 
 MIDDLEWARE = [

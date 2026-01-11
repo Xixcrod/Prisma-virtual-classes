@@ -7,7 +7,7 @@
 </a>
 <div class="container curso-detalle">
     <header class="curso-header">
-        <h2>{{ curso.materia.nombre|upper }}</h1>
+        <h2>{{ curso.materia.nombre|upper }}</h2>
         <div class="meta-info">
             <span class="profesor-tag">
                 <strong>Profesor:</strong> {{ curso.profesor.usuario.get_full_name }}
@@ -19,11 +19,23 @@
 
     <div class="row">
         <div class="col-md-4">
-            <div class="curso-card-img">
+            <div class="card-img">
                 {% if curso.imagen %}
-                    <img src="{{ curso.imagen.url }}" alt="Imagen de {{ curso.materia.nombre }}" class="img-fluid rounded">
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+                <img src="{% url "consumir-media-files" "img_curso" curso.id %}" alt="Imagen del curso" loading="lazy"> 
                 {% else %}
                     <img src="{% static 'img/default-curso.png' %}" alt="Sin imagen" class="img-fluid rounded">
+                {% endif %}
+                {% if es_profesor %}
+                <div>
+                  <form action="{% url 'editar-imagen-cursos' curso.id  %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form_img_curso.as_p }}
+                    <button type="submit">Cargar</button>
+                  </form>
+                </div>
                 {% endif %}
             </div>
         </div>
