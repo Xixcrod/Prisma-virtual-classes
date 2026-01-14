@@ -1,0 +1,80 @@
+{% extends 'layouts/base.html' %} 
+{% load static %} 
+
+{% block content %}
+<a href="{{ url_retorno }}" class="btn btn-secondary">
+   Volver
+</a>
+<div class="container curso-detalle">
+    <header class="curso-header">
+        <h2>{{ curso.materia.nombre|upper }}</h2>
+        <div class="meta-info">
+            <span class="profesor-tag">
+                <strong>Profesor:</strong> {{ curso.profesor.usuario.get_full_name }}
+            </span>
+        </div>
+    </header>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card-img">
+                {% if curso.imagen %}
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+                <img src="{% url "consumir-media-files" "img_curso" curso.id %}" alt="Imagen del curso" loading="lazy"> 
+                {% else %}
+                    <img src="{% static 'img/default-curso.png' %}" alt="Sin imagen" class="img-fluid rounded">
+                {% endif %}
+                {% if es_profesor %}
+                <div>
+                  <form action="{% url 'editar-imagen-cursos' curso.id  %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form_img_curso.as_p }}
+                    <button type="submit">Cargar</button>
+                  </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h3>Descripción del curso</h3>
+            <p class="text-muted">{{ curso.descripcion|linebreaks }}</p>
+        </div>
+        {% if es_profesor %}
+        <div class="col-md-8">
+          <h3>{{ cantidad_estudiantes }} estudiantes inscritos.</h3>
+        </div>
+        {% endif %}
+    </div>
+
+    <br>
+
+    <section class="curso-contenido">
+        <h3>Contenido Programático</h3>
+        
+        {% if tiene_acceso %}
+            <div class="list-group">
+                {% for tema in temas %}
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                           <a href="{% url "detalles-temas" tema.id %}">
+                              <h5 class="mb-1">{{ forloop.counter }}. {{ tema.titulo }}</h5>
+                              <small class="text-secondary">{{ tema.fecha_creacion|date:"d M Y" }}</small>
+                           </a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="alert alert-info">Aún no se han cargado temas para este curso.</p>
+                {% endfor %}
+            </div>
+        {% else %}
+        {# Llamada al macro donde se encapsula lógica del manejo de accesos #}
+        {% include "partials/_card-acceso.html" with estado=estado_acceso curso_id=curso.id%} 
+        {% endif %}
+    </section>
+</div>
+{% endblock content %}

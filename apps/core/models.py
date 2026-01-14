@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import validate_image_file_extension
 import uuid
 
 # Create your models here.
@@ -85,7 +86,7 @@ class Materia(models.Model):
         return self.nombre
 
 
-# Cursos (Es una instancia de materia que el profesor si puede modificar)
+# Cursos (Es una instancia de materia que el profesor si puede modificar).
 class Curso(models.Model):
     id = models.UUIDField(
         primary_key=True,
@@ -97,7 +98,7 @@ class Curso(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     descripcion = models.TextField()
-    imagen = models.ImageField(upload_to='images/cursos/', blank=True, null=True)
+    imagen = models.ImageField(upload_to='images/cursos/', default='images/placeholers/placeholder-images.webp', blank=True, null=True,validators=[validate_image_file_extension]) # Validaciones a nivel de modelo (antes de guardar la isntancia en la BD). Para cuidar la extensión de la imagen. Además de una ruta por defecto de un pllaceholder. 
 
     def __str__(self):
         return self.materia.nombre + ' - ' + self.profesor.usuario.first_name + ' ' + self.profesor.usuario.last_name
@@ -114,7 +115,7 @@ class Tema(models.Model):
     titulo = models.CharField(max_length=75)
     descripcion = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    imagen = models.ImageField(upload_to='images/temas/', blank=True, null=True)
+    imagen = models.ImageField(upload_to='images/temas/', default='images/placeholers/placeholder-images.webp', blank=True, null=True)
 
     def __str__(self):
         return self.titulo

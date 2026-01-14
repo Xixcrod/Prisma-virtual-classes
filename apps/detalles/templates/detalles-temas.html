@@ -1,0 +1,48 @@
+{% extends 'layouts/base.html' %} 
+{% load static %} 
+{% block content %} 
+<a href="{{ url_retorno }}" class="btn btn-secondary">
+   Volver
+</a>
+<div class="container tema-detalle">
+  <header class="tema-header">
+    <h2>{{ tema.titulo|upper }}</h1>
+      <div class="meta-info">
+        <span class="profesor-tag">
+          <strong>Profesor:</strong> {{ tema.curso.profesor.usuario.get_full_name }}
+        </span>
+      </div>
+  </header>
+
+      <div class="row">
+          <div class="col-md-4">
+              <div class="curso-card-img">
+                  {% if curso.imagen %}
+                    <img src="{{ tema.imagen.url }}" alt="Imagen de {{ tema.titulo }}" class="img-fluid rounded">
+                  {% else %}
+                    <img src="{% static 'img/default-curso.png' %}" alt="Sin imagen" class="img-fluid rounded">
+                  {% endif %}
+              </div>
+          </div>
+
+          <div class="col-md-8">
+              <h3>Descripción del curso:</h3>
+            <p class="text-muted">{{ tema.descripcion|linebreaks }}</p>
+          </div>
+      </div>
+
+  <div class="videos-container">
+    <h3>Videos del Tema</h3>
+      <div class="list-group">
+          {% for video in videos %}
+          <div class="video-item">
+            <a href="{% url "detalles-videos" video.id %}">
+              <h5>{{ forloop.counter }}. {{ video.titulo }}</h5>
+            </a>
+            <small class="text-secondary">{{ video.fecha_creacion|date:"d M Y" }}</small>
+          </div>
+      </div>
+        {% endfor %}
+  </div>
+</div>
+{%endblock %}

@@ -7,3 +7,6 @@ migrations/
 db.sqlite3
 staticfiles/
 media/
+# Esto es de Hernán
+create_courses.py
+check_access.py
