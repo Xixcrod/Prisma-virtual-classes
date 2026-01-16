@@ -122,7 +122,7 @@ def gestionar_materias_profesor(request, profesor_id):
                 activo=True,
                 descripcion=f"Asignado el {materia_obj.nombre}" 
             )
-        messages.success(request, "Asignación actualizada correctamente.")
+        messages.success(request, "Asignación actualizada correctamente")
         return redirect('lista_profesores')
 
     return render(request, 'Admin/asignar_materias.html', {
@@ -287,3 +287,12 @@ def obtener_materias_por_carrera(request, carrera_id, semestre):
     ).values('id', 'nombre')
     
     return JsonResponse(list(materias), safe=False)
+
+# Función para eliminar curso recibiendo su id
+def eliminar_curso(request, curso_id):
+    curso = get_object_or_404(Curso, id=curso_id)
+    curso.activo = False
+    curso.save()
+    
+    messages.warning(request, f"El curso {curso.materia.nombre} ha sido desactivado correctamente.")
+#   return redirect('catalogo')
