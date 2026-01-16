@@ -3,15 +3,20 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required, user_passes_test
 import secrets
 import string
 
 # Importaciones consolidadas de tus modelos
 from apps.core.models import Usuario, Estudiante, Profesor, Carrera, Materia, Curso
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def admin(request):
     return render(request, "Admin/dashboard.html")
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def registrar_usuario(request):
     carreras = Carrera.objects.all()
     if request.method == "POST":
@@ -74,6 +79,8 @@ def registrar_usuario(request):
 
     return render(request, "Admin/registrar_usuario.html", {"carreras": carreras})
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def lista_profesores(request):
     profesores = Profesor.objects.filter(activo=True) 
     carreras = Carrera.objects.all()
@@ -91,6 +98,8 @@ def lista_profesores(request):
         'asignaciones_json': asignaciones
     })
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def gestionar_materias_profesor(request, profesor_id):
     profesor_obj = get_object_or_404(Profesor, id=profesor_id)
     carreras = Carrera.objects.all()
@@ -131,6 +140,8 @@ def gestionar_materias_profesor(request, profesor_id):
         'materias_actuales': list(materias_actuales)
     })
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def eliminar_profesor(request, profesor_id):
     profesor = get_object_or_404(Profesor, id=profesor_id)
     profesor.activo = False
@@ -139,6 +150,8 @@ def eliminar_profesor(request, profesor_id):
     messages.warning(request, f"El profesor {profesor.usuario.first_name} ha sido desactivado.")
     return redirect('lista_profesores')
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def registrar_carrera_materia(request):
     carreras = Carrera.objects.all().order_by('nombre') # Obtiene todas las carreras ordenadas A-Z
     materias = Materia.objects.all().select_related('carrera').order_by('carrera__nombre', 'semestre', 'nombre')
@@ -225,6 +238,8 @@ def registrar_carrera_materia(request):
         "carreras_data": carreras_data
     })
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def editar_carrera(request, carrera_id):
      # Busca carrera por ID, si no existe error 404
     carrera = get_object_or_404(Carrera, id=carrera_id)
@@ -238,6 +253,8 @@ def editar_carrera(request, carrera_id):
     # Si es GET, redirigimos a la página principal 
     return redirect('registrar_carrera_materia')
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def editar_materia(request, materia_id):
      # Busca materia por ID
     materia = get_object_or_404(Materia, id=materia_id)
@@ -267,18 +284,24 @@ def editar_materia(request, materia_id):
     # Si es GET, redirigimos a la página principal
     return redirect('registrar_carrera_materia')
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def eliminar_materia(request, materia_id):
     materia = get_object_or_404(Materia, id=materia_id)
     materia.delete()
     messages.success(request, "Materia eliminada correctamente.")
     return redirect('registrar_carrera_materia')
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def eliminar_carrera(request, carrera_id):
     carrera = get_object_or_404(Carrera, id=carrera_id)
-    carrera.delete() # Elimina la materia de la base de datos
+    carrera.delete()
     messages.success(request, "Carrera eliminada correctamente.")
     return redirect('registrar_carrera_materia')
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def obtener_materias_por_carrera(request, carrera_id, semestre):
     # carrera_id llegará como un UUID válido
     materias = Materia.objects.filter(
@@ -289,6 +312,8 @@ def obtener_materias_por_carrera(request, carrera_id, semestre):
     return JsonResponse(list(materias), safe=False)
 
 # Función para eliminar curso recibiendo su id
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def eliminar_curso(request, curso_id):
     curso = get_object_or_404(Curso, id=curso_id)
     curso.activo = False

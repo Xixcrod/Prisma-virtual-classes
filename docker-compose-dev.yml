@@ -8,6 +8,6 @@ services:
     volumes:
       - .:/home/app
     env_file:
-      - .env
+      - .env.example
     environment:
       - IS_DOCKER=True
