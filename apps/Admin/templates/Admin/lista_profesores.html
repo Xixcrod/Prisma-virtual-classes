@@ -141,7 +141,7 @@
         const urlBase = "{% url 'gestionar_materias_profesor' '00000000-0000-0000-0000-000000000000' %}".replace(dummyUuid, profesorId);
         form.action = urlBase;
 
-        // Reset inputs
+        // Se reinician los campos de entrada
         carreraSelect.value = "";
         semestreSelect.innerHTML = '<option value="" disabled selected>Semestre</option>';
         semestreSelect.disabled = true;

@@ -408,24 +408,6 @@ body {
     color: white;
 }
 
-@media (max-width: 768px) {
-    .main-content {
-        grid-template-columns: 1fr;
-    }
-
-    .svg-card {
-        padding: 2rem;
-    }
-
-    .red-card {
-        padding: 2rem;
-    }
-
-    .btn-back-circle {
-        margin-left: 0;
-    }
-}
-
 /* Línea inferior del navbar con gradiente rosado y morado */
 .navbar {
     border-bottom: 4px solid transparent !important;

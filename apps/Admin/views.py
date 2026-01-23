@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 import secrets
 import string
 
-# Importaciones consolidadas de tus modelos
+# Importaciones consolidadas de los modelos
 from apps.core.models import Usuario, Estudiante, Profesor, Carrera, Materia, Curso
 
 @login_required
@@ -85,7 +85,7 @@ def lista_profesores(request):
     profesores = Profesor.objects.filter(activo=True) 
     carreras = Carrera.objects.all()
     
-    # Creamos un diccionario con las materias de cada profesor para enviarlo al JS
+    # Se crea un diccionario con las materias de cada profesor para enviarlo al JS
     asignaciones = {}
     for p in profesores:
         materias_ids = list(Curso.objects.filter(profesor=p).values_list('materia_id', flat=True))
@@ -104,7 +104,7 @@ def gestionar_materias_profesor(request, profesor_id):
     profesor_obj = get_object_or_404(Profesor, id=profesor_id)
     carreras = Carrera.objects.all()
     
-    # Obtenemos las materias que ya tiene asignadas para marcarlas en el checklist
+    # Se obtienen las materias que ya tiene asignadas para marcarlas en el checklist
     materias_actuales = Curso.objects.filter(profesor=profesor_obj).values_list('materia_id', flat=True)
 
     if request.method == 'POST':
@@ -112,7 +112,7 @@ def gestionar_materias_profesor(request, profesor_id):
         carrera_id = request.POST.get('carrera_id')
         semestre = request.POST.get('semestre')
         
-        # Si vienen carrera y semestre, solo borramos lo de ese bloque para no borrar todo
+        # Si vienen carrera y semestre, solo se borra lo de ese bloque para no borrar todo
         if carrera_id and semestre:
             Curso.objects.filter(
                 profesor=profesor_obj,
@@ -145,7 +145,7 @@ def gestionar_materias_profesor(request, profesor_id):
 def eliminar_profesor(request, profesor_id):
     profesor = get_object_or_404(Profesor, id=profesor_id)
     profesor.activo = False
-    profesor.save()          # Guarda en la base de datos
+    profesor.save() # Guarda en la base de datos
     
     messages.warning(request, f"El profesor {profesor.usuario.first_name} ha sido desactivado.")
     return redirect('lista_profesores')
@@ -156,15 +156,15 @@ def registrar_carrera_materia(request):
     carreras = Carrera.objects.all().order_by('nombre') # Obtiene todas las carreras ordenadas A-Z
     materias = Materia.objects.all().select_related('carrera').order_by('carrera__nombre', 'semestre', 'nombre')
 
-    if request.method == "POST":  # VERIFICACIÓN MÉTODO POST (formulario enviado)
-        print("DEBUG POST:", request.POST) # Esto imprimirá los datos en tu consola para verificar
+    if request.method == "POST":  # Verificación método POST (formulario enviado)
+        print("DEBUG POST:", request.POST) # Esto imprimirá los datos en la consola para verificar
         action = request.POST.get('action')
         
         # Registrar Carrera
         if action == 'crear_carrera':
             nombre = request.POST.get('nombre', '').strip()
             cantidad_semestres = request.POST.get('cantidad_semestres', 10)
-            if not nombre:  # VALIDACIÓN: Campos obligatorios
+            if not nombre:  # Validación: Campos obligatorios
                 messages.error(request, "El nombre de la carrera es obligatorio.")
             else:
                 try:
