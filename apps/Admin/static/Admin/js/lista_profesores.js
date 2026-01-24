@@ -23,8 +23,9 @@ function openAssignModal(profesorId, profesorNombre) {
 
     // Configurar la URL de acción del formulario
     const dummyUuid = "00000000-0000-0000-0000-000000000000";
-    // La variable GESTIONAR_MATERIAS_URL_TEMPLATE debe ser definida en el HTML
-    const urlBase = GESTIONAR_MATERIAS_URL_TEMPLATE.replace(dummyUuid, profesorId);
+    // La plantilla se obtiene del atributo data-url-template del formulario
+    const urlTemplate = form.dataset.urlTemplate;
+    const urlBase = urlTemplate.replace(dummyUuid, profesorId);
     form.action = urlBase;
 
     // Se reinician los campos de entrada

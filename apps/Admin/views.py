@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
@@ -11,64 +12,80 @@ import string
 from apps.core.models import Usuario, Estudiante, Profesor, Carrera, Materia, Curso
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser)
 def admin(request):
-    return render(request, "Admin/dashboard.html")
+    # 1. Si es Superusuario, entra al dashboard
+    if request.user.is_superuser:
+        return render(request, "Admin/dashboard.html")
+
+    elif hasattr(request.user, 'profesor'):
+        return redirect('adminp')
+    
+    if hasattr(request.user, 'estudiante'):
+        return redirect('adminp')
+    
+    # 3. Si es alguien más, error 404
+    raise Http404()
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def registrar_usuario(request):
     carreras = Carrera.objects.all()
     if request.method == "POST":
-        nombres = request.POST.get('nombres')
-        apellidos = request.POST.get('apellidos')
-        cedula = request.POST.get('cedula')
-        correo = request.POST.get('correo')
-        telefono = request.POST.get('telefono')
+        # Limpiar y extraer datos
+        nombres = request.POST.get('nombres', '').strip()
+        apellidos = request.POST.get('apellidos', '').strip()
+        cedula = request.POST.get('cedula', '').strip()
+        correo = request.POST.get('correo', '').strip()
+        telefono = request.POST.get('telefono', '').strip()
         rol = request.POST.get('rol')
 
         alphabet = string.ascii_letters + string.digits
         password_plana = ''.join(secrets.choice(alphabet) for i in range(8))
 
+        from django.db import transaction
+
         try:
-            if Usuario.objects.filter(cedula=cedula).exists():
-                messages.error(request, "Error: Ya existe un usuario registrado con esta cédula.")
-                return redirect('registrar_usuario')
-            
-            if Usuario.objects.filter(email=correo).exists():
-                messages.error(request, "Error: Ya existe un usuario registrado con este correo electrónico.")
-                return redirect('registrar_usuario')
+            with transaction.atomic():
+                # Validaciones insensibles a mayúsculas/minúsculas y espacios
+                if Usuario.objects.filter(cedula__iexact=cedula).exists():
+                    messages.error(request, "Error: Ya existe un usuario registrado con esta cédula.")
+                    return redirect('registrar_usuario')
+                
+                if Usuario.objects.filter(email__iexact=correo).exists():
+                    messages.error(request, "Error: Ya existe un usuario registrado con este correo electrónico.")
+                    return redirect('registrar_usuario')
 
-            nuevo_usuario = Usuario(
-                first_name=nombres,
-                last_name=apellidos,
-                email=correo,
-                cedula=cedula,
-                telefono=telefono,
-                username=cedula
-            )
-            nuevo_usuario.set_password(password_plana)
-            nuevo_usuario.save()
+                nuevo_usuario = Usuario(
+                    first_name=nombres,
+                    last_name=apellidos,
+                    email=correo,
+                    cedula=cedula,
+                    telefono=telefono,
+                    username=cedula
+                )
+                nuevo_usuario.set_password(password_plana)
+                nuevo_usuario.save()
 
-            if rol == 'profesor':
-                Profesor.objects.create(usuario=nuevo_usuario)
-            elif rol == 'estudiante':
-                carrera_id = request.POST.get('carrera')
-                if carrera_id:
-                    carrera_obj = Carrera.objects.get(id=carrera_id)
-                    Estudiante.objects.create(usuario=nuevo_usuario, carrera=carrera_obj)
+                if rol == 'profesor':
+                    Profesor.objects.create(usuario=nuevo_usuario)
+                elif rol == 'estudiante':
+                    carrera_id = request.POST.get('carrera')
+                    if carrera_id:
+                        carrera_obj = Carrera.objects.get(id=carrera_id)
+                        Estudiante.objects.create(usuario=nuevo_usuario, carrera=carrera_obj)
 
-            # Envío de correo
-            asunto = 'Tus credenciales de Prisma'
-            mensaje = f'Hola {nombres} {apellidos},\ntu cuenta ha sido creada exitosamente.\nTu contraseña es: {password_plana}'
-            
-            send_mail(
-                asunto,
-                mensaje,
-                settings.EMAIL_HOST_USER,
-                [correo],
-                fail_silently=False,
-            )
+                # Envío de correo (dentro de la transacción)
+                # Si falla el correo, la transacción se revierte y no se crea el usuario
+                asunto = 'Tus credenciales de Prisma'
+                mensaje = f'Hola {nombres} {apellidos},\ntu cuenta ha sido creada exitosamente.\nTu contraseña es: {password_plana}'
+                
+                send_mail(
+                    asunto,
+                    mensaje,
+                    settings.EMAIL_HOST_USER,
+                    [correo],
+                    fail_silently=False,
+                )
 
             messages.success(request, f"Usuario registrado con éxito. Contraseña enviada a {correo}")
             return redirect('dashboard')

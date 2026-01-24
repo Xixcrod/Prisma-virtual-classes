@@ -79,7 +79,7 @@
             <img src="{% static 'Admin/img/linea colorida.svg' %}" alt="Linea Colorida" class="separator-line">
         </div>
 
-        <form id="assignForm" method="POST" class="modal-form">
+        <form id="assignForm" method="POST" class="modal-form" data-url-template="{% url 'gestionar_materias_profesor' '00000000-0000-0000-0000-000000000000' %}">
             {% csrf_token %}
 
             <!-- Select Carrera -->
@@ -117,8 +117,5 @@
 
 {{ asignaciones_json|json_script:"asignaciones-data" }}
 
-<script>
-    const GESTIONAR_MATERIAS_URL_TEMPLATE = "{% url 'gestionar_materias_profesor' '00000000-0000-0000-0000-000000000000' %}";
-</script>
 <script src="{% static 'Admin/js/lista_profesores.js' %}"></script>
 {% endblock %}

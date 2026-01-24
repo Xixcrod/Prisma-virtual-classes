@@ -1,13 +1,14 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
+{% block body_background %}{% static 'Admin/img/fondo_admin.jpg' %}{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'Admin/css/registro_usuario.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="registration-page">
-
     <div class="back-button-container">
         <a href="{% url 'dashboard' %}" class="btn-back-circle">VOLVER</a>
     </div>
@@ -22,111 +23,76 @@
         {% endfor %}
     </div>
     {% endif %}
-
     <h2 class="page-title">Registro de Usuario</h2>
-
-    <div class="form-card">
-        <!-- Imagen de recuadro iluminado como fondo decorativo opcional -->
-        <div class="glow-overlay"></div>
-
-        <form method="POST" class="admin-form" id="registroForm">
+    <div class="registration-card">
+        <form method="POST" id="registroForm">
             {% csrf_token %}
 
-            <!-- Selector de Rol con SVGs Originales -->
-            <div class="role-selector">
-                <label class="radio-container">
-                    <input type="radio" name="rol" value="profesor" onclick="updateSelectors()" required>
-                    <span class="label-text">Profesor</span>
-                    <img src="{% static 'img/selector apagado.svg' %}" class="selector-svg" id="svg-profesor">
-                </label>
+            <!-- Encabezado con Selector de Rol -->
+            <div class="card-header-roles">
+                <div class="role-options">
+                    <label class="role-radio" id="label-profesor">
+                        <span>Profesor</span>
+                        <input type="radio" name="rol" value="profesor" onclick="updateSelectors()" required>
+                    </label>
 
-                <label class="radio-container">
-                    <input type="radio" checked="checked" name="rol" value="estudiante" onclick="updateSelectors()"
-                        required>
-                    <span class="label-text">Estudiante</span>
-                    <img src="{% static 'img/selector encendido.svg' %}" class="selector-svg" id="svg-estudiante">
-                </label>
+                    <label class="role-radio" id="label-estudiante">
+                        <span>Estudiante</span>
+                        <input type="radio" name="rol" value="estudiante" onclick="updateSelectors()" checked required>
+                    </label>
+                </div>
             </div>
 
-            <!-- Línea Colorida Decorativa -->
-            <div class="divider-container">
-                <img src="{% static 'img/linea colorida.svg' %}" class="linea-colorida">
+            <div class="separator-container">
+                <img src="{% static 'Admin/img/linea colorida.svg' %}" alt="Linea Colorida" class="separator-line">
             </div>
 
-            <div class="inputs-container">
-                <div class="input-wrapper">
-                    <input type="text" id="nombres" name="nombres" required maxlength="20"
-                        placeholder="Nombre de Usuario">
+            <!-- Cuerpo del Formulario -->
+            <div class="card-body-form">
+                <!-- Campos del formulario usando clases Bootstrap + Personalizadas -->
+                <div class="mb-3">
+                    <input type="text" class="form-control custom-input" id="nombres" name="nombres" required
+                        maxlength="20" placeholder="Nombre">
                 </div>
-                <div class="input-wrapper">
-                    <input type="text" id="apellidos" name="apellidos" required maxlength="20" placeholder="Apellidos">
+
+                <div class="mb-3">
+                    <input type="text" class="form-control custom-input" id="apellidos" name="apellidos" required
+                        maxlength="20" placeholder="Apellidos">
                 </div>
-                <div class="input-wrapper">
-                    <input type="email" id="correo" name="correo" required placeholder="Correo Electrónico">
+
+                <div class="mb-3">
+                    <input type="email" class="form-control custom-input" id="correo" name="correo" required
+                        placeholder="Correo Electrónico">
                 </div>
-                <div class="input-wrapper">
-                    <input type="text" id="telefono" name="telefono" required maxlength="11" placeholder="Teléfono">
+
+                <div class="mb-3">
+                    <input type="text" class="form-control custom-input" id="telefono" name="telefono" required
+                        maxlength="11" placeholder="Teléfono">
                 </div>
-                <div class="input-wrapper">
-                    <input type="text" id="cedula" name="cedula" required maxlength="8" placeholder="Cédula">
+
+                <div class="mb-3">
+                    <input type="text" class="form-control custom-input" id="cedula" name="cedula" required
+                        maxlength="8" placeholder="Cédula">
                 </div>
-                <div class="input-wrapper" id="carrera-group">
-                    <select id="carrera" name="carrera" class="custom-select">
+
+                <!-- Campo Carrera (Condicional) -->
+                <div class="mb-3" id="carrera-group">
+                    <select id="carrera" name="carrera" class="form-select custom-select">
                         <option value="" disabled selected>Seleccione Carrera</option>
                         {% for carrera in carreras %}
                         <option value="{{ carrera.id }}">{{ carrera.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
-            </div>
 
-            <div class="form-footer">
-                <button type="submit" class="submit-btn">REGISTRAR</button>
-            </div>
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-register">REGISTRAR</button>
+                </div>
 
-            <div class="text-center mt-3">
-                <a href="{% url 'dashboard' %}" class="back-link-simple">Volver al panel</a>
             </div>
         </form>
     </div>
 </div>
 
-<script>
-    function updateSelectors() {
-        const radios = document.getElementsByName('rol');
-        const svgProfesor = document.getElementById('svg-profesor');
-        const svgEstudiante = document.getElementById('svg-estudiante');
-        const carreraGroup = document.getElementById('carrera-group');
-        const carreraSelect = document.getElementById('carrera');
-
-        let selected = 'estudiante';
-        for (const r of radios) {
-            if (r.checked) {
-                selected = r.value;
-                break;
-            }
-        }
-
-        // Rutas estáticas (Django las procesará)
-        const pathEncendido = "{% static 'img/selector encendido.svg' %}";
-        const pathApagado = "{% static 'img/selector apagado.svg' %}";
-
-        if (selected === 'profesor') {
-            svgProfesor.src = pathEncendido;
-            svgEstudiante.src = pathApagado;
-            carreraGroup.style.display = 'none';
-            carreraSelect.required = false;
-        } else {
-            svgProfesor.src = pathApagado;
-            svgEstudiante.src = pathEncendido;
-            carreraGroup.style.display = 'block';
-            carreraSelect.required = true;
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', updateSelectors);
-</script>
-
 <script src="{% static 'Admin/js/registrar_usuario.js' %}"></script>
-
 {% endblock %}
