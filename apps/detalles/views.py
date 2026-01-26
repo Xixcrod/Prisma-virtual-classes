@@ -2,26 +2,33 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from django.http import FileResponse, Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.views.generic import DetailView, UpdateView
-from django.views.generic.detail import BaseDetailView
+from django.views.generic.detail import BaseDetailView, SingleObjectMixin
+from django.views import View
 from apps.core.models import Curso, Tema, Video, Usuario, Profesor, Acceso
-from .mixins import AuthorizationsMixin, ConfigAccessToMediaFilesMixin
+from .mixins import AuthorizationsMixin, ConfigAccessToMediaFilesMixin, FormsPostMixin
 from django.conf import settings
 from apps.core.utils.context_processors import (
     roles_usuario,
 )  # Importación de la función de Díaz para gestionar los roles de usuario
-from .forms import UpdateCoursesImageForm
+from .forms import (
+    UpdateCoursesImageForm,
+    UpdateCoursesForm,
+    CreateTemaForm,
+    UpdateThemesImageForm,
+    UpdateThemeForm,
+    UpdateVideoForm,
+    CreateVideoForm,
+)
 import mimetypes
-
-# INFO: Clases para las vistas de detalles de Cursos, Temas y Vídeos.
-
-
-# NOTE: Falta agregar el LoginRequiredMixin para garantizar el acceso solo de usuarios autenticados.
+from .utils.forms_config import FormConfig
 
 
 #   Vista para detalles de los cursos.
-class CoursesDetails(AuthorizationsMixin, DetailView):
+class CoursesDetails(
+    LoginRequiredMixin, AuthorizationsMixin, FormsPostMixin, DetailView
+):
     # Modelo desde donde pertenece el objeto a detallar.
     model = Curso
 
@@ -31,6 +38,28 @@ class CoursesDetails(AuthorizationsMixin, DetailView):
     # De dónde se pretende recibir el parámetro de la uuid desde la url.
     pk_url_kwarg = "id_curso"
     context_object_name = "curso"
+    # Declaración de la configuración de formularios
+    forms_config = {
+        # Formulario de modificación de imagen
+        "update_course_image_form": FormConfig(
+            form_class=UpdateCoursesImageForm,
+            prefix="update_course_image",
+            roles={"es_profesor"},
+        ),
+        # Formulario de modificación de detalles de curso
+        "update_course_form": FormConfig(
+            form_class=UpdateCoursesForm,
+            prefix="update_course_form",
+            roles={"es_profesor"},
+        ),
+        # Formulario de creación de temas
+        "create_theme_form": FormConfig(
+            form_class=CreateTemaForm,
+            is_create=True,
+            prefix="create_theme",
+            roles={"es_profesor"},
+        ),
+    }
 
     # Determinación de los contextos para el template, agergando los temas del curso y evaluando los acceso para los estudiantes.
     def get_context_data(self, **kwargs):
@@ -61,14 +90,36 @@ class CoursesDetails(AuthorizationsMixin, DetailView):
             ).count()
         # Agragación al contexto el nuevo campo para los temas del curso.
         context["temas"] = Tema.objects.filter(curso=curso)
+        # Cantidad de vídeos
+        context["cantidad_videos"] = Video.objects.filter(tema__curso=curso).count()
         context["tiene_acceso"] = True
-        context["form_img_curso"] = UpdateCoursesImageForm(instance=self.object)
-        # Retorno del contexto junto con los temas del curso.
         return context
+
+    # En de que los formularios pasen las validaciones
+    def form_valid(self, form, action):
+        # Mensajes de éxito según el formulario
+        forms_success_msj = {
+            "update_course_image_form": "La imagen se ha cargado correctamente.",
+            "update_course_form": "El curso ha sido modificado exitosamente.",
+            "create_theme_form": "El tema ha sido creado exitosamente.",
+        }
+        # Si es la creación de un tema, referenciar la FK del curso actual
+        if action == "create_theme_form":
+            obj = form.save(commit=False)
+            obj.curso = self.get_object()
+            obj.save()
+
+        else:
+            form.save()
+        if action in forms_success_msj:
+            messages.success(self.request, forms_success_msj.get(action))
+        return redirect(self.request.path)
 
 
 # Vista para detalles de los temas.
-class ThemesDetails(AuthorizationsMixin, DetailView):
+class ThemesDetails(
+    LoginRequiredMixin, AuthorizationsMixin, FormsPostMixin, DetailView
+):
     # Modelo desde donde pertenece el objeto a detallar.
     model = Tema
 
@@ -78,6 +129,26 @@ class ThemesDetails(AuthorizationsMixin, DetailView):
     # De dónde se pretende recibir el parámetro de la uuid desde la url.
     pk_url_kwarg = "id_tema"
     context_object_name = "tema"
+
+    # Confirguración de formularios
+    forms_config = {
+        "update_theme_image_form": FormConfig(
+            form_class=UpdateThemesImageForm,
+            prefix="update_theme_image_form",
+            roles={"es_profesor"},
+        ),
+        "update_theme_form": FormConfig(
+            form_class=UpdateThemeForm,
+            prefix="update_theme_form",
+            roles={"es_profesor"},
+        ),
+        "create_video_form": FormConfig(
+            form_class=CreateVideoForm,
+            is_create=True,
+            prefix="create_video_form",
+            roles={"es_profesor"},
+        ),
+    }
 
     def get_context_data(self, **kwargs):
         # El tema (objeto) obtenido por la ejecución de la clase.
@@ -93,9 +164,28 @@ class ThemesDetails(AuthorizationsMixin, DetailView):
         # Retorno del contexto junto con los videos del tema.
         return context
 
+    # En caso de que el formulario sea validado
+    def form_valid(self, form, action):
+        # Mensajes de éxito según el formulario
+        forms_success_msj = {
+            "update_theme_image_form": "La imagen se ha cargado correctamente.",
+            "update_theme_form": "El tema ha sido modificado exitosamente.",
+            "create_video_form": "El vídeo ha sido cargado exitosamente.",
+        }
+        if action == "create_video_form":
+            obj = form.save(commit=False)
+            obj.tema = self.get_object()
+            obj.duracion = getattr(form, "duracion_extraida", None)
+            obj.save()
+        else:
+            form.save()
+        if action in forms_success_msj:
+            messages.success(self.request, forms_success_msj.get(action))
+        return redirect(self.request.path)
+
 
 # Vista para detalles de los vídeos.
-class VideoDetails(AuthorizationsMixin, DetailView):
+class VideoDetails(LoginRequiredMixin, AuthorizationsMixin, FormsPostMixin, DetailView):
     # Modelo desde donde pertenece el objeto a detallar.
     model = Video
 
@@ -105,6 +195,14 @@ class VideoDetails(AuthorizationsMixin, DetailView):
     # De dónde se pretende recibir el parámetro de la uuid desde la url.
     pk_url_kwarg = "id_video"
     context_object_name = "video"
+    # Configuración de formularios
+    forms_config = {
+        "update_video_form": FormConfig(
+            form_class=UpdateVideoForm,
+            prefix="update_video_form",
+            roles={"es_profesor"},
+        )
+    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -114,31 +212,41 @@ class VideoDetails(AuthorizationsMixin, DetailView):
         )
         return context
 
+    # En caso de que el formulario sea validado
+    def form_valid(self, form, action):
+        # Mensajes de éxito según el formulario
+        forms_success_msj = {
+            "update_theme_image_form": "La imagen se ha cargado correctamente.",
+            "update_theme_form": "El curso ha sido modificado exitosamente.",
+        }
+        form.save()
+        if action in forms_success_msj:
+            messages.success(self.request, forms_success_msj.get(action))
+        return redirect(self.request.path)
 
-# Vista para cambiar imagen del curso.
-class UpdateCourseImage(AuthorizationsMixin, UpdateView):
-    model = Curso
-    form_class = UpdateCoursesImageForm
-    pk_url_kwarg = "id_curso"
 
-    # Redirección a la vista de detalles del curso una vez procesada la subida con éxito.
-    def get_success_url(self):
-        curso = self.object
-        return reverse("detalles-cursos", kwargs={"id_curso": curso.id})
+# Vista para borrar temas de un curso
+class DeleteTheme(LoginRequiredMixin, AuthorizationsMixin, SingleObjectMixin, View):
+    model = Tema
+    pk_url_kwarg = "id_tema"
 
-    # En caso de ser un formulario inválido, agrupa y retorna los mensajes de error.
-    def form_invalid(self, form):
-        for field, message in form.errors.items():
-            for error in message:
-                messages.error(
-                    self.request, error
-                )  # NOTE: Esto podría recibir un tercer argumento para almacenar tags de configuraciones de CSS.
-        return redirect("detalles-cursos", id_curso=self.get_object().pk)
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        curso = self.object.curso.id
+        self.object.delete()
+        return redirect("detalles-cursos", id_curso=curso)
 
-    # Si el formulario adquiere la característica de ser válido después de las validaciones, simplemente retorna un mensaje de éxito y sigue con el curso del procedimiento (llamada al get_success_url)
-    def form_valid(self, form):
-        messages.success(self.request, "La imagen ha sido cargada correctamente.")
-        return super().form_valid(form)
+
+# Vista para borrar vídeos
+class DeleteVideo(LoginRequiredMixin, AuthorizationsMixin, SingleObjectMixin, View):
+    model = Video
+    pk_url_kwarg = "id_video"
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        tema = self.object.tema.id
+        self.object.delete()
+        return redirect("detalles-temas", id_tema=tema)
 
 
 # Vista para garantizar el acceso a los recursos multimedia expuestos por el servidor media/ (garantizando el cumplimiento de la lógica de negocios y de autenticación).
@@ -191,26 +299,3 @@ class AccessToMediaFiles(
 
         response["Content-type"] = mime_type
         return response
-
-
-# Método deshabilitado (por AuthorizationsMixin). A espera de más pruebas.
-"""# Modificación del queryset para verificar roles y, en base a eso, realizar las consultas según sea el caso.
-    def get_queryset(self):
-        # El uso de la función de Díaz.
-        roles = roles_usuario(self.request)
-        # Obtención del id desde la url
-        id_curso = self.kwargs.get("id_curso")
-        # Los profesores solo podrán acceder a sus propios cursos.
-        if roles["es_profesor"]:
-            return Curso.objects.filter(
-                id=id_curso, profesor__usuario=self.request.user
-            )
-        # Los estudiantes solo podrán acceden al curso.
-        if roles["es_estudiante"]:
-            return Curso.objects.filter(id=id_curso)
-
-        # WARNING: Retorna un error 404 si no cumple con los roles.
-        return Curso.objects.none()"""
-
-# NOTE: Falta construir las vistas para la creación de accesos a los cursos desde los estudiantes.
-# TEST: Falta testear el ingreso según tipo de usuario, de los ingresos de profesores siempre y cuando les pertenezca el curso (estos dos de forma más incisiva), entre otros.

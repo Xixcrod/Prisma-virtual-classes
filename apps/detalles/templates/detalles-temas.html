@@ -1,9 +1,20 @@
 {% extends 'layouts/base.html' %} 
 {% load static %} 
 {% block content %} 
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'detalles/css/confirmDelete.css' %}">
+  <link rel="stylesheet" href="{% static 'detalles/css/overlayUploadVideo.css' %}">
+{% endblock %}
 <a href="{{ url_retorno }}" class="btn btn-secondary">
    Volver
 </a>
+<div class="upload-overlay" id="uploadOverlay">
+    <div class="upload-progress-container">
+        <div class="upload-spinner"></div>
+        <h2 id="uploadStatus">Cargando video...</h2>
+        <p class="upload-warning">Por favor, no cierres esta página.</p>
+    </div>
+</div>
 <div class="container tema-detalle">
   <header class="tema-header">
     <h2>{{ tema.titulo|upper }}</h1>
@@ -17,16 +28,41 @@
       <div class="row">
           <div class="col-md-4">
               <div class="curso-card-img">
-                  {% if curso.imagen %}
-                    <img src="{{ tema.imagen.url }}" alt="Imagen de {{ tema.titulo }}" class="img-fluid rounded">
-                  {% else %}
+                {% if tema.imagen %}
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+                <img src="{% url "consumir-media-files" "img_tema" tema.id %}" alt="Imagen del tema" loading="lazy"> 
+                {% else %}
                     <img src="{% static 'img/default-curso.png' %}" alt="Sin imagen" class="img-fluid rounded">
-                  {% endif %}
+                {% endif %}
+                
               </div>
+              {% if es_profesor %}
+              <div>
+                  <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ update_theme_image_form.as_p }}
+                    <button type="submit" name="action" value="update_theme_image_form">Cargar</button>
+                  </form>
+
+                  <form method="post">
+                    {% csrf_token %}
+                    {{ update_theme_form.as_p }}
+                    <button type="submit" name="action" value="update_theme_form">Cargar</button>
+                  </form>
+                  <form method="post" enctype="multipart/form-data" id="uploadVideoForm">
+                    {% csrf_token %}
+                    <span id="video-label">Cliquea aquí para seleccionar un archivo</span>
+                    {{ create_video_form }}
+                    <button type="submit" name="action" value="create_video_form" id="btn-upload-video">Cargar</button>
+                  </form>
+              </div>
+              {% endif %}
           </div>
 
           <div class="col-md-8">
-              <h3>Descripción del curso:</h3>
+              <h3>Descripción del tema:</h3>
             <p class="text-muted">{{ tema.descripcion|linebreaks }}</p>
           </div>
       </div>
@@ -42,7 +78,29 @@
             <small class="text-secondary">{{ video.fecha_creacion|date:"d M Y" }}</small>
           </div>
       </div>
+      {% if es_profesor %}
+        <button type="button" class="btn-eliminar" onclick="abrirModalEliminar('{% url 'eliminar-video' video.pk %}', '{{ video.titulo|escapejs }}')">Eliminar</button>
+      {% endif %}
         {% endfor %}
+
+    {% if es_profesor %}
+   <dialog class="modalConfirm" id="modalConfirm">
+      <div class="modal-content">
+        <h3>¿Desea eliminar este tema?</h3>
+        <p>Está a punto de borrar: <strong id="modalTitulo">...</strong></p>
+        <p class="advertencia">Esta acción es irreversible</p>
+        <div class="modal-acciones">
+          <button class="btn-cancelar" onclick="document.getElementById('modalConfirm').close()">Cancelar</button>
+          <form method="post" action="" id="EliminarForm">
+            {% csrf_token %}
+            <button type="submit" class="btn-confirmar">Sí, deseo eliminar</button>
+          </form>
+        </div>
+    </div>
+   </dialog>
+   <script src="{% static 'detalles/js/confirmDelete.js' %}" defer></script>
+   <script src="{% static 'detalles/js/uploadVideo.js' %}" defer></script>
+    {% endif %}
   </div>
 </div>
-{%endblock %}
+{% endblock %}
