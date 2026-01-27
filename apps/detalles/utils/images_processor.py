@@ -14,8 +14,8 @@ class ImagesProcessor:
 
     def __call__(self):
         try:
-            print("PROCESANDO IMAGEN")
             if not self.img:
+                ValidationError("La imagen no se pudo procesar.")
                 return None, None
             # Máximo de píxeles permitido para lasd imagenes (Evita las bombas de pixeles).
             Image.MAX_IMAGE_PIXELS = 10000000
@@ -47,10 +47,7 @@ class ImagesProcessor:
                 nombre_final = f"{uuid_nombre}.{self.format.lower()}"
                 # Retorno del nombre final y el contenido del archivo para la reasignación.
                 return nombre_final, ContentFile(buffer.getvalue())
-        except Exception as e:
-            print(
-                f"Error en el procesamiento de la clase {ImagesProcessor.__name__}: {e}"
-            )
+        except (Image.DescompressionBombError, Image.DescompressionBombWarning):
             raise ValidationError(
                 "Hubo un error al procesar el archivo, intente más tarde."
             )

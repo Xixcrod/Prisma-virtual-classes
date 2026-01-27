@@ -20,13 +20,21 @@
     <div>
       <h3>Duración: {{ video.duracion }}</h3>
     </div>
+    <form method="post">
+      {% csrf_token %}
+      {{ update_video_form.as_p }}
+      <button type="submit" name="action" value="update_video_form">Modificar</button>
+    </form>
   </div>
   <div class="video-player-container row">
     <div class="col-md-8">
       <div class="video-player">
-        <video width="100%" height="auto" controls>
-          <source src="{{ video.archivo.url }}" type="video/mp4" />
-          Your browser does not support the video tag.
+        <video width="100%" height="auto" controls preload="metadata">
+          <source src="{% url "consumir-media-files" "video" video.id %}?format=mp4" type="video/mp4" />
+          <source src="{% url "consumir-media-files" "video" video.id %}?format=webm" type="video/webm" />
+          <source src="{% url "consumir-media-files" "video" video.id %}?format=quicktime" type="video/quicktime" />
+          <source src="{% url "consumir-media-files" "video" video.id %}?format=x-msvideo" type="video/x-msvideo" />
+          Tu navegador no soporta este formato de vídeo
         </video>
       </div>
     </div>

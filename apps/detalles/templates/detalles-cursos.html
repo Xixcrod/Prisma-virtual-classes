@@ -1,5 +1,10 @@
 {% extends 'layouts/base.html' %} 
 {% load static %} 
+{% block extra_css %}
+  {% if es_profesor %}
+    <link rel="stylesheet" href="{% static 'detalles/css/confirmDelete.css' %}">
+  {% endif %}
+{% endblock %}
 
 {% block content %}
 <a href="{{ url_retorno }}" class="btn btn-secondary">
@@ -30,12 +35,24 @@
                 {% endif %}
                 {% if es_profesor %}
                 <div>
-                  <form action="{% url 'editar-imagen-cursos' curso.id  %}" method="post" enctype="multipart/form-data">
+                  <form method="post" enctype="multipart/form-data">
+                    
                     {% csrf_token %}
-                    {{ form_img_curso.as_p }}
-                    <button type="submit">Cargar</button>
+                    
+                    {{ update_course_image_form.as_p }} 
+                    <button type="submit" name="action" value="update_course_image_form">Cargar</button>
                   </form>
-                </div>
+                  <form method="post">
+                    {% csrf_token %}
+                    {{ update_course_form.as_p }}
+                    <button type="submit" name="action" value="update_course_form">Cargar</button>
+                  </form>
+                  <form method="post", enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ create_theme_form.as_p }}
+                    <button type="submit" name="action" value="create_theme_form">Cargar</button>
+                  </form>
+
                 {% endif %}
             </div>
         </div>
@@ -43,6 +60,8 @@
         <div class="col-md-8">
             <h3>Descripción del curso</h3>
             <p class="text-muted">{{ curso.descripcion|linebreaks }}</p>
+            <p class="text-muted">Cantidad de vídeos:{{ cantidad_videos }}</p>
+            <p class=text-muted>Semestre: {{ curso.materia.semestre }}</p>
         </div>
         {% if es_profesor %}
         <div class="col-md-8">
@@ -66,15 +85,37 @@
                               <small class="text-secondary">{{ tema.fecha_creacion|date:"d M Y" }}</small>
                            </a>
                         </div>
-                    </div>
+                        {% if es_profesor %}
+                          <button type="button" class="btn-eliminar" onclick="abrirModalEliminar('{% url 'eliminar-tema' tema.pk %}', '{{ tema.titulo|escapejs }}')">Eliminar</button>
+                        {% endif %}
+                  </div>
                 {% empty %}
                     <p class="alert alert-info">Aún no se han cargado temas para este curso.</p>
                 {% endfor %}
-            </div>
-        {% else %}
+
+            {% else %}
         {# Llamada al macro donde se encapsula lógica del manejo de accesos #}
         {% include "partials/_card-acceso.html" with estado=estado_acceso curso_id=curso.id%} 
         {% endif %}
+
+        {% if es_profesor %} 
+        <dialog class="modalConfirm" id="modalConfirm">
+                  <div class="modal-content">
+                    <h3>¿Desea eliminar este tema?</h3>
+                    <p>Está a punto de borrar: <strong id="modalTitulo">...</strong></p>
+                    <p class="advertencia">Esta acción es irreversible</p>
+                    <div class="modal-acciones">
+                      <button class="btn-cancelar" onclick="document.getElementById('modalConfirm').close()">Cancelar</button>
+                      <form method="post" action="" id="EliminarForm">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-confirmar">Sí, deseo eliminar</button>
+                      </form>
+                    </div>
+                  </div>
+                </dialog>
+                <script src="{% static 'detalles/js/confirmDelete.js' %}" defer></script>
+          {% endif %}
+      </div>
     </section>
 </div>
 {% endblock content %}

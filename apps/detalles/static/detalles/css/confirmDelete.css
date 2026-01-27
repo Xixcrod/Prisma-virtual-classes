@@ -1,0 +1,79 @@
+/* El contenedor del modal */
+dialog.modalConfirm {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 0;
+  width: 90%;
+  max-width: 400px;
+  animation: aparecer 0.3s ease-out;
+}
+
+/* El fondo oscuro detrás del modal */
+dialog.modalConfirm::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px); /* Efecto borroso opcional */
+}
+
+/* Contenido interno */
+.modal-content {
+  padding: 20px;
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.advertencia {
+  color: #dc3545; /* Rojo */
+  font-size: 0.9em;
+}
+
+/* Botones */
+.modal-acciones {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Botones personalizados */
+.btn-eliminar {
+  background: none;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-cancelar {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-confirmar {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Animación de entrada */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
