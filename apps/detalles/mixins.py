@@ -76,6 +76,9 @@ class ConfigAccessToMediaFilesMixin:
         "img_curso": MediaConfig(model=Curso, file_field="imagen", alias="img_curso"),
         "img_tema": MediaConfig(model=Tema, file_field="imagen", alias="img_tema"),
         "video": MediaConfig(model=Video, file_field="url_video", alias="video"),
+        "thumbnail_video": MediaConfig(
+            model=Video, file_field="thumbnail", alias="thumbnail_video"
+        ),
     }
 
     # Obtención de la configuración según el alias establecido en la url del template.

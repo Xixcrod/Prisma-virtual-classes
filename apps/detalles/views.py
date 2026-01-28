@@ -20,6 +20,7 @@ from .forms import (
     UpdateThemeForm,
     UpdateVideoForm,
     CreateVideoForm,
+    UpdateThumbnailVideoForm,
 )
 import mimetypes
 from .utils.forms_config import FormConfig
@@ -176,6 +177,11 @@ class ThemesDetails(
             obj = form.save(commit=False)
             obj.tema = self.get_object()
             obj.duracion = getattr(form, "duracion_extraida", None)
+            # Si existe el nuevo campo del formualrio, se guarda la miniatura procesada en la BD
+            thumbnail_data = getattr(form, "thumbnail_final", None)
+            if thumbnail_data:
+                file_name, file_data = thumbnail_data
+                obj.thumbnail.save(file_name, file_data, save=False)
             obj.save()
         else:
             form.save()
@@ -201,7 +207,12 @@ class VideoDetails(LoginRequiredMixin, AuthorizationsMixin, FormsPostMixin, Deta
             form_class=UpdateVideoForm,
             prefix="update_video_form",
             roles={"es_profesor"},
-        )
+        ),
+        "update_thumbnail_form": FormConfig(
+            form_class=UpdateThumbnailVideoForm,
+            prefix="update_thumbnail_form",
+            roles={"es_profesor"},
+        ),
     }
 
     def get_context_data(self, **kwargs):
@@ -216,8 +227,8 @@ class VideoDetails(LoginRequiredMixin, AuthorizationsMixin, FormsPostMixin, Deta
     def form_valid(self, form, action):
         # Mensajes de éxito según el formulario
         forms_success_msj = {
-            "update_theme_image_form": "La imagen se ha cargado correctamente.",
-            "update_theme_form": "El curso ha sido modificado exitosamente.",
+            "update_thumbnail_form": "La miniatura se ha cargado correctamente.",
+            "update_video_form": "El vídeo ha sido modificado exitosamente.",
         }
         form.save()
         if action in forms_success_msj:

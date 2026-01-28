@@ -3,6 +3,13 @@
    Volver
 </a>
 <div class="container video-detalle">
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
   <header class="video-header">
     <h2>{{ video.titulo|upper }}</h2>
     <div class="meta-info">
@@ -26,6 +33,14 @@
       <button type="submit" name="action" value="update_video_form">Modificar</button>
     </form>
   </div>
+  <div>
+      <img src="{% url "consumir-media-files" "thumbnail_video" video.id %}" alt="Miniatura del vídeo">
+  </div>
+  <form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+    {{ update_thumbnail_form.as_p }}
+  <button type="submit" name="action" value="update_thumbnail_form">Modificar</button>
+  </form>
   <div class="video-player-container row">
     <div class="col-md-8">
       <div class="video-player">

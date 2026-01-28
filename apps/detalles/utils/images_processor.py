@@ -45,8 +45,18 @@ class ImagesProcessor:
                 # Uso de uuid para renombrar la nueva imagen generada.
                 uuid_nombre = uuid.uuid4()
                 nombre_final = f"{uuid_nombre}.{self.format.lower()}"
+                buffer.seek(0)
                 # Retorno del nombre final y el contenido del archivo para la reasignación.
                 return nombre_final, ContentFile(buffer.getvalue())
+        except (Image.UnidentifiedImageError, IOError, SyntaxError) as e:
+            # Si Pillow no puede identificar el archivo (como el caso del .txt)
+            # o hay un error de entrada/salida.
+            print(f"Error de Pillow: {e}")
+            return None, None
+        except Exception as e:
+            # Cualquier otro error inesperado
+            print(f"Error inesperado en ImagesProcessor: {e}")
+            return None, None
         except (Image.DescompressionBombError, Image.DescompressionBombWarning):
             raise ValidationError(
                 "Hubo un error al procesar el archivo, intente más tarde."

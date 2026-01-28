@@ -1,7 +1,9 @@
+from typing import Required
 from django import forms
 from django.core.validators import FileExtensionValidator
 from apps.core.models import Curso, Tema, Video
-from apps.detalles.utils.videos_processor import VideosProcessor
+from .utils.videos_processor import VideosProcessor
+from .utils.images_processor import ImagesProcessor
 from django.core.exceptions import ValidationError
 from apps.detalles.validators import ValidateImage, not_only_whitespaces
 from .mixins import CleanImageFormMixin
@@ -141,9 +143,10 @@ class UpdateThemesImageForm(CleanImageFormMixin, forms.ModelForm):
             ),
         ],
         widget=forms.FileInput(attrs={"class": "form-control"}),
-        label="Cambiar imagen del curso.",
+        label="Cambiar imagen del tema.",
         # Mensajes de error modificados a conveniencia.
         error_messages={
+            "required": "La imagen debe ser ingresada.",
             "invalid_image": "El archivo no es una imagen válida o está corrupto. Intenta con un formato real.",
             "missing": "No has seleccionado ningún archivo.",
             "empty": "El archivo está vacío.",
@@ -285,6 +288,24 @@ class CreateVideoForm(forms.ModelForm):
         ),
         label="Vídeo:",
     )
+    thumbnail = forms.ImageField(
+        validators=[
+            FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "webp"]),
+            ValidateImage(
+                mb_max=15,
+                mimes_perm=["image/jpeg", "image/jpg", "image/png", "image/webp"],
+            ),
+        ],
+        widget=forms.FileInput(attrs={"class": "form-control"}),
+        label="Subir miniatura del vídeo (Opcional):",
+        error_messages={
+            "invalid_image": "El archivo no es una imagen válida o está corrupto. Intenta con un formato real.",
+            "missing": "No has seleccionado ningún archivo.",
+            "empty": "El archivo está vacío.",
+            "invalid_extension": "Esta extensión de archivo no está permitida. Usa JPG, PNG o WebP.",
+        },
+        required=False,
+    )
 
     # Aplicación de validaciones y procesamientos de vídeo
     def clean_url_video(self):
@@ -303,10 +324,81 @@ class CreateVideoForm(forms.ModelForm):
         ]
         if video.content_type not in allowed_types:
             raise ValidationError("Este vídeo no está en un formato válido.")
-        processor = VideosProcessor(video, self)
+        # Obtención del prefijo que denota el formulario desde el html (porque todavía no se ha ejecutado el clean_thumbnail)
+        prefix = f"{self.prefix}-" if self.prefix else ""
+        # Se obtiene la miniatura que el usuario cargó
+        thumbnail_uploaded = self.files.get(f"{prefix}thumbnail")
+        # Si no la ha cargado, se procesa el vídeo y ahí también se extrae del primer frame una imagen que servirá de miniatura para guardarla en la Base de Datos. Si lo hizo, se procesa y guarda esa miniatura.
+        if not thumbnail_uploaded:
+            processor = VideosProcessor(video, self, use_default_thumbnail=True)
+        else:
+            processor = VideosProcessor(video, self, use_default_thumbnail=False)
+            # Validaciones y procesamientos directos de la miniatura si la cargó el usuario
+            validator_thumbnail = ValidateImage(mb_max=15)
+            validator_thumbnail(thumbnail_uploaded)
+            thumbnail_uploaded.seek(0)
+            # Procesamiento de la miniatura
+            processor_image = ImagesProcessor(thumbnail_uploaded)
+
+            thumnail_name, thumbnail = processor_image()
+            # Se guarda la miniatura procesada y enviada por el usuario en un nuevo campo del formulario
+            self.thumbnail_final = (thumnail_name, thumbnail)
+
         video = processor()
         return video
 
     class Meta:
         model = Video
-        fields = ["titulo", "resumen", "url_video"]
+        fields = ["titulo", "resumen", "url_video", "thumbnail"]
+
+
+# Formulario para cambiar la miniatura de un vídeo
+class UpdateThumbnailVideoForm(forms.ModelForm):
+    thumbnail = forms.ImageField(
+        validators=[
+            FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "webp"]),
+            ValidateImage(
+                mb_max=15,
+                mimes_perm=["image/jpeg", "image/jpg", "image/png", "image/webp"],
+            ),
+        ],
+        widget=forms.FileInput(attrs={"class": "form-control"}),
+        label="Cambiar la miniatura del vídeo.",
+        # Mensajes de error modificados a conveniencia.
+        error_messages={
+            "required": "La miniatura debe ser ingresada.",
+            "invalid_image": "El archivo no es una imagen válida o está corrupto. Intenta con un formato real.",
+            "missing": "No has seleccionado ningún archivo.",
+            "empty": "El archivo está vacío.",
+            "invalid_extension": "Esta extensión de archivo no está permitida. Usa JPG, PNG o WebP.",
+        },
+    )
+
+    def clean_thumbnail(self):
+        # Obtenbción del campo ya validado.
+        thumbnail = self.cleaned_data.get("thumbnail")
+        if not thumbnail:
+            return None
+        # Procesamiento de la imagen.
+        try:
+            processor = ImagesProcessor(thumbnail)
+
+            nombre, imagen_procesada = processor()
+
+            if not nombre and not imagen_procesada:
+                print(
+                    f"DEBUG: La imagen procesada ha generado como resultado en su nombre: {nombre} y en su contenido: {imagen_procesada}"
+                )
+                raise ValidationError(
+                    "No se ha podido procesar la imagen, intente más tarde."
+                )
+            # Redefinición de los valores del campo (nombre del archivo y su contenido).
+            thumbnail.file = imagen_procesada
+            thumbnail.name = nombre
+        except Exception as e:
+            raise ValidationError(f"Error procesando la imagen: {str(e)}")
+        return thumbnail
+
+    class Meta:
+        model = Video
+        fields = ["thumbnail"]

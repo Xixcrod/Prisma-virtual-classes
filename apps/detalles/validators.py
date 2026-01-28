@@ -27,14 +27,19 @@ class ValidateImage:
             )
         archivo.seek(0)
         # Contra bomba de pixeles.
-        with Image.open(archivo) as pil_img:
-            Image.MAX_IMAGE_PIXELS = 10000000
-            width, height = pil_img.size
-            total_pixels = width * height
-            if total_pixels > Image.MAX_IMAGE_PIXELS:
-                raise ValidationError(
-                    "La imagen no ha podido ser procesada, excedió del límite permitido de pixeles."
-                )
+        try:
+            with Image.open(archivo) as pil_img:
+                Image.MAX_IMAGE_PIXELS = 10000000
+                width, height = pil_img.size
+                total_pixels = width * height
+                if total_pixels > Image.MAX_IMAGE_PIXELS:
+                    raise ValidationError(
+                        "La imagen no ha podido ser procesada, excedió del límite permitido de pixeles."
+                    )
+        except (IOError, SyntaxError, Image.UnidentifiedImageError):
+            raise ValidationError(
+                "La imagen suministrada no está en un formato válido."
+            )
 
 
 # Validación de que la cantidad de caracteres sea mayor o igual a 10, sin contar espacios en blanco.

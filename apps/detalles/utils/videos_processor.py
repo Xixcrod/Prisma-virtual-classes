@@ -1,16 +1,20 @@
 import os
 import av
+import io
 import uuid
 from datetime import timedelta
 from tempfile import NamedTemporaryFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
+from .images_processor import ImagesProcessor
 
 
 # Clase para el procesamiento de los vídeos.
 class VideosProcessor:
-    def __init__(self, video, form):
+    def __init__(self, video, form, use_default_thumbnail):
         self.video = video
         self.form = form
+        self.use_default_thumbnail = use_default_thumbnail
 
     def __call__(self):
         temp_path = None
@@ -40,6 +44,35 @@ class VideosProcessor:
             duracion_segundos = container.duration / 1000000
             # Formateo del tiempo y guardado en un nuevo atributo del formulario.
             self.form.duracion_extraida = timedelta(seconds=int(duracion_segundos))
+            # Si el usuario no cargó una miniatura. aquí se extrae una del primer frame del vídeo
+            if self.use_default_thumbnail:
+                stream = container.streams.video[0]
+                for frame in container.decode(stream):
+                    img_pil = frame.to_image()
+                    # Si inicializa un contenedor de bytes
+                    temp_thumb_io = io.BytesIO()
+                    # Se guarda la imagen (PIL Object) que se ha extraído
+                    img_pil.save(temp_thumb_io, format="JPEG", quality=85)
+                    temp_thumb_io.seek(0)
+
+                    # Se inicia un nombre único para la miniatura generada.
+                    thumb_filename = f"thumb_{uuid.uuid4()}.jpg"
+
+                    # Se guarda el contenido y características como un objeto de archivo que Django puede reconocer.
+                    django_file = SimpleUploadedFile(
+                        thumb_filename, temp_thumb_io.read(), content_type="image/jpeg"
+                    )
+                    # Se procesa la miniatura
+                    processor = ImagesProcessor(django_file)
+                    thumbnail_name, thumbnail_processed = processor()
+                    # Se introduce la miniatura procesada en un nuevo campo al formulario
+                    self.form.thumbnail_final = (
+                        thumbnail_name,
+                        thumbnail_processed,
+                    )
+                    break
+            # Se cierra el proceso de la librería AV (Buena práctica)
+            container.close()
             # Renombre del vídeo meidante un uuid
             uuid_name = uuid.uuid4()
             self.video.name = f"{uuid_name}{ext_original}"
@@ -55,5 +88,5 @@ class VideosProcessor:
                 # Este es un manejo para que en caso de que, con el proceso realizado con AV, se tarde el sistema de reconocer o eliminar ese archivo temporal
                 except PermissionError:
                     pass
-        # Retorno del vídeo con su nuevo nombre y el formulario con la duración del vídeo.
+        # Retorno del vídeo con su nuevo nombre y el formulario con la duración del vídeo y la miniatura para el vídeo.
         return self.video
