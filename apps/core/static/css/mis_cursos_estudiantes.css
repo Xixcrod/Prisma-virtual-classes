@@ -1,48 +1,10 @@
-/* =============================
-   CONTENEDOR PRINCIPAL
-============================= */
-.estudiante-main {
+body {
+    background: url('../img/fondo3.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
     color: #ffffff;
-    min-height: 100vh;
 }
 
-/* =============================
-   BANNER
-============================= */
-.estudiante-banner {
-    width: 100%;
-    margin-bottom: 4rem;
-    position: relative;
-    overflow: hidden;
-}
 
-.estudiante-banner img {
-    width: 100%;
-    height: 350px; /* Altura fija para el banner */
-    object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformar */
-    object-position: center;
-    mask-image: linear-gradient(to bottom, black 80%, transparent 100%); /* Efecto desvanecido abajo */
-    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-}
-
-/* =============================
-   SECCIONES
-============================= */
-.estudiante-seccion {
-    padding: 0 5%; /* Márgenes laterales */
-    margin-bottom: 5rem;
-    padding: 2rem 6%; /* Reduje un poco el padding vertical interno */
-    position: relative;
-    background: url('../img/iluminacion_detras.svg'); 
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-size: cover;
-    
-}
-
-/* =============================
-   TITULOS
-============================= */
 .estudiante-titulo {
     font-size: 2.2rem;
     font-weight: 800;
@@ -64,6 +26,20 @@
     color: #9ca3af;
     margin-bottom: 2.5rem;
     font-weight: 400;
+}
+
+/* =============================
+   SECCIONES
+============================= */
+.estudiante-seccion {
+    padding: 0 5%; /* Márgenes laterales */
+    margin-bottom: 5rem;
+    padding: 2rem 6%; /* Reduje un poco el padding vertical interno */
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    
 }
 
 /* =============================
@@ -149,7 +125,7 @@
     /* LIMITAR A 2 LÍNEAS (Evita que el título empuje todo) */
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-clamp: 2;
+    line-clamp:2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     height: 3.1em; /* Altura reservada para 2 líneas */
@@ -193,21 +169,4 @@
     background: rgba(255,255,255,0.02);
     border-radius: 12px;
     border: 1px dashed rgba(255,255,255,0.1);
-}
-
-/* =============================
-   RESPONSIVE
-============================= */
-@media (max-width: 768px) {
-    .estudiante-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    }
-    
-    .estudiante-titulo {
-        font-size: 1.8rem;
-    }
-    
-    .estudiante-banner img {
-        height: 200px;
-    }
 }

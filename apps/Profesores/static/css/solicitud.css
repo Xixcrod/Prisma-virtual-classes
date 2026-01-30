@@ -1,0 +1,146 @@
+/* 1. Base y Fondo General */
+body {
+    background: url('../img/fondo2.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
+    color: #ffffff;
+}
+
+.main-container {
+    flex: 1;
+    min-height: 80vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 2. Pestañas (Tabs) Estilo Neón Morado */
+.tabs-header {
+    margin-bottom: 25px;
+    display: flex;
+    gap: 20px;
+}
+
+.tab-button {
+    background: linear-gradient(to bottom, #5d3fd3, #3b20a1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 45px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.tab-button.active {
+    background: #4b0082;
+    border-color: #ffffff;
+    box-shadow: 0 0 15px rgba(147, 112, 219, 0.6);
+    transform: translateY(-2px);
+}
+
+/* 3. Contenedor de la Tabla con Borde Naranja */
+.table-container {
+    border: 3px solid #ff8c00; 
+    width: 90%;
+    max-width: 950px;
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
+    padding: 0; /* Quitamos padding para que el scroll pegue a los bordes */
+    overflow: hidden;
+}
+
+/* 4. ÁREA DE SCROLL */
+.table-scroll-area {
+    max-height: 450px; 
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Estilo de la Scrollbar */
+.table-scroll-area::-webkit-scrollbar {
+    width: 8px;
+}
+.table-scroll-area::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+.table-scroll-area::-webkit-scrollbar-thumb {
+    background: #ff8c00;
+    border-radius: 10px;
+}
+
+/* 5. Tabla y Encabezado Fijo */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse; /* Cambiado a collapse para mejor control del sticky */
+}
+
+.styled-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(to right, rgba(139, 0, 0, 1), rgba(255, 140, 0, 0.8));
+}
+
+.styled-table th {
+    color: #ffffff;
+    text-transform: capitalize;
+    font-size: 1.1rem;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #ff8c00;
+}
+
+.styled-table td {
+    color: #fdfdfd; 
+    font-family: 'Brush Script MT', 'Comic Sans MS', cursive; 
+    font-size: 1.4rem;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 140, 0, 0.2);
+}
+
+/* 6. Botones de Acción Neón */
+.btn-approve { 
+    color: #39ff14; 
+    text-shadow: 0 0 8px #39ff14;
+    text-decoration: none;
+    margin-right: 15px;
+    font-size: 1.5rem;
+}
+
+.btn-reject { 
+    color: #ff3131; 
+    text-shadow: 0 0 8px #ff3131;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+/* 7. Paginación */
+.pagination-dots {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+}
+
+.dot {
+    height: 14px;
+    width: 14px;
+    background-color: #333;
+    border: 2px solid #555;
+    border-radius: 50%;
+}
+
+.dot.active {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px #ffffff;
+}

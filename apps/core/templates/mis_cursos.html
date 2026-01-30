@@ -1,0 +1,42 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mis_cursos_estudiantes.css' %}">
+{% endblock %}
+
+{% block content %}
+{% if es_estudiante %}
+<main class="estudiante-main">
+
+<h1 class="estudiante-titulo">
+        Últimos <span>videos añadidos</span>
+</h1>
+<p class="estudiante-subtitulo">
+        Últimos videos añadidos a nuestros temas
+</p>
+
+<section class="estudiante-seccion">
+<div class="estudiante-grid">
+    {% for curso in cursos.cursos_estudiante %}
+    <a href="{% url 'detalles-cursos' id_curso=curso.id %}" class="estudiante-card-link">
+    <article class="estudiante-card">
+        <img src="{{ curso.imagen.url }}" alt="{{ curso.materia.nombre }}" class ="estudiante-card-img">
+
+        <div class="estudiante-card-info">
+        <p>{{ curso.materia.nombre }}</p>
+        <p>{{ curso.descripcion }}</p>
+        <p>{{ curso.materia.semestre }} semestre</p>
+        <p class="estudiante-profesor">Profesor: {{ curso.profesor }}</p>
+        </div>
+    </article>
+    </a>
+    {% empty %}
+    <p class="estudiante-vacio">Aún no tienes acceso a ningún curso.</p>
+    {% endfor %}
+</div>
+</section>
+</main>
+{% endif %}
+
+{% endblock %}

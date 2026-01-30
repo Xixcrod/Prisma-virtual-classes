@@ -1,0 +1,55 @@
+{% extends 'layouts/base.html' %} 
+{% load static %} 
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/solicitud.css' %}" />
+{% endblock %} 
+
+{% block content %}
+<div class="main-container">
+    <div class="tabs-header">
+        <button id="tab-pendientes" class="tab-button active">Solicitudes</button>
+        <button id="tab-aceptados" class="tab-button">Aceptados</button>
+    </div>
+
+    <div class="table-container">
+        <div class="table-scroll-area">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Carrera</th>
+                        <th>Curso</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in solicitudes %}
+                    <tr class="row-pendiente">
+                        <td>{{ item.estudiante.usuario.get_full_name }}</td>
+                        <td>{{ item.estudiante.carrera.nombre }}</td>
+                        <td>{{ item.curso.materia.nombre }}</td>
+                        <td class="action-buttons">
+                            <a href="{% url 'gestionar_estatus' item.id 'AP' %}" class="btn-approve">✔</a>
+                            <a href="{% url 'gestionar_estatus' item.id 'RE' %}" class="btn-reject">✖</a>
+                        </td>
+                    </tr>
+                    {% endfor %} 
+
+                    {% for item in aceptados %}
+                    <tr class="row-aceptado" style="display: none">
+                        <td>{{ item.estudiante.usuario.get_full_name }}</td>
+                        <td>{{ item.estudiante.carrera.nombre }}</td>
+                        <td>{{ item.curso.materia.nombre }}</td>
+                        <td class="action-buttons">
+                            <a href="{% url 'gestionar_estatus' item.id 'RE' %}" class="btn-reject">✖</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/cambiar_lista_solicitud.js' %}"></script>
+{% endblock content %}
