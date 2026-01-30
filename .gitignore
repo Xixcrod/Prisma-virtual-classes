@@ -10,3 +10,4 @@ media/
 # Esto es de Hernán
 create_courses.py
 check_access.py
+whoosh_index/
