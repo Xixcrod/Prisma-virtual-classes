@@ -31,6 +31,7 @@ body {
 .text-gradient {
     background: linear-gradient(90deg, var(--prisma-orange), var(--prisma-red));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 800;
 }

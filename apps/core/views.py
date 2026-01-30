@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .utils.get_information import obtener_estadisticas_profesor
 from .utils.get_information import obtener_ultimos_contenidos_estudiante
+from .utils.get_information import obtener_cursos_estudiante
 
 # Create your views here.
 
@@ -30,3 +31,7 @@ def dashboardpe(request):
     stats = obtener_estadisticas_profesor(request.user)
     contenidos = obtener_ultimos_contenidos_estudiante(request)
     return render(request, 'dashboardpe.html', {'stats': stats, 'contenidos': contenidos,})
+
+def mis_cursos(request):
+    cursos = obtener_cursos_estudiante(request)
+    return render(request, 'mis_cursos.html', {'cursos': cursos})

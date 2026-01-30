@@ -80,11 +80,11 @@
                     {% if es_profesor %}
                     <li class="nav-item"><a class="nav-link active" href="{% url 'dashboardpe' %}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Mis cursos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Solicitudes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'aceptar_rechazar_solicitud' %}">Solicitudes</a></li>
                     {% elif es_estudiante %}
                     <li class="nav-item"><a class="nav-link active" href="{% url 'dashboardpe' %}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Catálogo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Favoritos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'mis_cursos' %}">Mis cursos</a></li>
                     {% endif %}
                     {% endif %}
                 </ul>
