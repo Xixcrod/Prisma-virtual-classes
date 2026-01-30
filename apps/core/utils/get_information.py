@@ -52,3 +52,26 @@ def obtener_ultimos_contenidos_estudiante(request):
         ultimos_videos = []
         ultimos_temas = []
         return {'ultimos_videos': ultimos_videos, 'ultimos_temas': ultimos_temas}
+
+def obtener_cursos_estudiante(request):
+    try:
+        # 1. Identificamos al estudiante
+        estudiante = Estudiante.objects.get(usuario=request.user)
+
+        # 2. OBTENER CURSOS CON ACCESO APROBADO ('AP')
+        # Filtramos Cursos a través del modelo Acceso
+        cursos_aprobados = Curso.objects.filter(
+            acceso__estudiante=estudiante,
+            acceso__estado='AP',
+            activo=True
+        ).order_by('-fecha_creacion')
+
+        return {
+            'cursos_estudiante': cursos_aprobados,
+        }
+
+    except (Estudiante.DoesNotExist, TypeError):
+        # Manejo si no es estudiante o no está logueado
+        return {
+            'cursos_estudiante': [],
+        }
