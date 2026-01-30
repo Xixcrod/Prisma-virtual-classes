@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements/local.txt
 COPY . .
 
 # Run migrations and index building
-RUN python manage.py makemigrations --no-input
+RUN python manage.py makemigrations core --no-input
 RUN python manage.py migrate --no-input
 
 RUN python manage.py rebuild_index --noinput
