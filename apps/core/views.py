@@ -4,6 +4,8 @@ from django.urls import reverse
 from apps.core.decorators.login_excluded import login_excluded
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from .utils.get_information import obtener_estadisticas_profesor
+from .utils.get_information import obtener_ultimos_contenidos_estudiante
 
 # Create your views here.
 
@@ -22,6 +24,9 @@ def signout(request):
 def recuperar_contrasena(request):
     return render(request, 'recuperar_contrasena.html')
 
-#Ruta de prueba para el admin
-def adminp(request):
-    return render(request, 'adminp.html')
+#Ruta de dashboard del profesor y estudiante
+@login_required
+def dashboardpe(request):
+    stats = obtener_estadisticas_profesor(request.user)
+    contenidos = obtener_ultimos_contenidos_estudiante(request)
+    return render(request, 'dashboardpe.html', {'stats': stats, 'contenidos': contenidos,})

@@ -37,11 +37,10 @@
                 {% if user.is_authenticated %}
                 {% if es_profesor or es_estudiante %}
                 <div class="dropdown">
-                    <a class="notif-link position-relative dropdown-toggle" href="#" id="notifDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="notif-link position-relative dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{% static 'img/notificacionencendido.png' %}" alt="Notificaciones" class="notif-icon">
                         {% if notif_count > 0 %}
-                        <span class="badge-count">{{ notif_count }}</span>
+                        <span id="notif-badge" class="badge-count">{{ notif_count }}</span>
                         {% endif %}
                     </a>
 
@@ -53,9 +52,8 @@
                         </li>
                         <li class="p-2">
                             <div class="d-flex justify-content-between">
-                                <small class="fw-bold text-orange">{{ n.emisor.get_full_name }}</small>
-                                <small class="text-muted" style="font-size: 0.7rem;">{{ n.fecha_creacion|timesince
-                                    }}</small>
+                                <small class="fw-bold text-orange">{{ n.emisor_nombre }}</small>
+                                <small class="text-muted" style="font-size: 0.7rem;">{{ n.hace_cuanto }}</small>
                             </div>
                             <p class="mb-0 small text-light">{{ n.mensaje }}</p>
                         </li>
@@ -76,11 +74,11 @@
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-center">
                     {% if user.is_authenticated %}
                     {% if es_profesor %}
-                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'dashboardpe' %}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Mis cursos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Solicitudes</a></li>
                     {% elif es_estudiante %}
-                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'dashboardpe' %}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Catálogo</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Favoritos</a></li>
                     {% endif %}
@@ -127,4 +125,5 @@
     {% endif %}
 </body>
 
+<script src="{% static 'js/marcar_notificaciones_leidas.js' %}"></script>
 </html>

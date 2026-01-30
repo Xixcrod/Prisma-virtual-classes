@@ -1,0 +1,102 @@
+/* --- CONFIGURACIÓN GENERAL --- */
+main.main-content {
+    flex: 1;
+}
+
+/* Forzamos que el fondo cubra todo y no se repita */
+body {
+    background: url('../img/fondo2.jpg') no-repeat center center fixed !important;
+    background-size: cover !important;
+    color: #ffffff;
+}
+
+/* --- VARIABLES DE COLOR --- */
+:root {
+    --prisma-orange: #ff6b00;
+    --prisma-red: #ff004c;
+    --prisma-purple: #7000ff;
+    
+    /* Fondo blanco muy transparente para el efecto cristal */
+    --glass-bg: rgba(255, 255, 255, 0.05); 
+    /* Borde blanco suave para definir el contorno */
+    --glass-border: rgba(255, 255, 255, 0.15);
+}
+
+/* --- TEXTOS --- */
+.text-orange { color: var(--prisma-orange) !important; }
+.text-red { color: var(--prisma-red) !important; }
+.text-purple { color: var(--prisma-purple) !important; }
+
+/* Degradado del título principal */
+.text-gradient {
+    background: linear-gradient(90deg, var(--prisma-orange), var(--prisma-red));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* --- TARJETAS (ESTILO EXACTO) --- */
+.prisma-card {
+    background: var(--glass-bg); /* Fondo sutil */
+    
+    /* ESTO ES LO MÁS IMPORTANTE: Desenfoca lo que hay detrás */
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
+    
+    border: 1px solid var(--glass-border); 
+    border-radius: 0; /* Ajusta a 0px si las quieres cuadradas como en tu código previo */
+    
+    transition: all 0.3s ease;
+    min-height: 280px;
+    
+    /* Sombra profunda para dar relieve */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* EFECTO HOVER: Aumenta el brillo y el borde al pasar el mouse */
+.card-hover:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.1); /* Se vuelve un poco más blanca */
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* --- AJUSTE DE ICONOS --- */
+.icon-box {
+    width: 65px;
+    height: 65px;
+    margin-bottom: 25px;
+    background: transparent !important; /* Aseguramos que no haya fondo gris */
+    padding: 0;
+}
+
+.icon-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* --- TIPOGRAFÍA DE LA TARJETA --- */
+/* El número grande */
+.display-number {
+    font-size: 4rem; /* Hacemos el número bien grande */
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+/* El título (Cursos, Temas...) */
+.card-title-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+/* La descripción pequeña */
+.card-desc {
+    font-size: 0.9rem;
+    color: #a0a0a0; /* Gris suave */
+    font-weight: 400;
+    line-height: 1.4;
+}

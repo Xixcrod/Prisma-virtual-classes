@@ -1,0 +1,154 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboardp.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboarde.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% if es_profesor %}
+<main class="main-content container-fluid px-4 py-5 prisma-container">
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10 text-center">
+            <h1 class="display-4 fw-bold text-white">
+                Bienvenido, <span class="text-gradient">Prof. {{ user.first_name }} {{ user.last_name }}</span>
+            </h1>
+            <p class="lead text-light opacity-75 mt-3">
+                Gestiona tu contenido audiovisual y mantén conectados a tus estudiantes con material de calidad.
+            </p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="text-white fw-bold">
+                Tu actividad en <span class="text-orange">PRISMA</span>
+            </h3>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card prisma-card card-hover h-100">
+                <div class="card-body p-4">
+                    <div class="icon-box mb-3">
+                        <img src="{% static 'img/cursos_logo.png' %}" alt="Cursos" class="img-fluid">
+                    </div>
+                    <h2 class="display-3 fw-bold text-orange mb-0">{{ stats.total_cursos }}</h2>
+                    <h4 class="text-white fw-bold">Cursos</h4>
+                    <p class="card-desc">Cursos activos este semestre</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card prisma-card card-hover h-100">
+                <div class="card-body p-4">
+                    <div class="icon-box mb-3">
+                        <img src="{% static 'img/temas_logos.png' %}" alt="Temas" class="img-fluid">
+                    </div>
+                    <h2 class="display-3 fw-bold text-red mb-0">{{ stats.total_temas }}</h2>
+                    <h4 class="text-white fw-bold">Temas</h4>
+                    <p class="card-desc">Unidades temáticas creadas</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card prisma-card card-hover h-100">
+                <div class="card-body p-4">
+                    <div class="icon-box mb-3">
+                        <img src="{% static 'img/videos_logos.png' %}" alt="Videos" class="img-fluid">
+                    </div>
+                    <h2 class="display-3 fw-bold text-purple mb-0">{{ stats.total_videos }}</h2>
+                    <h4 class="text-white fw-bold">Videos</h4>
+                    <p class="card-desc">Videos subidos al sistema</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+{% elif es_estudiante %}
+<main class="estudiante-main">
+
+    <!-- Banner / Bienvenida -->
+    <section class="estudiante-banner">
+        <img src="{% static 'img/welcome_student.svg' %}" alt="Bienvenido Estudiante">
+    </section>
+
+    <!-- Últimos videos -->
+
+    <h1 class="estudiante-titulo">
+        Últimos <span>videos añadidos</span>
+    </h1>
+    <p class="estudiante-subtitulo">
+        Últimos videos añadidos a nuestros temas
+    </p>
+    <section class="estudiante-seccion">
+
+        <div class="estudiante-grid">
+            {% for video in contenidos.ultimos_videos %}
+            <a href="{% url 'detalles-videos' id_video=video.id %}" class="estudiante-card-link">
+                <article class="estudiante-card">
+                    <img class="estudiante-card-img" src="{% url 'consumir-media-files' 'thumbnail_video' video.id %}"
+                        alt="Miniatura del vídeo">
+
+                    <div class="estudiante-card-info">
+                        <h3>{{ video.titulo }}</h3>
+                        <p>{{ video.tema.curso.materia.carrera.nombre }}</p>
+                        <p>{{ video.tema.curso.materia.nombre }}</p>
+                        <p>{{ video.tema.curso.materia.semestre }} semestre</p>
+                        <p class="estudiante-profesor">
+                            Prof. {{ video.tema.curso.profesor.usuario.first_name }} {{
+                            video.tema.curso.profesor.usuario.last_name }}
+                    </div>
+                </article>
+            </a>
+            {% empty %}
+            <p class="estudiante-vacio">No tienes ningún video reciente.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Últimos temas -->
+    <h1 class="estudiante-titulo rojo">
+        Últimos <span>temas añadidos a las materias</span>
+    </h1>
+    <p class="estudiante-subtitulo">
+        Últimos temas agregados por profesor
+    </p>
+    <section class="estudiante-seccion">
+
+
+        <div class="estudiante-grid">
+            {% for tema in contenidos.ultimos_temas %}
+            <a href="{% url 'detalles-temas' id_tema=tema.id %}" class="estudiante-card-link">
+                <article class="estudiante-card estudiante-card-tema">
+                    <img class="estudiante-card-img" src="{% url 'consumir-media-files' 'img_tema' tema.id %}"
+                        alt="Miniatura del tema">
+                    <div class="estudiante-card-info">
+                        <h3>{{ tema.titulo }}</h3>
+                        <p>{{ tema.curso.materia.carrera.nombre }}</p>
+                        <p>{{ tema.curso.materia.nombre }}</p>
+                        <p>{{ tema.curso.materia.semestre }} semestre</p>
+                        <p class="estudiante-profesor">
+                            Prof. {{ tema.curso.profesor.usuario.first_name }} {{ tema.curso.profesor.usuario.last_name
+                            }}
+                        </p>
+                    </div>
+                </article>
+            </a>
+            {% empty %}
+            <p class="estudiante-vacio">No tienes ningún tema reciente.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+</main>
+{% endif %}
+{% endblock content %}

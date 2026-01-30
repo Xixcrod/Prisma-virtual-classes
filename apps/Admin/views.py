@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
 import secrets
 import string
+from django.contrib.auth.decorators import login_required
 
 # Importaciones consolidadas de los modelos
 from apps.core.models import Usuario, Estudiante, Profesor, Carrera, Materia, Curso

@@ -34,11 +34,11 @@ def loginProcess(request):
 
             # 2. Si es Profesor (Verificamos la relación OneToOne)
             elif hasattr(user, 'profesor'):
-                return redirect('adminp')
+                return redirect('dashboardpe')
 
             # 3. Si es Estudiante
             elif hasattr(user, 'estudiante'):
-                return redirect('dashboard')
+                return redirect('dashboardpe')
 
             # 4. Por defecto (si es un usuario sin rol específico)
             else:

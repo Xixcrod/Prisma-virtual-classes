@@ -85,6 +85,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'prismasettings.wsgi.application'
+LOGIN_URL = 'login'
 
 
 # Database
@@ -119,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
 TIME_ZONE = 'UTC'
 
@@ -160,4 +161,11 @@ SITE_NAME = 'Prisma' # Nombre del sitio web para usar en los correos
 # Redirecciones de autenticación
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
-LOGIN_URL = 'login'
+
+#------------Código para cerrar sesión por inactividad o cerrar pestaña-------------#
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# La sesión expira en 3600 segundos (1 hora)
+SESSION_COOKIE_AGE = 3600
+# El contador se reinicia cada vez que el usuario hace algo
+SESSION_SAVE_EVERY_REQUEST = True
+

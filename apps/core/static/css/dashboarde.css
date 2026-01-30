@@ -1,0 +1,212 @@
+/* =============================
+   CONTENEDOR PRINCIPAL
+============================= */
+.estudiante-main {
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+/* =============================
+   BANNER
+============================= */
+.estudiante-banner {
+    width: 100%;
+    margin-bottom: 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.estudiante-banner img {
+    width: 100%;
+    height: 350px; /* Altura fija para el banner */
+    object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformar */
+    object-position: center;
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%); /* Efecto desvanecido abajo */
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+/* =============================
+   SECCIONES
+============================= */
+.estudiante-seccion {
+    padding: 0 5%; /* Márgenes laterales */
+    margin-bottom: 5rem;
+    padding: 2rem 6%; /* Reduje un poco el padding vertical interno */
+    position: relative;
+    background: url('../img/iluminacion_detras.svg'); 
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    
+}
+
+/* =============================
+   TITULOS
+============================= */
+.estudiante-titulo {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: #ffffff;;
+    letter-spacing: -0.5px;
+}
+
+.estudiante-titulo span {
+    color: #ff8c1a;
+}
+
+.estudiante-titulo.rojo span {
+    color: #ef4444;
+}
+
+.estudiante-subtitulo {
+    font-size: 1rem;
+    color: #9ca3af;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+}
+
+/* =============================
+   GRID DE TARJETAS (SOLUCIÓN TAMAÑO)
+============================= */
+.estudiante-grid {
+    display: grid;
+    /* Tarjetas más anchas (min 280px) para parecerse al diseño */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 2rem;
+    padding-bottom: 1rem;
+}
+
+/* =============================
+   TARJETAS
+============================= */
+.estudiante-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.estudiante-card {
+    /* Gradiente con transparencia: del rojo vino traslúcido al negro profundo */
+    background: linear-gradient(
+        145deg, 
+        rgba(144, 25, 25, 0.9) 0%, 
+        rgba(21, 22, 33, 0.95) 100%
+    );
+    
+    /* Efecto de desenfoque detrás de la tarjeta (opcional, muy elegante) */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    
+    /* Tu altura fija */
+    height: 420px; 
+    display: flex;
+    flex-direction: column;
+}
+
+.estudiante-card:hover {
+    transform: translateY(-8px);
+    /* Sombra más profunda y sutilmente rojiza */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(43, 18, 18, 0.2);
+    border-color: rgba(255, 140, 26, 0.4);
+    
+    /* Aclara un poco el rojo al pasar el mouse */
+    background: linear-gradient(
+        145deg, 
+        rgba(61, 22, 22, 0.95) 0%, 
+        rgba(21, 22, 33, 1) 100%
+    );
+}
+/* IMAGEN DE LA TARJETA */
+.estudiante-card-img {
+    width: 100%;
+    height: 180px; /* Altura fija para la imagen */
+    object-fit: cover; /* Importante para no estirar la imagen */
+    object-position: center;
+}
+
+/* CUERPO DE LA TARJETA */
+.estudiante-card-info {
+    padding: 1.25rem;
+    flex: 1; /* Ocupa el espacio restante */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribuye contenido arriba y profesor abajo */
+}
+
+/* TÍTULO DE LA TARJETA */
+.estudiante-card-info h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    color: #ffffff;
+    
+    /* LIMITAR A 2 LÍNEAS (Evita que el título empuje todo) */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 3.1em; /* Altura reservada para 2 líneas */
+}
+
+/* METADATOS (Carrera, Semestre, etc) */
+/* Agrupamos los p para que se vean compactos */
+.estudiante-card-info p {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    margin: 0.2rem 0;
+    white-space: nowrap;      /* No permite saltos de línea */
+    overflow: hidden;         /* Oculta lo que sobre */
+    text-overflow: ellipsis;  /* Pone ... si es muy largo */
+}
+
+/* PROFESOR */
+.estudiante-profesor {
+    color: #ff8c1a !important;
+    font-weight: 600;
+    font-size: 0.9rem !important;
+    margin-top: auto; /* Empuja el nombre al fondo de la tarjeta */
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* TARJETA TIPO TEMA (Si no tiene imagen o es diferente) */
+.estudiante-card-tema .estudiante-card-img {
+    /* Opcional: Filtro oscuro para temas si usas imágenes */
+    filter: brightness(0.8); 
+}
+
+/* =============================
+   MENSAJE VACÍO
+============================= */
+.estudiante-vacio {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #9ca3af;
+    background: rgba(255,255,255,0.02);
+    border-radius: 12px;
+    border: 1px dashed rgba(255,255,255,0.1);
+}
+
+/* =============================
+   RESPONSIVE
+============================= */
+@media (max-width: 768px) {
+    .estudiante-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+    
+    .estudiante-titulo {
+        font-size: 1.8rem;
+    }
+    
+    .estudiante-banner img {
+        height: 200px;
+    }
+}
