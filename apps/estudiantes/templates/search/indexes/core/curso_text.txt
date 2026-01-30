@@ -1,0 +1,5 @@
+{{ object.materia.nombre }}
+{{ object.profesor.usuario.first_name }} {{ object.profesor.usuario.last_name }}
+{{ object.materia.carrera.nombre }}
+{{ object.descripcion }}
+Semestre {{ object.materia.semestre }}

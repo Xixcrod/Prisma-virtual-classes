@@ -7,6 +7,10 @@ from django.views import View
 from apps.core.utils.context_processors import roles_usuario
 from apps.core.models import Acceso, Curso, Estudiante
 
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from haystack.query import SearchQuerySet
+from .forms import CatalogoSearchForm
 
 # Create your views here.
 def inicio(request):
@@ -50,3 +54,110 @@ class CreateAccessRequest(View):
         else:
             messages.info(request, "Ya tienes una solicitud en curso...")
         return redirect("detalles-cursos", id_curso=curso.id)
+
+# Vista del catálogo de cursos
+@login_required
+def catalogo_cursos(request):
+    """
+    Vista principal del catálogo de cursos.
+    Muestra cursos filtrados y permite búsqueda con Haystack/Whoosh.
+    - Estudiantes: solo cursos de su carrera
+    - Administradores: todos los cursos
+    """
+    # Verificar si el usuario es administrador
+    es_admin = request.user.is_superuser or request.user.is_staff
+    
+    # Si es admin, puede ver todo sin necesidad de ser estudiante
+    if es_admin:
+        estudiante = None
+        carrera_filtro = None
+    else:
+        # Verificar que el usuario sea un estudiante
+        try:
+            estudiante = Estudiante.objects.select_related(
+                'usuario', 'carrera'
+            ).get(usuario=request.user)
+            carrera_filtro = estudiante.carrera.nombre
+        except Estudiante.DoesNotExist:
+            messages.error(request, 'Solo los estudiantes pueden acceder al catálogo de cursos.')
+            return redirect('core:dashboard')
+
+    # Obtener los IDs de cursos con acceso (solo para estudiantes)
+    if estudiante:
+        cursos_con_acceso = Acceso.objects.filter(
+            estudiante=estudiante,
+            estado='AP'  # Aprobado
+        ).values_list('curso_id', flat=True)
+
+        # Obtener solicitudes pendientes
+        solicitudes_pendientes = Acceso.objects.filter(
+            estudiante=estudiante,
+            estado='PE'  # Pendiente
+        ).values_list('curso_id', flat=True)
+    else:
+        cursos_con_acceso = []
+        solicitudes_pendientes = []
+
+    # Crear el formulario de búsqueda
+    form = CatalogoSearchForm(
+        request.GET or None,
+        estudiante=estudiante,
+        searchqueryset=SearchQuerySet().models(Curso)
+    )
+
+    # Ejecutar búsqueda
+    resultados = form.search()
+
+    # Filtrar por carrera solo si NO es admin
+    if not es_admin and carrera_filtro:
+        resultados = resultados.filter(carrera_nombre=carrera_filtro)
+
+    # Convertir resultados a lista de objetos Curso con información adicional
+    cursos_data = []
+    for result in resultados:
+        curso = result.object
+        
+        # Determinar el estado del acceso para este curso
+        tiene_acceso = curso.id in cursos_con_acceso
+        solicitud_pendiente = curso.id in solicitudes_pendientes
+        
+        cursos_data.append({
+            'curso': curso,
+            'tiene_acceso': tiene_acceso,
+            'solicitud_pendiente': solicitud_pendiente,
+            'puede_solicitar': not tiene_acceso and not solicitud_pendiente and not es_admin,
+            'es_admin': es_admin,  # Nuevo campo para el template
+        })
+
+    # Paginación
+    paginator = Paginator(cursos_data, 8)  # 8 cursos por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Estadísticas
+    if estudiante:
+        stats = {
+            'total_cursos_disponibles': len(resultados),
+            'cursos_con_acceso': len(cursos_con_acceso),
+            'solicitudes_pendientes': len(solicitudes_pendientes),
+            'semestre_actual': estudiante.carrera.cantidad_semestres,
+        }
+    else:
+        # Estadísticas para admin
+        stats = {
+            'total_cursos_disponibles': len(resultados),
+            'cursos_con_acceso': 0,
+            'solicitudes_pendientes': 0,
+            'semestre_actual': None,
+        }
+
+    context = {
+        'form': form,
+        'page_obj': page_obj,
+        'estudiante': estudiante,
+        'es_admin': es_admin,
+        'stats': stats,
+        'query': request.GET.get('q', ''),
+    }
+
+    return render(request, 'catalogo_cursos.html', context)

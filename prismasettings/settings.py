@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'apps.estudiantes.apps.EstudiantesConfig',
     'django_bootstrap5',
     'django_cleanup.apps.CleanupConfig', # Módulo para limpiar en disco las actualizaciones de archivos cuando se les reemplaza por otro.
+    'haystack', # Módulo de búsqueda
 ]
 
 MIDDLEWARE = [
@@ -87,6 +88,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'prismasettings.wsgi.application'
 LOGIN_URL = 'login'
 
+    # Configuración de Haystack con Whoosh como backend de búsqueda.
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 12
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases

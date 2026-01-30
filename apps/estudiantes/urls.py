@@ -8,4 +8,5 @@ urlpatterns = [
         views.CreateAccessRequest.as_view(),
         name="solicitar-acceso",
     ),
+    path('catalogo/', views.catalogo_cursos, name='catalogo_cursos'),
 ]
