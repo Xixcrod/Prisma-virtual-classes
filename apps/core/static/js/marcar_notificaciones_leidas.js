@@ -4,24 +4,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (notifDropdown) {
         notifDropdown.addEventListener('shown.bs.dropdown', function () {
-            // 1. Ocultar el badge visualmente de inmediato para mejorar la experiencia
+            // Leemos los datos que Django inyectó en el HTML
+            const urlLeidas = notifDropdown.getAttribute('data-url');
+            const token = notifDropdown.getAttribute('data-csrf');
+
+            // 1. Ocultar el badge visualmente
             if (badge) {
                 badge.style.display = 'none';
             }
 
-            // 2. Enviar petición al servidor para marcar como leídas en la BD
-            fetch('{% url "marcar_leidas" %}', {
+            // 2. Enviar la petición POST
+            fetch(urlLeidas, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-CSRFToken': token, // Ahora 'token' tiene el valor real
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({})
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status !== 'ok') {
-                    console.error('Error al marcar notificaciones');
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
                 }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Notificaciones actualizadas con éxito");
+            })
+            .catch(error => {
+                console.error('Hubo un problema:', error);
+                // Si falla, podrías volver a mostrar el badge:
+                // if (badge) badge.style.display = 'block';
             });
         });
     }

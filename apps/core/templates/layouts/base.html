@@ -37,8 +37,12 @@
                 {% if user.is_authenticated %}
                 {% if es_profesor or es_estudiante %}
                 <div class="dropdown">
-                    <a class="notif-link position-relative dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="notif-link position-relative dropdown-toggle" href="#" id="notifDropdown"
+                        data-url="{% url 'marcar_leidas' %}" data-csrf="{{ csrf_token }}" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+
                         <img src="{% static 'img/notificacionencendido.png' %}" alt="Notificaciones" class="notif-icon">
+
                         {% if notif_count > 0 %}
                         <span id="notif-badge" class="badge-count">{{ notif_count }}</span>
                         {% endif %}
@@ -126,4 +130,5 @@
 </body>
 
 <script src="{% static 'js/marcar_notificaciones_leidas.js' %}"></script>
+
 </html>

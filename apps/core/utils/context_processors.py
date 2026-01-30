@@ -41,7 +41,7 @@ def notificaciones_context(request):
     return {}
 
 def marcar_notificaciones_leidas(request):
-    if request.method == 'POST' and request.user.is_authenticated:
+    if request.user.is_authenticated:
         # Marcamos todas las notificaciones del receptor actual como leídas
         Notificacion.objects.filter(receptor=request.user, leido=False).update(leido=True)
         return JsonResponse({'status': 'ok'})

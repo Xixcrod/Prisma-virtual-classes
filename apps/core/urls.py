@@ -11,5 +11,5 @@ urlpatterns = [
     path('recuperar_contrasena/', views.recuperar_contrasena, name='recuperar_contrasena'),#Ruta para la página de recuperación de contraseña
     path('processing_password/', recover_password.recovering_password, name="processing_password"), #Ruta para procesar la solicitud de recuperación de contraseña
 
-    path('notificaciones/marcar-leidas/', context_processors.marcar_notificaciones_leidas, name='marcar_leidas'), # Ruta para marcar notificaciones como leídas
+    path('marcar_leidas/', context_processors.marcar_notificaciones_leidas, name='marcar_leidas'), # Ruta para marcar notificaciones como leídas
 ]
