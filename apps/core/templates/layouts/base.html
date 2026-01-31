@@ -80,7 +80,7 @@
                     {% if user.is_authenticated %}
                     {% if es_profesor %}
                     <li class="nav-item"><a class="nav-link active" href="{% url 'dashboardpe' %}">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Mis cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'admin_mis_cursos' %}">Mis cursos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'aceptar_rechazar_solicitud' %}">Solicitudes</a></li>
                     {% elif es_estudiante %}
                     <li class="nav-item"><a class="nav-link active" href="{% url 'dashboardpe' %}">Inicio</a></li>

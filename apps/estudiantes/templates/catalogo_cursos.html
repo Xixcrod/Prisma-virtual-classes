@@ -214,7 +214,7 @@ body {
                                 <div class="curso-card">
                                 {% if request.user.is_staff or request.user.is_superuser %}
                                     <form method="post"
-                                        action="#" {# Eliminar #}
+                                        action="{% url 'eliminar_curso' curso_id=item.curso.id %}"
                                         class="delete-course-btn">
                                         {% csrf_token %}
                                         <button type="submit"
