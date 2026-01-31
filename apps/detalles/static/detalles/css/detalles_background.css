@@ -1,0 +1,577 @@
+html,
+body {
+  overflow-y: auto;
+  min-height: 100%;
+  background-color: #0f1020;
+  background-image: url('/static/detalles/img/fondo.jpg');
+  background-size: cover;
+}
+
+.hero-simple {
+  background-size: cover; /* La imagen se ajusta sola */
+  background-position: center; /* Se centra */
+  padding: 40px 0 100px 0;
+  position: relative;
+  background-color: #0f1020; /* Color oscuro por si la imagen no carga */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-primary), transparent 75%) 0%,
+      /* Casi sólido arriba */
+      color-mix(in srgb, var(--color-fourth), transparent 75%) 25%,
+      /* Más transparente al centro */
+      color-mix(in srgb, var(--color-tertiary), transparent 75%) 100%
+        /* Muy transparente abajo */
+    ),
+    rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 2; /* Esto empuja el texto al frente */
+}
+
+.image-container img {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+.btn-orange-box {
+  background-color: var(--color-tertiary);
+  color: #0b0c1a;
+  border: none;
+  padding: 10px;
+  letter-spacing: 1px;
+  padding: 8px 15px;
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: normal !important; /* Mata el 'nowrap' de Bootstrap */
+  word-break: break-all !important; /* Rompe el texto aunque no tenga espacios */
+  overflow-wrap: anywhere !important;
+  display: block !important;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.filtrado-seccion h5 {
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.7rem;
+}
+
+.description-card {
+  background: color-mix(in srgb, #0a0814, transparent 50%);
+  backdrop-filter: blur(5px);
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: left;
+  position: relative;
+}
+
+.description-card h5 {
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.7rem;
+  text-transform: uppercase;
+}
+
+.description-card h6 {
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.3rem;
+}
+
+.info-general {
+  background: color-mix(in srgb, #0a0814, transparent 50%);
+  backdrop-filter: blur(5px);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: left;
+  position: relative;
+  width: 100%;
+  min-width: 300px; /* Pero no menos de 300px para que tenga cuerpo */
+}
+
+.info-general h5 {
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.info-general span {
+  font-weight: 700;
+  color: var(--color-tertiary);
+}
+
+.subtitle {
+  font-weight: 700;
+  font-style: normal;
+}
+.btn-prisma-solicitar {
+  background-color: transparent !important;
+  color: var(--color-tertiary) !important; /* Texto Naranja */
+  font-weight: 800 !important;
+}
+/* Clase para el botón de Solicitar (Naranja) */
+.btn-prisma-solicitar:hover {
+  background-color: #fff !important; /* Cambia a blanco o un naranja más claro */
+  color: var(--color-tertiary) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px
+    color-mix(in srgb, var(--color-tertiary), transparent 60%);
+  filter: brightness(1.1);
+}
+
+/* Efecto suave de transición */
+.btn-prisma-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.btn-img-flat {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.img-svg-custom {
+  width: 64px; /* Ajusta el ancho a tu gusto */
+  height: auto;
+  display: block;
+}
+
+.btn-img-flat:hover {
+  transform: scale(1.05); /* Se agranda un poquito */
+  filter: brightness(1.2) drop-shadow(0 0 10px var(--color-tertiary));
+}
+
+.btn-img-flat:active {
+  transform: scale(0.95); /* Efecto de click */
+}
+
+/* --- 1. Contenedor del Modal (Efecto Glass) --- */
+.prisma-modal {
+  background: color-mix(in srgb, #0a0814, transparent 10%); /* Muy oscuro */
+  backdrop-filter: blur(15px); /* Desenfoque fuerte detrás */
+  border: 1px solid var(--color-fourth); /* Borde naranja fino */
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Sombra profunda */
+  color: white;
+  border-radius: 12px;
+}
+
+/* --- 2. Títulos y Textos --- */
+.text-rojo {
+  color: var(--color-primary);
+  letter-spacing: 1px;
+}
+
+/* --- 3. Inputs del Formulario (Para que no sean blancos) --- */
+/* Esto afectará a todos los inputs dentro del modal */
+.prisma-modal input[type='text'],
+.prisma-modal input[type='file'],
+.prisma-modal textarea,
+.prisma-modal select {
+  background-color: rgba(255, 255, 255, 0.05); /* Fondo casi transparente */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 6px;
+  padding: 10px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+/* Al hacer click en el input */
+.prisma-modal input:focus {
+  outline: none;
+  border-color: var(--color-tertiary);
+  box-shadow: 0 0 10px
+    color-mix(in srgb, var(--color-tertiary), transparent 80%);
+}
+
+/* Estilo especial para el input de archivo (file) */
+.prisma-modal input[type='file']::file-selector-button {
+  background-color: var(--color-fourth);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 10px;
+  margin-left: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Añade esta línea para suavidad */
+}
+.prisma-modal input[type='file']::file-selector-button:hover {
+  background-color: var(
+    --color-primary
+  ); /* Cambia al naranja en lugar de blanco */
+  color: #0b0c1a; /* Texto oscuro para contraste */
+  filter: brightness(1.2);
+}
+/* --- 4. Botón de Guardar --- */
+.btn-rojo-glow {
+  background-color: var(--color-primary); /* Color sólido inicial */
+  color: #0b0c1a;
+  font-weight: 800;
+  border: none;
+  padding: 12px;
+  text-transform: uppercase;
+  transition: all 0.4s ease; /* Transición un poco más suave para el degradado */
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.btn-rojo-glow:hover {
+  /* Degradado: Naranja Terciario -> Magenta/Morado del Logo */
+  background: linear-gradient(135deg, var(--color-primary) 0%, #a32ed3 100%);
+
+  color: white; /* Cambiamos a blanco para que resalte sobre el morado */
+
+  /* Sombra con el color dominante del degradado */
+  box-shadow: 0 0 20px color-mix(in srgb, #a32ed3, transparent 50%);
+
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.btn-rojo-glow:active {
+  transform: translateY(0);
+}
+.prisma-modal form p {
+  margin-bottom: 1rem;
+}
+.prisma-modal form label {
+  font-weight: 700;
+  margin-bottom: 5px;
+  display: block;
+  color: var(--color-primary);
+}
+
+body.modal-open {
+  padding-right: 0 !important;
+  overflow-y: scroll; /* Mantiene el espacio del scrollbar para que nada se mueva */
+}
+
+/* Opcional: Si el fondo sigue saltando, fuerza esto */
+.modal {
+  padding-right: 0 !important;
+}
+
+.prisma-modal .errorlist {
+  margin: 0 0 15px 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.prisma-modal .errorlist li {
+  /* Fondo oscuro semi-transparente para que se lea bien el texto */
+  background: rgba(220, 53, 69, 0.1);
+  backdrop-filter: blur(4px);
+  color: #ffb3b3; /* Un rojo muy claro para que resalte sobre el fondo oscuro */
+
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: block;
+
+  /* Magia del borde degradado */
+  border: 2px solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(90deg, #dc3545 0%, #701fa1 100%);
+
+  /* Sombra sutil para dar profundidad */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Contenedor de la lista --- */
+.elementos-container {
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espacio exacto entre cajas */
+}
+
+/* --- La Caja Estilo Neón (Exacta a la imagen) --- */
+.elemento-card-prisma {
+  display: flex;
+  align-items: center;
+  background: rgba(10, 8, 20, 0.7); /* Fondo ultra oscuro traslúcido */
+  border: 2px solid var(--color-tertiary); /* Borde naranja neón completo */
+  border-radius: 4px; /* Bordes menos redondeados, más rectos */
+  padding: 12px 20px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+}
+
+/* Efecto al pasar el mouse */
+.elemento-card-prisma:hover {
+  background: rgba(255, 165, 0, 0.1); /* Brillo interno tenue */
+  box-shadow: 0 0 15px rgba(255, 165, 0, 0.4); /* Resplandor neón exterior */
+  transform: scale(1.01);
+}
+
+/* Icono de carpeta (dentro del recuadro) */
+.elemento-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  padding-right: 15px;
+  border-right: 1px solid rgba(255, 165, 0, 0.3); /* Línea divisoria sutil */
+}
+
+.elemento-icon img {
+  width: 28px;
+  height: auto;
+}
+
+/* Texto del título */
+.elemento-info {
+  flex-grow: 1;
+}
+
+.elemento-info h5 {
+  color: white;
+  font-size: 1.15rem;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.text-secondary-prisma {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  display: block;
+}
+
+/* Botón eliminar pequeño para no romper el diseño */
+.btn-eliminar-simple {
+  background: transparent;
+  border: none;
+  color: #ff4d5e;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.btn-eliminar-simple:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Contenedor de la cabecera */
+.cabecera-seccion {
+  border-bottom: 1px solid rgba(255, 165, 0, 0.1); /* Opcional: línea sutil abajo */
+  padding-bottom: 10px;
+  margin: 0 1.5rem 2rem 1.5rem;
+}
+/* Estilo de la Imagen-Icono */
+.icono-listado-img {
+  width: 32px; /* Ajusta según el tamaño de tu imagen */
+  height: auto;
+}
+
+/* Formato de Texto Naranja exacto */
+.texto-listado-prisma {
+  color: var(--color-tertiary) !important; /* El naranja neón */
+  font-weight: 700;
+  text-transform: none; /* Mantener mayúsculas/minúsculas normales */
+  letter-spacing: 0.5px;
+  font-size: 1.4rem; /* Tamaño similar al de tu captura */
+}
+
+/* Si quieres que el icono y el texto respiren mejor en móviles */
+@media (max-width: 576px) {
+  .texto-listado-prisma {
+    font-size: 1.1rem;
+  }
+  .icono-listado-img {
+    width: 25px;
+  }
+}
+.elemento-acciones {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  padding-left: 15px;
+  border-left: 1px solid rgba(255, 165, 0, 0.3); /* Línea divisoria sutil */
+}
+
+.elemento-acciones img {
+  width: 28px;
+  height: auto;
+}
+
+/* Contenedor principal del reproductor */
+.video-player-prisma {
+  position: relative;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  /* Borde neón sutil */
+  border: 2px solid var(--color-fourth);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    0 0 15px color-mix(in srgb, var(--color-fourth), transparent 70%);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.video-player-prisma:hover {
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.9),
+    0 0 25px color-mix(in srgb, var(--color-fourth), transparent 50%);
+}
+
+/* El elemento de video en sí */
+.video-element {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 16 / 9; /* Mantiene el formato cine */
+  outline: none;
+}
+
+/* Capa de resplandor interna (opcional para ambiente) */
+.video-overlay-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+/* Personalización de los controles (en navegadores Webkit) */
+.video-element::-webkit-media-controls-panel {
+  background-image: linear-gradient(
+    to top,
+    rgba(10, 8, 20, 0.9),
+    rgba(10, 8, 20, 0.2)
+  ) !important;
+}
+
+.video-element::-webkit-media-controls-play-button,
+.video-element::-webkit-media-controls-current-time-display {
+  filter: sepia(1) saturate(5) hue-rotate(-10deg); /* Intenta acercar el color al naranja Prisma */
+}
+
+/* Meta info debajo del video */
+.video-meta-prisma h4 {
+  letter-spacing: 1px;
+  border-left: 4px solid var(--color-primary);
+  padding-left: 15px;
+}
+
+/* Contenedor general */
+.messages-container-prisma {
+  margin: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Base de la alerta */
+.alert-prisma {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: color-mix(in srgb, #0a0814, transparent 20%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-weight: 500;
+  position: relative;
+  animation: slideIn Prisma 0.4s ease-out;
+}
+
+/* Variación: Success (Verde Prisma) */
+.alert-prisma-success {
+  border-left: 5px solid #00ff88;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+}
+.alert-prisma-success .alert-prisma-icon {
+  color: #00ff88;
+  text-shadow: 0 0 8px #00ff88;
+}
+
+/* Variación: Error (Rojo/Magenta Prisma) */
+.alert-prisma-error,
+.alert-prisma-danger {
+  border-left: 5px solid var(--color-primary);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.15);
+}
+.alert-prisma-error .alert-prisma-icon {
+  color: var(--color-primary);
+}
+
+/* Variación: Info/Warning (Naranja Prisma) */
+.alert-prisma-warning,
+.alert-prisma-info {
+  border-left: 5px solid var(--color-tertiary);
+  box-shadow: 0 0 15px rgba(255, 165, 0, 0.15);
+}
+.alert-prisma-info .alert-prisma-icon {
+  color: var(--color-tertiary);
+}
+
+/* Contenido interno */
+.alert-prisma-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.alert-prisma-icon {
+  font-size: 1.2rem;
+}
+
+/* Botón de cerrar */
+.btn-close-prisma {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+  line-height: 1;
+}
+
+.btn-close-prisma:hover {
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Animación de entrada */
+@keyframes slideInPrisma {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

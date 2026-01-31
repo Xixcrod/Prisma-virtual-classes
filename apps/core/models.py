@@ -98,7 +98,7 @@ class Curso(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     descripcion = models.TextField()
-    imagen = models.ImageField(upload_to='images/cursos/', default='static/placeholers/placeholder-images.webp', blank=True, null=True,validators=[validate_image_file_extension]) # Validaciones a nivel de modelo (antes de guardar la isntancia en la BD). Para cuidar la extensión de la imagen. Además de una ruta por defecto de un pllaceholder. 
+    imagen = models.ImageField(upload_to='images/cursos/', blank=True, null=True,validators=[validate_image_file_extension]) # Validaciones a nivel de modelo (antes de guardar la isntancia en la BD). Para cuidar la extensión de la imagen. Además de una ruta por defecto de un pllaceholder. 
 
     def __str__(self):
         return self.materia.nombre + ' - ' + self.profesor.usuario.first_name + ' ' + self.profesor.usuario.last_name
@@ -115,7 +115,7 @@ class Tema(models.Model):
     titulo = models.CharField(max_length=75)
     descripcion = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    imagen = models.ImageField(upload_to='images/temas/', default='static/placeholers/placeholder-images.webp', blank=True, null=True)
+    imagen = models.ImageField(upload_to='images/temas/', blank=True, null=True)
 
     def __str__(self):
         return self.titulo
@@ -133,7 +133,7 @@ class Video(models.Model):
     resumen = models.TextField()
     duracion = models.CharField(max_length=8)
     url_video = models.FileField(upload_to='videos/')
-    thumbnail = models.FileField(upload_to='videos/thumbnails/', default='static/placeholers/placeholder-images.webp')
+    thumbnail = models.FileField(upload_to='videos/thumbnails/', blank=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

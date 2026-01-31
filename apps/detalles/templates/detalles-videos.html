@@ -1,59 +1,169 @@
 {% extends "layouts/base.html" %} {% load static %} {% block content %}
-<a href="{{ url_retorno }}" class="btn btn-secondary">
-   Volver
-</a>
-<div class="container video-detalle">
-  {% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-      {{ message }}
-    </div>
-  {% endfor %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'detalles/css/detalles_background.css' %}">
+{% endblock %}
+
+{% if video.thumbnail %}
+    {% url "consumir-media-files" "thumbnail_video" video.id as img_url %}
+{% else %}
+    {% static 'img/placeholders/placeholder-images.webp' as img_url %}
 {% endif %}
-  <header class="video-header">
-    <h2>{{ video.titulo|upper }}</h2>
-    <div class="meta-info">
-      <span class="profesor-tag">
-        <strong>Profesor:</strong>
-        {{ video.tema.curso.profesor.usuario.get_full_name }}
-      </span>
-    </div>
-  </header>
-  <div class="row">
-    <div class="col-md-4">
-      <h3>Descripción del vídeo:</h3>
-      <p class="text-muted">{{ video.resumen }}</p>
-    </div>
-    <div>
-      <h3>Duración: {{ video.duracion }}</h3>
-    </div>
-    <form method="post">
-      {% csrf_token %}
-      {{ update_video_form.as_p }}
-      <button type="submit" name="action" value="update_video_form">Modificar</button>
-    </form>
-  </div>
-  <div>
-      <img src="{% url "consumir-media-files" "thumbnail_video" video.id %}" alt="Miniatura del vídeo">
-  </div>
-  <form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-    {{ update_thumbnail_form.as_p }}
-  <button type="submit" name="action" value="update_thumbnail_form">Modificar</button>
-  </form>
-  <div class="video-player-container row">
-    <div class="col-md-8">
-      <div class="video-player">
-        <video width="100%" height="auto" controls preload="metadata">
-          <source src="{% url "consumir-media-files" "video" video.id %}?format=mp4" type="video/mp4" />
-          <source src="{% url "consumir-media-files" "video" video.id %}?format=webm" type="video/webm" />
-          <source src="{% url "consumir-media-files" "video" video.id %}?format=quicktime" type="video/quicktime" />
-          <source src="{% url "consumir-media-files" "video" video.id %}?format=x-msvideo" type="video/x-msvideo" />
-          Tu navegador no soporta este formato de vídeo
-        </video>
+
+
+<div class="hero-simple" style="background-image: url('{{ img_url }}')">
+  <div class="overlay"></div>
+  <div class="container content">
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="image-container mt-2">
+          <img src="{{ img_url }}" alt="Miniatura del vídeo" class="img-fluid">
+        </div>
+        <div class="filtrado-seccion mt-4 text-center">
+          {% if es_profesor %}
+            <div class=badge-prisma>
+              <button class="btn-img-flat mx-auto" title="Modificar la miniatura del vídeo" type="button" data-bs-toggle="modal" data-bs-target="#modalEditarMiniaturaVideo">
+                <img src="{% static 'detalles/img/icono_editar.png' %}" alt="Modificar miniatura del vídeo" class="img-svg-custom">
+              </button>
+            </div>
+            {% endif %}
+          <h5 class="text-white mb-3 mt-3 text-uppercase">Filtrado</h5>
+          <div class="d-grid gap-3" style="padding: 0 5rem;">
+            <div class="badge-prisma btn-orange-box">Semestre: {{ video.tema.curso.materia.semestre }}</div>
+            <div class="badge-prisma btn-orange-box">{{ video.tema.curso.materia.nombre }}</div>
+          </div>
+        </div>
       </div>
+      
+      <div class="col-12 col-md-8">
+        <div class="description-card p-2 mt-2 text-white">
+          <h5>{{ video.titulo }}</h5>
+          <h6>Descripción:</h6>
+          <p>{{ video.resumen|default_if_none:"Sin resumen" }}</p>
+        </div> 
+        <div class="row align-items-center mt-3 g-3">
+          <div class="col-12 col-lg-7">
+            <div class="info-general p-2 text-white">
+              <h5>Información general:</h5>
+              <p class="subtitle">Profesor: <span>{{ video.tema.curso.profesor.usuario.get_full_name }}</span></p>
+            </div>
+          </div>
+            {% if es_profesor %}
+            <div class="col-12 col-lg-5 text-center">
+              <div class="info-action">
+                <button class="btn-img-flat mx-auto" title="Modificar los detalles del vídeo" type="button" data-bs-toggle="modal" data-bs-target="#modalEditarDetallesVideo">
+                  <img src="{% static 'detalles/img/icono_editar.png' %}" alt="Modificar detalles del vídeo" class="img-svg-custom">
+                </button>
+              </div>
+            </div>
+          {% endif %}
+
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+</div>
+
+{% if es_profesor %}
+
+<div class="modal fade" id="modalEditarMiniaturaVideo" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"> <div class="modal-content prisma-modal">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-uppercase fw-bold text-rojo">Actualizar Imagen</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" class="form-prisma">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+             {{ update_thumbnail_form.as_p }}
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" name="action" value="update_thumbnail_form" class="btn btn-rojo-glow">
+              GUARDAR CAMBIOS
+            </button>
+          </div>
+        </form>
+      </div>
+
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="modalEditarDetallesVideo" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"> <div class="modal-content prisma-modal">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-uppercase fw-bold text-rojo">Actualizar Detalles del Video</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" class="form-prisma">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+             {{ update_video_form.as_p }}
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" name="action" value="update_video_form" class="btn btn-rojo-glow">
+              GUARDAR CAMBIOS
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<section class="curso-contenido">
+  {% if messages %}
+  <div class="messages-container-prisma">
+    {% for message in messages %}
+      <div class="alert-prisma alert-prisma-{{ message.tags }}">
+        <div class="alert-prisma-content">
+          <span class="alert-prisma-icon">
+            {% if message.tags == 'success' %}
+              <i class="fas fa-check-circle"></i>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+              <i class="fas fa-exclamation-triangle"></i>
+            {% else %}
+              <i class="fas fa-info-circle"></i>
+            {% endif %}
+          </span>
+          <span class="alert-prisma-text">{{ message }}</span>
+        </div>
+        <button type="button" class="btn-close-prisma" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+  <div class="d-flex align-items-center ms-4 mb-4 mt-5 cabecera-seccion">
+      <img src="{% static 'detalles/img/list_icon.svg' %}" class="icono-listado-img" alt="Icono Listado">
+    
+      <h3 class="ms-3 m-0 texto-listado-prisma">Reproductor de vídeo</h3>
+  </div>
+  <div class="container-fluid px-4 my-5 ">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10">
+        <div class="video-player-prisma">
+          <div class="video-overlay-glow"></div>
+          <video class="video-element" controls preload="metadata" controlsList="nodownload">
+            <source src="{% url 'consumir-media-files' 'video' video.id %}?format=mp4" type="video/mp4" />
+            <source src="{% url 'consumir-media-files' 'video' video.id %}?format=webm" type="video/webm" />
+            Tu navegador no soporta este formato de vídeo
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 {%endblock %}

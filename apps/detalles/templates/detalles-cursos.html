@@ -1,121 +1,254 @@
 {% extends 'layouts/base.html' %} 
-{% load static %} 
+{% load static %}
+{% block body_background %}{% static 'detalles/img/fondo_admin.jpg' %}{% endblock %}
 {% block extra_css %}
+  <link rel="stylesheet" href="{% static 'detalles/css/detalles_background.css' %}">
   {% if es_profesor %}
     <link rel="stylesheet" href="{% static 'detalles/css/confirmDelete.css' %}">
   {% endif %}
 {% endblock %}
 
 {% block content %}
-<a href="{{ url_retorno }}" class="btn btn-secondary">
-   Volver
-</a>
-<div class="container curso-detalle">
-    <header class="curso-header">
-        <h2>{{ curso.materia.nombre|upper }}</h2>
-        <div class="meta-info">
-            <span class="profesor-tag">
-                <strong>Profesor:</strong> {{ curso.profesor.usuario.get_full_name }}
-            </span>
-        </div>
-    </header>
 
-    <hr>
+{% if curso.imagen %}
+    {% url "consumir-media-files" "img_curso" curso.id as img_url %}
+{% else %}
+    {% static 'img/placeholders/placeholder-images.webp' as img_url %}
+{% endif %}
 
+<div class="hero-simple" style="background-image: url('{{ img_url }}')">
+  <div class="overlay"></div>
+  <div class="container content">
     <div class="row">
-        <div class="col-md-4">
-            <div class="card-img">
-                {% if curso.imagen %}
-                {% for message in messages %}
-                {{ message }}
-                {% endfor %}
-                <img src="{% url "consumir-media-files" "img_curso" curso.id %}" alt="Imagen del curso" loading="lazy"> 
-                {% else %}
-                    <img src="{% static 'img/default-curso.png' %}" alt="Sin imagen" class="img-fluid rounded">
-                {% endif %}
-                {% if es_profesor %}
-                <div>
-                  <form method="post" enctype="multipart/form-data">
-                    
-                    {% csrf_token %}
-                    
-                    {{ update_course_image_form.as_p }} 
-                    <button type="submit" name="action" value="update_course_image_form">Cargar</button>
-                  </form>
-                  <form method="post">
-                    {% csrf_token %}
-                    {{ update_course_form.as_p }}
-                    <button type="submit" name="action" value="update_course_form">Cargar</button>
-                  </form>
-                  <form method="post", enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ create_theme_form.as_p }}
-                    <button type="submit" name="action" value="create_theme_form">Cargar</button>
-                  </form>
-
-                {% endif %}
+      <div class="col-12 col-md-4">
+        <div class="image-container mt-2">
+          <img src="{{ img_url }}" alt="Imagen del curso" class="img-fluid">
+        </div>
+        <div class="filtrado-seccion mt-4 text-center">
+          {% if es_profesor %}
+            <div class=badge-prisma>
+              <button class="btn-img-flat mx-auto" title="Modificar la imagen del curso" type="button" data-bs-toggle="modal" data-bs-target="#modalEditarImagen">
+                <img src="{% static 'detalles/img/icono_editar.png' %}" alt="Modificar detalles del curso" class="img-svg-custom">
+              </button>
             </div>
+            {% endif %}
+          <h5 class="text-white mb-3 mt-3 text-uppercase">Filtrado</h5>
+          <div class="d-grid gap-3" style="padding: 0 5rem;">
+            <div class="badge-prisma btn-orange-box">Semestre: {{ curso.materia.semestre }}</div>
+            <div class="badge-prisma btn-orange-box">{{ curso.materia.nombre }}</div>
+          </div>
         </div>
-
-        <div class="col-md-8">
-            <h3>Descripción del curso</h3>
-            <p class="text-muted">{{ curso.descripcion|linebreaks }}</p>
-            <p class="text-muted">Cantidad de vídeos:{{ cantidad_videos }}</p>
-            <p class=text-muted>Semestre: {{ curso.materia.semestre }}</p>
-        </div>
-        {% if es_profesor %}
-        <div class="col-md-8">
-          <h3>{{ cantidad_estudiantes }} estudiantes inscritos.</h3>
-        </div>
-        {% endif %}
-    </div>
-
-    <br>
-
-    <section class="curso-contenido">
-        <h3>Contenido Programático</h3>
-        
-        {% if tiene_acceso %}
-            <div class="list-group">
-                {% for tema in temas %}
-                    <div class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                           <a href="{% url "detalles-temas" tema.id %}">
-                              <h5 class="mb-1">{{ forloop.counter }}. {{ tema.titulo }}</h5>
-                              <small class="text-secondary">{{ tema.fecha_creacion|date:"d M Y" }}</small>
-                           </a>
-                        </div>
-                        {% if es_profesor %}
-                          <button type="button" class="btn-eliminar" onclick="abrirModalEliminar('{% url 'eliminar-tema' tema.pk %}', '{{ tema.titulo|escapejs }}')">Eliminar</button>
-                        {% endif %}
-                  </div>
-                {% empty %}
-                    <p class="alert alert-info">Aún no se han cargado temas para este curso.</p>
-                {% endfor %}
-
-            {% else %}
-        {# Llamada al macro donde se encapsula lógica del manejo de accesos #}
-        {% include "partials/_card-acceso.html" with estado=estado_acceso curso_id=curso.id%} 
-        {% endif %}
-
-        {% if es_profesor %} 
-        <dialog class="modalConfirm" id="modalConfirm">
-                  <div class="modal-content">
-                    <h3>¿Desea eliminar este tema?</h3>
-                    <p>Está a punto de borrar: <strong id="modalTitulo">...</strong></p>
-                    <p class="advertencia">Esta acción es irreversible</p>
-                    <div class="modal-acciones">
-                      <button class="btn-cancelar" onclick="document.getElementById('modalConfirm').close()">Cancelar</button>
-                      <form method="post" action="" id="EliminarForm">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-confirmar">Sí, deseo eliminar</button>
-                      </form>
-                    </div>
-                  </div>
-                </dialog>
-                <script src="{% static 'detalles/js/confirmDelete.js' %}" defer></script>
-          {% endif %}
       </div>
-    </section>
+      
+      <div class="col-12 col-md-8">
+        <div class="description-card p-2 mt-2 text-white">
+          <h5>{{ curso.materia.nombre }}</h5>
+          <h6>Descripción:</h6>
+          <p>{{ curso.descripcion|default_if_none:"Sin descripción" }}</p>
+        </div> <div class="row align-items-center mt-3 g-3">
+          <div class="col-12 col-lg-7">
+            <div class="info-general p-3 text-white">
+              <h5>Información general:</h5>
+              <p class="subtitle">Secciones dentro del contenido: <span>{{ cantidad_temas|default_if_none:0 }}</span></p>
+              <p class="subtitle">Cantidad de vídeos: <span>{{ cantidad_videos|default_if_none:0 }}</span></p>
+              <p class="subtitle">Profesor: <span>{{ curso.profesor.usuario.get_full_name }}</span></p>
+            </div>
+          </div>
+            {% if es_profesor %}
+            <div class="col-12 col-lg-5 text-center">
+              <div class="info-action">
+                <button class="btn-img-flat mx-auto" title="Modificar los detalles del curso" type="button" data-bs-toggle="modal" data-bs-target="#modalEditarDetallesCurso">
+                  <img src="{% static 'detalles/img/icono_editar.png' %}" alt="Modificar detalles del curso" class="img-svg-custom">
+                </button>
+              </div>
+            </div>
+          {% endif %}
+
+        </div> 
+      </div> 
+    </div> 
+  </div> 
 </div>
+
+{% if es_profesor %}
+
+<div class="modal fade" id="modalEditarImagen" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"> <div class="modal-content prisma-modal">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-uppercase fw-bold text-rojo">Actualizar Imagen</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" class="form-prisma">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+             {{ update_course_image_form.as_p }}
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" name="action" value="update_course_image_form" class="btn btn-rojo-glow">
+              GUARDAR CAMBIOS
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalEditarDetallesCurso" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"> <div class="modal-content prisma-modal">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-uppercase fw-bold text-rojo">Actualizar Detalles del Curso</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" class="form-prisma">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+             {{ update_course_form.as_p }}
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" name="action" value="update_course_form" class="btn btn-rojo-glow">
+              GUARDAR CAMBIOS
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalCrearTema" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"> <div class="modal-content prisma-modal">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-uppercase fw-bold text-rojo">Crear Tema</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" class="form-prisma">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+             {{ create_theme_form.as_p }}
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" name="action" value="create_theme_form" class="btn btn-rojo-glow">
+              CREAR TEMA
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endif %}
+
+<section class="curso-contenido">
+    {% if messages %}
+  <div class="messages-container-prisma">
+    {% for message in messages %}
+      <div class="alert-prisma alert-prisma-{{ message.tags }}">
+        <div class="alert-prisma-content">
+          <span class="alert-prisma-icon">
+            {% if message.tags == 'success' %}
+              <i class="fas fa-check-circle"></i>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+              <i class="fas fa-exclamation-triangle"></i>
+            {% else %}
+              <i class="fas fa-info-circle"></i>
+            {% endif %}
+          </span>
+          <span class="alert-prisma-text">{{ message }}</span>
+        </div>
+        <button type="button" class="btn-close-prisma" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+  <div class="d-flex align-items-center ms-4 mb-4 mt-5 cabecera-seccion">
+      <img src="{% static 'detalles/img/list_icon.svg' %}" class="icono-listado-img" alt="Icono Listado">
+    
+      <h3 class="ms-3 m-0 texto-listado-prisma">Listado de temas dentro del curso</h3>
+  </div>    
+  <div class="elementos-container">
+        {% if tiene_acceso %}
+            {% for tema in temas %}
+                <div class="elemento-card-prisma">
+                    <div class="elemento-icon">
+                        <img src="{% static 'detalles/img/folder_icon.svg' %}" alt="folder icon">
+                    </div>
+                    
+                    <div class="elemento-info">
+                        <a href="{% url 'detalles-temas' tema.id %}" class="text-decoration-none">
+                            <h5 class="text-white">{{ tema.titulo }}</h5>
+                            <small class="text-secondary-prisma">{{ tema.fecha_creacion|date:"d M Y" }}</small>
+                        </a>
+                    </div>
+
+                    {% if es_profesor %}
+                    <div class="elemento-acciones">
+                      <button type="button" class="btn-eliminar-simple" 
+                                onclick="abrirModalEliminar('{% url 'eliminar-tema' tema.pk %}', '{{ tema.titulo|escapejs }}')">
+                        <img src="{% static 'detalles/img/delete_icon.svg' %}" alt="Eliminar tema"  class="img-svg-custom">
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="ms-4 text-secondary">No hay temas disponibles.</p>
+            {% endfor %}
+
+        {% else %}
+            <div class="ms-4">
+                {% include "partials/_card-acceso.html" with estado=estado_acceso curso_id=curso.id %} 
+            </div>
+        {% endif %}
+  </div>
+
+    {# Lógica del Modal de Eliminación (Solo para profesores) #}
+    {% if es_profesor %} 
+  <dialog class="prisma-modal-confirm" id="modalConfirm">
+    <div class="modal-content-prisma text-center">
+        <h3 class="text-naranja">¿Desea eliminar este elemento?</h3>
+        <p>Está a punto de borrar: <strong id="modalTitulo" class="text-white">...</strong></p>
+        <p class="advertencia-roja">Esta acción es irreversible</p>
+        
+        <div class="modal-acciones-flex">
+            <button class="btn-cancelar-prisma" onclick="document.getElementById('modalConfirm').close()">
+                Cancelar
+            </button>
+            <form method="post" action="" id="EliminarForm">
+                {% csrf_token %}
+                <button type="submit" class="btn-confirmar-degradado">Sí, eliminar</button>
+            </form>
+        </div>
+    </div>
+  </dialog>        
+  <script src="{% static 'detalles/js/confirmDelete.js' %}" defer></script>
+
+  <div class="text-center mt-5 mb-4">
+    <button class="btn-img-flat" title="Añadir nuevo tema" type="button" data-bs-toggle="modal" data-bs-target="#modalCrearTema">
+        <img src="{% static 'detalles/img/boton_crear.svg' %}" alt="Añadir" class="img-svg-custom">
+    </button>
+  </div>
+    {% endif %}
+
+</section>
+
 {% endblock content %}

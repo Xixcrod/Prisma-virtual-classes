@@ -24,7 +24,7 @@ class UpdateCoursesImageForm(CleanImageFormMixin, forms.ModelForm):
             ),
         ],
         widget=forms.FileInput(attrs={"class": "form-control"}),
-        label="Cambiar imagen del curso.",
+        label="Cambiar imagen del curso:",
         # Mensajes de error modificados a conveniencia.
         error_messages={
             "invalid_image": "El archivo no es una imagen válida o está corrupto. Intenta con un formato real.",
