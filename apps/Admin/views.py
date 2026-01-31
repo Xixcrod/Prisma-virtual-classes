@@ -363,9 +363,6 @@ def catalogo_cursos_admin(request):
             
         cursos_data.append({
             'curso': curso,
-            'tiene_acceso': False, 
-            'solicitud_pendiente': False,
-            'puede_solicitar': False,
             'es_admin': es_admin,
         })
 
