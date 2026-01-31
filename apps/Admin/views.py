@@ -7,10 +7,14 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
 import secrets
 import string
+import uuid
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from haystack.query import SearchQuerySet
 
 # Importaciones consolidadas de los modelos
-from apps.core.models import Usuario, Estudiante, Profesor, Carrera, Materia, Curso
+from apps.core.models import Usuario, Estudiante, Profesor, Carrera, Materia, Curso, Acceso
+from apps.estudiantes.forms import CatalogoSearchForm
 
 @login_required
 def admin(request):
@@ -106,7 +110,7 @@ def lista_profesores(request):
     # Se crea un diccionario con las materias de cada profesor para enviarlo al JS
     asignaciones = {}
     for p in profesores:
-        materias_ids = list(Curso.objects.filter(profesor=p).values_list('materia_id', flat=True))
+        materias_ids = list(Curso.objects.filter(profesor=p, activo=True).values_list('materia_id', flat=True))
         # Convertir UUIDs a strings para el JSON
         asignaciones[str(p.id)] = [str(m_id) for m_id in materias_ids]
 
@@ -122,8 +126,8 @@ def gestionar_materias_profesor(request, profesor_id):
     profesor_obj = get_object_or_404(Profesor, id=profesor_id)
     carreras = Carrera.objects.all()
     
-    # Se obtienen las materias que ya tiene asignadas para marcarlas en el checklist
-    materias_actuales = Curso.objects.filter(profesor=profesor_obj).values_list('materia_id', flat=True)
+    # Se obtienen las materias que ya tiene asignadas (y activas) para marcarlas en el checklist
+    materias_actuales = Curso.objects.filter(profesor=profesor_obj, activo=True).values_list('materia_id', flat=True)
 
     if request.method == 'POST':
         materias_seleccionadas = request.POST.getlist('materias_ids')
@@ -329,6 +333,65 @@ def obtener_materias_por_carrera(request, carrera_id, semestre):
     
     return JsonResponse(list(materias), safe=False)
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def catalogo_cursos_admin(request):
+    """
+    Versión para Admin del catálogo que evita el crash de objetos no encontrados en el índice.
+    """
+    es_admin = True
+    estudiante = None
+    
+    # Crear el formulario de búsqueda
+    form = CatalogoSearchForm(
+        request.GET or None,
+        estudiante=estudiante,
+        searchqueryset=SearchQuerySet().models(Curso)
+    )
+
+    # Ejecutar búsqueda
+    resultados = form.search()
+
+    # Convertir resultados a lista de objetos Curso con información adicional
+    cursos_data = []
+    for result in resultados:
+        curso = result.object
+        
+        # VALIDACIÓN CRÍTICA: Evita el AttributeError si el curso no existe en la DB
+        if curso is None:
+            continue
+            
+        cursos_data.append({
+            'curso': curso,
+            'tiene_acceso': False, 
+            'solicitud_pendiente': False,
+            'puede_solicitar': False,
+            'es_admin': es_admin,
+        })
+
+    # Paginación
+    paginator = Paginator(cursos_data, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    stats = {
+        'total_cursos_disponibles': len(cursos_data),
+        'cursos_con_acceso': 0,
+        'solicitudes_pendientes': 0,
+        'semestre_actual': None,
+    }
+
+    context = {
+        'form': form,
+        'page_obj': page_obj,
+        'estudiante': estudiante,
+        'es_admin': es_admin,
+        'stats': stats,
+        'query': request.GET.get('q', ''),
+    }
+
+    return render(request, 'catalogo_cursos.html', context)
+
 # Función para eliminar curso recibiendo su id
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
@@ -336,6 +399,18 @@ def eliminar_curso(request, curso_id):
     curso = get_object_or_404(Curso, id=curso_id)
     curso.activo = False
     curso.save()
+
+    return redirect('catalogo')
+
+# Vista para mostrar los cursos del profesor y estudiante
+@login_required
+def mis_cursos(request):
+    cursos = []
+    if hasattr(request.user, 'profesor'):
+        cursos = Curso.objects.filter(profesor=request.user.profesor, activo=True)
+    elif hasattr(request.user, 'estudiante'):
+        from apps.core.utils.get_information import obtener_cursos_estudiante
+        cursos_data = obtener_cursos_estudiante(request)
+        cursos = cursos_data.get('cursos_estudiante', [])
     
-    messages.warning(request, f"El curso {curso.materia.nombre} ha sido desactivado correctamente.")
-#   return redirect('catalogo')
+    return render(request, 'Admin/mis_cursos.html', {'cursos': cursos})
