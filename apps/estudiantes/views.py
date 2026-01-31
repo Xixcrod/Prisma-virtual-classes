@@ -82,22 +82,6 @@ def catalogo_cursos(request):
             messages.error(request, 'Solo los estudiantes pueden acceder al catálogo de cursos.')
             return redirect('core:dashboard')
 
-    # Obtener los IDs de cursos con acceso (solo para estudiantes)
-    if estudiante:
-        cursos_con_acceso = Acceso.objects.filter(
-            estudiante=estudiante,
-            estado='AP'  # Aprobado
-        ).values_list('curso_id', flat=True)
-
-        # Obtener solicitudes pendientes
-        solicitudes_pendientes = Acceso.objects.filter(
-            estudiante=estudiante,
-            estado='PE'  # Pendiente
-        ).values_list('curso_id', flat=True)
-    else:
-        cursos_con_acceso = []
-        solicitudes_pendientes = []
-
     # Crear el formulario de búsqueda
     form = CatalogoSearchForm(
         request.GET or None,
@@ -117,15 +101,8 @@ def catalogo_cursos(request):
     for result in resultados:
         curso = result.object
         
-        # Determinar el estado del acceso para este curso
-        tiene_acceso = curso.id in cursos_con_acceso
-        solicitud_pendiente = curso.id in solicitudes_pendientes
-        
         cursos_data.append({
             'curso': curso,
-            'tiene_acceso': tiene_acceso,
-            'solicitud_pendiente': solicitud_pendiente,
-            'puede_solicitar': not tiene_acceso and not solicitud_pendiente and not es_admin,
             'es_admin': es_admin,  # Nuevo campo para el template
         })
 
@@ -134,29 +111,12 @@ def catalogo_cursos(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Estadísticas
-    if estudiante:
-        stats = {
-            'total_cursos_disponibles': len(resultados),
-            'cursos_con_acceso': len(cursos_con_acceso),
-            'solicitudes_pendientes': len(solicitudes_pendientes),
-            'semestre_actual': estudiante.carrera.cantidad_semestres,
-        }
-    else:
-        # Estadísticas para admin
-        stats = {
-            'total_cursos_disponibles': len(resultados),
-            'cursos_con_acceso': 0,
-            'solicitudes_pendientes': 0,
-            'semestre_actual': None,
-        }
 
     context = {
         'form': form,
         'page_obj': page_obj,
         'estudiante': estudiante,
         'es_admin': es_admin,
-        'stats': stats,
         'query': request.GET.get('q', ''),
     }
 

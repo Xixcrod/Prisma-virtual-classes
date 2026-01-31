@@ -9,6 +9,18 @@ body {
     background-size: cover;
 }
 
+.estudiante-titulo {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: #ffffff;;
+    letter-spacing: -0.5px;
+}
+
+.estudiante-titulo span {
+    color: #ff8c1a;
+}
+
 /* Left filter panel */
 .filter-panel {
     background: rgba(10,10,12,0.55);
@@ -40,6 +52,16 @@ body {
     background: transparent;
     color: #ffb58a;
     border: 1px solid rgba(255,255,255,0.05);
+}
+
+.form-control::placeholder {
+    color: #bbb;
+    opacity: 1;
+}
+
+.form-control::-moz-placeholder {
+    color: #bbb;
+    opacity: 1;
 }
 
 /* Cards grid */
@@ -138,7 +160,7 @@ body {
 <div class="catalogo-page">
     <div class="container">
         <div class="catalogo-header mb-3">
-            <h1>{% if request.user.is_staff or request.user.is_superuser %}Cursos de {{ estudiante.carrera.nombre }}{% else %}Cursos disponibles{% endif %}</h1>
+            <h1 class="estudiante-titulo">{% if request.user.is_staff or request.user.is_superuser %}Cursos <span>disponibles</span>{% else %}Cursos de <span>{{ estudiante.carrera.nombre }}</span>{% endif %}</h1>
         </div>
 
         <div class="row g-4">
@@ -209,6 +231,7 @@ body {
                                                 alt="{{ item.curso.materia.nombre }}" class="curso-imagen">
                                         <div class="curso-body">
                                             <h5 class="curso-title">{{ item.curso.materia.nombre }}</h5>
+                                            <h5 class="curso-carrera small" style="max-height:1.2em; overflow:hidden; color: #aaa;"><strong>{{ item.curso.materia.carrera.nombre }}</strong></h5>
                                             <p class="curso-profesor">
                                                 <i class="bi bi-person-circle"></i>
                                                 {{ item.curso.profesor.usuario.first_name }} {{ item.curso.profesor.usuario.last_name }}

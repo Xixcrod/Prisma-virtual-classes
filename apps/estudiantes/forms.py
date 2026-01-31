@@ -14,7 +14,7 @@ class CatalogoSearchForm(SearchForm):
         required=False,
         label='Buscar',
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
+            'class': 'form-control bg-dark text-white',
             'placeholder': 'Buscar cursos, materias, profesores...',
             'autocomplete': 'off'
         })
@@ -25,7 +25,7 @@ class CatalogoSearchForm(SearchForm):
         required=False,
         label='Semestre',
         choices=[('', 'Todos los semestres')],
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select bg-dark text-white'})
     )
     
     # Filtro por materia
@@ -33,7 +33,7 @@ class CatalogoSearchForm(SearchForm):
         required=False,
         label='Materia',
         choices=[('', 'Todas las materias')],
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select bg-dark text-white'})
     )
     
     # Filtro por profesor
@@ -41,7 +41,7 @@ class CatalogoSearchForm(SearchForm):
         required=False,
         label='Profesor',
         choices=[('', 'Todos los profesores')],
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select bg-dark text-white'})
     )
     
     # Filtro por carrera (adicional)
@@ -49,7 +49,7 @@ class CatalogoSearchForm(SearchForm):
         required=False,
         label='Carrera',
         choices=[('', 'Todas las carreras')],
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select bg-dark text-white'})
     )
     
     # Ordenamiento
@@ -65,7 +65,7 @@ class CatalogoSearchForm(SearchForm):
             ('semestre', 'Semestre (ascendente)'),
             ('-semestre', 'Semestre (descendente)'),
         ],
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select bg-dark text-white'})
     )
 
     def __init__(self, *args, **kwargs):
@@ -167,6 +167,11 @@ class CatalogoSearchForm(SearchForm):
         order_by = self.cleaned_data.get('order_by', '-fecha_creacion')
         if order_by:
             sqs = sqs.order_by(order_by)
+
+        # Aplicar filtro por carrera si se seleccionó
+        if self.cleaned_data.get('carrera'):
+            sqs = sqs.filter(carrera_id=self.cleaned_data['carrera'])
+
 
         return sqs
 

@@ -19,6 +19,7 @@ class CursoIndex(indexes.SearchIndex, indexes.Indexable):
     
     semestre = indexes.IntegerField(model_attr='materia__semestre')
     carrera_nombre = indexes.CharField(model_attr='materia__carrera__nombre')
+    carrera_id = indexes.CharField(model_attr='materia__carrera__id')
     
     descripcion = indexes.CharField(model_attr='descripcion')
     fecha_creacion = indexes.DateTimeField(model_attr='fecha_creacion')
