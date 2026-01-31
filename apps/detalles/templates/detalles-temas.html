@@ -2,12 +2,14 @@
 {% load static %} 
 {% block content %} 
 {% block extra_css %}
+  <link rel="stylesheet" href="{% static 'detalles/css/detalles_background.css' %}">
+  {% if es_profesor %}
   <link rel="stylesheet" href="{% static 'detalles/css/confirmDelete.css' %}">
   <link rel="stylesheet" href="{% static 'detalles/css/overlayUploadVideo.css' %}">
+  {% endif %} 
 {% endblock %}
-<a href="{{ url_retorno }}" class="btn btn-secondary">
-   Volver
-</a>
+
+{% if es_profesor %}
 <div class="upload-overlay" id="uploadOverlay">
     <div class="upload-progress-container">
         <div class="upload-spinner"></div>
@@ -15,92 +17,242 @@
         <p class="upload-warning">Por favor, no cierres esta página.</p>
     </div>
 </div>
-<div class="container tema-detalle">
-  <header class="tema-header">
-    <h2>{{ tema.titulo|upper }}</h1>
-      <div class="meta-info">
-        <span class="profesor-tag">
-          <strong>Profesor:</strong> {{ tema.curso.profesor.usuario.get_full_name }}
-        </span>
-      </div>
-  </header>
+{% endif %}
 
-      <div class="row">
-          <div class="col-md-4">
-              <div class="curso-card-img">
-                {% if tema.imagen %}
-                {% for message in messages %}
-                {{ message }}
-                {% endfor %}
-                <img src="{% url "consumir-media-files" "img_tema" tema.id %}" alt="Imagen del tema" loading="lazy"> 
-                {% else %}
-                    <img src="{% static 'img/default-curso.png' %}" alt="Sin imagen" class="img-fluid rounded">
-                {% endif %}
-                
-              </div>
-              {% if es_profesor %}
-              <div>
-                  <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ update_theme_image_form.as_p }}
-                    <button type="submit" name="action" value="update_theme_image_form">Cargar</button>
-                  </form>
+{% if tema.imagen %}
+    {% url "consumir-media-files" "img_tema" tema.id as img_url %}
+{% else %}
+    {% static 'img/placeholders/placeholder-images.webp' as img_url %}
+{% endif %}
 
-                  <form method="post">
-                    {% csrf_token %}
-                    {{ update_theme_form.as_p }}
-                    <button type="submit" name="action" value="update_theme_form">Cargar</button>
-                  </form>
-                  <form method="post" enctype="multipart/form-data" id="uploadVideoForm">
-                    {% csrf_token %}
-                    <span id="video-label">Cliquea aquí para seleccionar un archivo</span>
-                    {{ create_video_form }}
-                    <button type="submit" name="action" value="create_video_form" id="btn-upload-video">Cargar</button>
-                  </form>
-              </div>
-              {% endif %}
-          </div>
-
-          <div class="col-md-8">
-              <h3>Descripción del tema:</h3>
-            <p class="text-muted">{{ tema.descripcion|linebreaks }}</p>
-          </div>
-      </div>
-
-  <div class="videos-container">
-    <h3>Videos del Tema</h3>
-      <div class="list-group">
-          {% for video in videos %}
-          <div class="video-item">
-            <a href="{% url "detalles-videos" video.id %}">
-              <h5>{{ forloop.counter }}. {{ video.titulo }}</h5>
-            </a>
-            <small class="text-secondary">{{ video.fecha_creacion|date:"d M Y" }}</small>
-          </div>
-      </div>
-      {% if es_profesor %}
-        <button type="button" class="btn-eliminar" onclick="abrirModalEliminar('{% url 'eliminar-video' video.pk %}', '{{ video.titulo|escapejs }}')">Eliminar</button>
-      {% endif %}
-        {% endfor %}
-
-    {% if es_profesor %}
-   <dialog class="modalConfirm" id="modalConfirm">
-      <div class="modal-content">
-        <h3>¿Desea eliminar este tema?</h3>
-        <p>Está a punto de borrar: <strong id="modalTitulo">...</strong></p>
-        <p class="advertencia">Esta acción es irreversible</p>
-        <div class="modal-acciones">
-          <button class="btn-cancelar" onclick="document.getElementById('modalConfirm').close()">Cancelar</button>
-          <form method="post" action="" id="EliminarForm">
-            {% csrf_token %}
-            <button type="submit" class="btn-confirmar">Sí, deseo eliminar</button>
-          </form>
+<div class="hero-simple" style="background-image: url('{{ img_url }}')">
+  <div class="overlay"></div>
+  <div class="container content">
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="image-container mt-2">
+          <img src="{{ img_url }}" alt="Imagen del tema" class="img-fluid">
         </div>
+        <div class="filtrado-seccion mt-4 text-center">
+          {% if es_profesor %}
+            <div class=badge-prisma>
+              <button class="btn-img-flat mx-auto" title="Modificar la imagen del tema" type="button" data-bs-toggle="modal" data-bs-target="#modalEditarImagenTema">
+                <img src="{% static 'detalles/img/icono_editar.png' %}" alt="Modificar imagen del tema" class="img-svg-custom">
+              </button>
+            </div>
+            {% endif %}
+          <h5 class="text-white mb-3 mt-3 text-uppercase">Filtrado</h5>
+          <div class="d-grid gap-3" style="padding: 0 5rem;">
+            <div class="badge-prisma btn-orange-box">Semestre: {{ tema.curso.materia.semestre }}</div>
+            <div class="badge-prisma btn-orange-box">{{ tema.curso.materia.nombre }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-12 col-md-8">
+        <div class="description-card p-2 mt-2 text-white">
+          <h5>{{ tema.titulo }}</h5>
+          <h6>Descripción:</h6>
+          <p>{{ tema.descripcion|default_if_none:"Sin descripción" }}</p>
+        </div> 
+        <div class="row align-items-center mt-3 g-3">
+          <div class="col-12 col-lg-7">
+            <div class="info-general p-2 text-white">
+              <h5>Información general:</h5>
+              <p class="subtitle">Cantidad de vídeos: <span>{{ cantidad_videos|default_if_none:0 }}</span></p>
+              <p class="subtitle">Profesor: <span>{{ tema.curso.profesor.usuario.get_full_name }}</span></p>
+            </div>
+          </div>
+            {% if es_profesor %}
+            <div class="col-12 col-lg-5 text-center">
+              <div class="info-action">
+                <button class="btn-img-flat mx-auto" title="Modificar los detalles del tema" type="button" data-bs-toggle="modal" data-bs-target="#modalEditarDetallesTema">
+                  <img src="{% static 'detalles/img/icono_editar.png' %}" alt="Modificar detalles del tema" class="img-svg-custom">
+                </button>
+              </div>
+            </div>
+          {% endif %}
+
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+</div>
+
+{% if es_profesor %}
+
+<div class="modal fade" id="modalEditarImagenTema" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"> <div class="modal-content prisma-modal">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-uppercase fw-bold text-rojo">Actualizar Imagen</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" class="form-prisma">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+             {{ update_theme_image_form.as_p }}
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" name="action" value="update_theme_image_form" class="btn btn-rojo-glow">
+              GUARDAR CAMBIOS
+            </button>
+          </div>
+        </form>
+      </div>
+
     </div>
-   </dialog>
-   <script src="{% static 'detalles/js/confirmDelete.js' %}" defer></script>
-   <script src="{% static 'detalles/js/uploadVideo.js' %}" defer></script>
-    {% endif %}
   </div>
 </div>
+
+<div class="modal fade" id="modalEditarDetallesTema" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"> <div class="modal-content prisma-modal">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-uppercase fw-bold text-rojo">Actualizar Detalles del Tema</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" class="form-prisma">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+             {{ update_theme_form.as_p }}
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" name="action" value="update_theme_form" class="btn btn-rojo-glow">
+              GUARDAR CAMBIOS
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalCrearVideo" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"> <div class="modal-content prisma-modal">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-uppercase fw-bold text-rojo">Crear Video</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" class="form-prisma" id="uploadVideoForm">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+             {{ create_video_form.as_p }}
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" name="action" value="create_video_form" id="btn-upload-video"class="btn btn-rojo-glow">
+              CREAR VIDEO
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endif %}
+
+<section class="curso-contenido">
+    {% if messages %}
+  <div class="messages-container-prisma">
+    {% for message in messages %}
+      <div class="alert-prisma alert-prisma-{{ message.tags }}">
+        <div class="alert-prisma-content">
+          <span class="alert-prisma-icon">
+            {% if message.tags == 'success' %}
+              <i class="fas fa-check-circle"></i>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+              <i class="fas fa-exclamation-triangle"></i>
+            {% else %}
+              <i class="fas fa-info-circle"></i>
+            {% endif %}
+          </span>
+          <span class="alert-prisma-text">{{ message }}</span>
+        </div>
+        <button type="button" class="btn-close-prisma" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+  <div class="d-flex align-items-center ms-4 mb-4 mt-5 cabecera-seccion">
+      <img src="{% static 'detalles/img/list_icon.svg' %}" class="icono-listado-img" alt="Icono Listado">
+    
+      <h3 class="ms-3 m-0 texto-listado-prisma">Listado de vídeos dentro del tema</h3>
+  </div>    
+  <div class="elementos-container">
+            {% for video in videos %}
+                <div class="elemento-card-prisma">
+                    <div class="elemento-icon">
+                        <img src="{% static 'detalles/img/folder_icon.svg' %}" alt="folder icon">
+                    </div>
+                    
+                    <div class="elemento-info">
+                        <a href="{% url 'detalles-videos' video.id %}" class="text-decoration-none">
+                            <h5 class="text-white">{{ video.titulo }}</h5>
+                            <small class="text-secondary-prisma">{{ video.fecha_creacion|date:"d M Y" }}</small>
+                        </a>
+                    </div>
+
+                    {% if es_profesor %}
+                    <div class="elemento-acciones">
+                      <button type="button" class="btn-eliminar-simple" 
+                                onclick="abrirModalEliminar('{% url 'eliminar-video' video.pk %}', '{{ tema.titulo|escapejs }}')">
+                        <img src="{% static 'detalles/img/delete_icon.svg' %}" alt="Eliminar video"  class="img-svg-custom">
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="ms-4 text-secondary">No hay vídeos disponibles.</p>
+            {% endfor %}
+
+  </div>
+
+    {# Lógica del Modal de Eliminación (Solo para profesores) #}
+    {% if es_profesor %} 
+  <dialog class="prisma-modal-confirm" id="modalConfirm">
+    <div class="modal-content-prisma text-center">
+        <h3 class="text-naranja">¿Desea eliminar este elemento?</h3>
+        <p>Está a punto de borrar: <strong id="modalTitulo" class="text-white">...</strong></p>
+        <p class="advertencia-roja">Esta acción es irreversible</p>
+        
+        <div class="modal-acciones-flex">
+            <button class="btn-cancelar-prisma" onclick="document.getElementById('modalConfirm').close()">
+                Cancelar
+            </button>
+            <form method="post" action="" id="EliminarForm">
+                {% csrf_token %}
+                <button type="submit" class="btn-confirmar-degradado">Sí, eliminar</button>
+            </form>
+        </div>
+    </div>
+  </dialog>
+  <script src="{% static 'detalles/js/confirmDelete.js' %}" defer></script>
+  <script src="{% static 'detalles/js/uploadVideo.js' %}" defer></script>
+
+  <div class="text-center mt-5 mb-4">
+    <button class="btn-img-flat" title="Añadir nuevo video" type="button" data-bs-toggle="modal" data-bs-target="#modalCrearVideo">
+        <img src="{% static 'detalles/img/boton_crear.svg' %}" alt="Añadir" class="img-svg-custom">
+    </button>
+  </div>
+    {% endif %}
+
+</section>
+
 {% endblock %}

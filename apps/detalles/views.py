@@ -83,6 +83,13 @@ class CoursesDetails(
                 context["tiene_acceso"] = False
                 # Envío del estado actual del acceso.
                 context["estado_acceso"] = acceso.estado if acceso else None
+                # Cantidad de temas
+                context["cantidad_temas"] = Tema.objects.filter(curso=curso).count()
+                # Cantidad de vídeos
+                context["cantidad_videos"] = Video.objects.filter(
+                    tema__curso=curso
+                ).count()
+
                 return context
         # Si se trata de un profesor, se contará la cantidad de estudiantes inscritos en el curso.
         if roles["es_profesor"]:
@@ -91,6 +98,8 @@ class CoursesDetails(
             ).count()
         # Agragación al contexto el nuevo campo para los temas del curso.
         context["temas"] = Tema.objects.filter(curso=curso)
+        # Cantidad de temas
+        context["cantidad_temas"] = Tema.objects.filter(curso=curso).count()
         # Cantidad de vídeos
         context["cantidad_videos"] = Video.objects.filter(tema__curso=curso).count()
         context["tiene_acceso"] = True
@@ -156,6 +165,8 @@ class ThemesDetails(
         tema = self.object
         # Llamada a método padre de obtención de contextos para opbtener los contextos base.
         context = super().get_context_data(**kwargs)
+        # Cantidad de vídeos
+        context["cantidad_videos"] = Video.objects.filter(tema=tema).count()
         # Agragación al contexto el nuevo campo para los videos del tema.
         context["videos"] = Video.objects.filter(tema=tema)
         # URL de retorno a la vista anterior.

@@ -1,57 +1,130 @@
 /**
- * Upload page styles - loading overlay
+ * Upload page styles - Prisma Loading Overlay
+ */
+
+/**
+ * Prisma Upload Overlay - Estilo Unificado Pro
  */
 
 .upload-overlay {
-  display: none;
+  /* Mantenemos el bloqueo para que no aparezca solo */
+  display: none !important;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
-  z-index: 9999;
+
+  /* Efecto Glassmorphism profundo */
+  background: color-mix(in srgb, #0a0814, transparent 15%);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+
+  z-index: 10000;
   justify-content: center;
   align-items: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
+/* Solo se activa cuando el JS añade la clase .active */
 .upload-overlay.active {
-  display: flex;
+  display: flex !important;
+  opacity: 1;
 }
 
 .upload-progress-container {
-  background: #1a1a1a;
-  border-radius: 16px;
-  padding: 48px;
+  /* Estética idéntica a tus formularios .prisma-modal */
+  background: color-mix(in srgb, #0a0814, transparent 10%);
+  border-radius: 12px;
+  padding: 50px 40px;
   text-align: center;
-  max-width: 300px;
+  max-width: 450px;
   width: 90%;
-  border: 1px solid #3f3f3f;
+
+  /* Borde naranja neón (Fourth) */
+  border: 1px solid var(--color-fourth);
+  box-shadow:
+    0 0 50px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(255, 165, 0, 0.1);
+  color: white;
 }
 
 .upload-progress-container h2 {
-  margin: 0 0 8px;
-  font-size: 1.25rem;
+  /* Color primario de tus títulos */
+  color: var(--color-primary);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  /* Animación sutil de respiración */
+  animation: pulse-text-prisma 2s ease-in-out infinite;
 }
 
 .upload-warning {
-  color: #aaaaaa;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.9rem;
-  margin: 0;
+  font-weight: 400;
+  letter-spacing: 0.5px;
 }
 
+/* --- SPINNER DEGRADADO PRISMA --- */
 .upload-spinner {
-  width: 48px;
-  height: 48px;
-  border: 3px solid #272727;
-  border-top-color: #ff0033;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 30px;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 24px;
+  padding: 4px; /* Grosor del anillo */
+
+  /* Degradado idéntico a tus botones: Naranja a Morado */
+  background: linear-gradient(135deg, var(--color-primary) 0%, #a32ed3 100%);
+
+  /* Magia para que sea un anillo hueco */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+
+  position: relative;
+  animation: spin-prisma 1.2s linear infinite;
+
+  /* Resplandor neón */
+  filter: drop-shadow(0 0 15px color-mix(in srgb, #a32ed3, transparent 50%));
 }
 
-@keyframes spin {
+/* Punto de luz brillante en el spinner */
+.upload-spinner::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 20px white;
+}
+
+/* --- ANIMACIONES --- */
+@keyframes spin-prisma {
+  from {
+    transform: rotate(0deg);
+  }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-text-prisma {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
   }
 }
