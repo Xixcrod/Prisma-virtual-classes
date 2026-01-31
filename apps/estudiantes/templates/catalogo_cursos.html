@@ -181,10 +181,13 @@ body {
                             {{ form.profesor }}
                         </div>
                         {% if request.user.is_staff or request.user.is_superuser %}
-                        <div class="mb-3">
-                            <label class="form-label">{{ form.carrera.label }}</label>
-                            {{ form.carrera }}
-                        </div>
+                        
+                        {# Esto no existe #}
+                        {#<div class="mb-3">#}
+                            {#<label class="form-label">{{ form.carrera.label }}</label>#}
+                            {#{{ form.carrera }}#}
+                        {#</div>#}
+                        
                         {% endif %}
                         <div class="mb-3">
                             <label class="form-label">{{ form.order_by.label }}</label>
@@ -214,7 +217,7 @@ body {
                                 <div class="curso-card">
                                 {% if request.user.is_staff or request.user.is_superuser %}
                                     <form method="post"
-                                        action="{% url 'eliminar_curso' curso_id=item.curso.id %}"
+                                        action="{% url 'eliminar_curso' item.curso.id %}"
                                         class="delete-course-btn">
                                         {% csrf_token %}
                                         <button type="submit"
