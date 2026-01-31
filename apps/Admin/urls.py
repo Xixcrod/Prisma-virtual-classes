@@ -16,4 +16,9 @@ urlpatterns = [
     path('eliminar-materia/<uuid:materia_id>/', views.eliminar_materia, name="eliminar_materia"),
     path('eliminar-carrera/<uuid:carrera_id>/', views.eliminar_carrera, name="eliminar_carrera"),
     path('obtener-materias/<uuid:carrera_id>/<int:semestre>/', views.obtener_materias_por_carrera, name="obtener_materias"),
+
+    # Rutas para Cursos
+    path('catalogo/', views.catalogo_cursos_admin, name="catalogo"),
+    path('eliminar-curso/<uuid:curso_id>/', views.eliminar_curso, name="eliminar_curso"),
+    path('mis-cursos/', views.mis_cursos, name="admin_mis_cursos"),
 ]
