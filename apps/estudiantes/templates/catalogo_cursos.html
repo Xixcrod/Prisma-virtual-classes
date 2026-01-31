@@ -226,7 +226,7 @@ body {
                                     </form>
                                 {% endif %}
 
-                                    <a href="{% url 'detalles-cursos' item.curso.id %}" style="text-decoration:none;">
+                                    <a href="{% if request.user.is_staff or request.user.is_superuser %}#{% else %}{% url 'detalles-cursos' item.curso.id %}{% endif %} "style="text-decoration:none;">
                                             <img src="{% if item.curso.imagen %}{{ item.curso.imagen.url }}{% else %}{% static 'img/placeholders/placeholder-images.webp' %}{% endif %}"
                                                 alt="{{ item.curso.materia.nombre }}" class="curso-imagen">
                                         <div class="curso-body">
