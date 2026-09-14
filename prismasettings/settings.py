@@ -145,6 +145,15 @@ AUTH_USER_MODEL = 'core.Usuario'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+BOOTSTRAP5 = {
+    "css_url": {
+        "url": "/static/bootstrap/css/bootstrap.min.css",
+    },
+    "javascript_url": {
+        "url": "/static/bootstrap/js/bootstrap.bundle.min.js",
+    },
+    "theme_url": None,
+}
 
 STATIC_URL = 'static/'
 
