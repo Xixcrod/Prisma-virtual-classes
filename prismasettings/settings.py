@@ -145,11 +145,12 @@ SUPABASE_MEDIA_BUCKET = os.getenv('SUPABASE_BUCKET_NAME')
 
 STORAGES = {
     "default": {
+        # Los archivos subidos por los usuarios (Media) van a Supabase
         "BACKEND": "django_supabase_storage.SupabaseStorage",
     },
     "staticfiles": {
-        # Al estar en producción, enviamos los estáticos directamente a Supabase
-        "BACKEND": "django_supabase_storage.SupabaseStorage", 
+        # Los CSS, JS y Bootstrap los sirve WhiteNoise directamente en Render
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
 
