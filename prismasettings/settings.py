@@ -94,14 +94,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'prismasettings.wsgi.application'
 LOGIN_URL = 'login'
 
-    # Configuración de Haystack con Whoosh como backend de búsqueda.
+# 1. Definir y crear automáticamente el directorio en el servidor
+WHOOSH_INDEX_PATH = os.path.join(BASE_DIR, 'whoosh_index')
+os.makedirs(WHOOSH_INDEX_PATH, exist_ok=True)
+
+# 2. Configuración de conexión de Haystack
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+        'PATH': WHOOSH_INDEX_PATH,
     },
 }
 
+# 3. Procesador de señales
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 12
 
