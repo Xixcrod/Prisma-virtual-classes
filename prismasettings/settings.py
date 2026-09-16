@@ -107,7 +107,8 @@ HAYSTACK_CONNECTIONS = {
 }
 
 # 3. Procesador de señales
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+# 3. Procesador de señales (Desactivado para que no rompa la DB)
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.BaseSignalProcessor'
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 12
 
 # Database
@@ -210,6 +211,7 @@ EMAIL_HOST_USER = os.environ.get('PRISMA_GMAIL_ADDRESS') #dirección de correo e
 EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD') #contraseña de correo electrónico
 DEFAULT_FROM_EMAIL = os.environ.get('PRISMA_GMAIL_ADDRESS') # Correo que aparecerá como remitente
 SITE_NAME = 'Prisma' # Nombre del sitio web para usar en los correos
+EMAIL_TIMEOUT = 10 # Tiempo de espera para la conexión SMTP en segundos
 
 # Redirecciones de autenticación
 LOGIN_REDIRECT_URL = 'dashboard'
