@@ -9,10 +9,11 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
-from pathlib import Path
 import os
+from pathlib import Path
+import dj_database_url
 from dotenv import load_dotenv
+
 
 load_dotenv()  # Esto carga las variables del archivo .env a os.environ
 
@@ -28,12 +29,16 @@ MEDIA_URL = '/media/'
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)70^mebq_y^i@c%0rz!!96y+#!a@0d%ahs#iklo@_=&pcc3o)b'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -103,10 +108,11 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 12
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # Password validation
@@ -127,6 +133,24 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# ---------------------------------------------------------
+# CONFIGURACIÓN DE SUPABASE STORAGE (NATIVO - PRODUCCIÓN)
+# ---------------------------------------------------------
+SUPABASE_URL = "https://ajkmhzxofqeqrtmbvcyk.supabase.co" # Tu URL base de Supabase
+SUPABASE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+SUPABASE_BUCKET = os.getenv('SUPABASE_BUCKET_NAME')
+SUPABASE_STATIC_BUCKET = os.getenv('SUPABASE_BUCKET_NAME')
+SUPABASE_MEDIA_BUCKET = os.getenv('SUPABASE_BUCKET_NAME')
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django_supabase_storage.SupabaseStorage",
+    },
+    "staticfiles": {
+        # Al estar en producción, enviamos los estáticos directamente a Supabase
+        "BACKEND": "django_supabase_storage.SupabaseStorage", 
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
@@ -156,6 +180,8 @@ BOOTSTRAP5 = {
 }
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # 2. Esto le dice a Django que busque en las carpetas "static" de cada APP
 STATICFILES_FINDERS = [
