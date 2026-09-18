@@ -23,10 +23,10 @@ def admin(request):
         return render(request, "Admin/dashboard.html")
 
     elif hasattr(request.user, 'profesor'):
-        return redirect('adminp')
+        return redirect('dashboardpe')
     
     if hasattr(request.user, 'estudiante'):
-        return redirect('adminp')
+        return redirect('dashboardpe')
     
     # 3. Si es alguien más, error 404
     raise Http404()
