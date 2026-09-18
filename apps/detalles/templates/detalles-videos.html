@@ -4,20 +4,13 @@
   <link rel="stylesheet" href="{% static 'detalles/css/detalles_background.css' %}">
 {% endblock %}
 
-{% if video.thumbnail %}
-    {% set img_url = video.thumbnail.url %}
-{% else %}
-    {% static 'img/placeholders/placeholder-images.webp' as img_url %}
-{% endif %}
-
-
-<div class="hero-simple" style="background-image: url('{{ img_url }}')">
+<div class="hero-simple" style="background-image: url('{% if video.thumbnail %}{{ video.thumbnail.url }}{% else %}{% static "img/placeholders/placeholder-images.webp" %}{% endif %}')">
   <div class="overlay"></div>
   <div class="container content">
     <div class="row">
       <div class="col-12 col-md-4">
         <div class="image-container mt-2">
-          <img src="{{ img_url }}" alt="Miniatura del vídeo" class="img-fluid">
+          <img src="{% if video.thumbnail %}{{ video.thumbnail.url }}{% else %}{% static 'img/placeholders/placeholder-images.webp' %}{% endif %}" alt="Miniatura del vídeo" class="img-fluid">
         </div>
         <div class="filtrado-seccion mt-4 text-center">
           {% if es_profesor %}
@@ -165,4 +158,4 @@
   </div>
 </section>
 
-{%endblock %}
+{% endblock %}
