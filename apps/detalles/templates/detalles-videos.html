@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% if video.thumbnail %}
-    {% url "consumir-media-files" "thumbnail_video" video.id as img_url %}
+    {% set img_url = video.thumbnail.url %}
 {% else %}
     {% static 'img/placeholders/placeholder-images.webp' as img_url %}
 {% endif %}
@@ -155,11 +155,10 @@
       <div class="col-12 col-lg-10">
         <div class="video-player-prisma">
           <div class="video-overlay-glow"></div>
-          <video class="video-element" controls preload="metadata" controlsList="nodownload">
-            <source src="{% url 'consumir-media-files' 'video' video.id %}?format=mp4" type="video/mp4" />
-            <source src="{% url 'consumir-media-files' 'video' video.id %}?format=webm" type="video/webm" />
-            Tu navegador no soporta este formato de vídeo
-          </video>
+            <video class="video-element" controls preload="metadata" controlsList="nodownload">
+                <source src="{{ video.archivo.url }}" type="video/mp4" />
+                Tu navegador no soporta este formato de vídeo
+            </video>
         </div>
       </div>
     </div>
