@@ -149,7 +149,7 @@
         <div class="video-player-prisma">
           <div class="video-overlay-glow"></div>
             <video class="video-element" controls preload="metadata" controlsList="nodownload">
-                <source src="{{ video.archivo.url }}"/>
+                <source src="{{ video.archivo.url }}" type="video/mp4" /> <!-- Añade el tipo aquí -->
                 Tu navegador no soporta este formato de vídeo
             </video>
         </div>
