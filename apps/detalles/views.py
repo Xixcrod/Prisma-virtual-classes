@@ -212,6 +212,7 @@ class VideoDetails(LoginRequiredMixin, AuthorizationsMixin, FormsPostMixin, Deta
     # De dónde se pretende recibir el parámetro de la uuid desde la url.
     pk_url_kwarg = "id_video"
     context_object_name = "video"
+    
     # Configuración de formularios
     forms_config = {
         "update_video_form": FormConfig(
@@ -228,7 +229,7 @@ class VideoDetails(LoginRequiredMixin, AuthorizationsMixin, FormsPostMixin, Deta
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # URL de retotno ala vista anterior.
+        # URL de retorno a la vista anterior.
         context["url_retorno"] = reverse(
             "detalles-temas", kwargs={"id_tema": self.object.tema.id}
         )
@@ -236,14 +237,25 @@ class VideoDetails(LoginRequiredMixin, AuthorizationsMixin, FormsPostMixin, Deta
 
     # En caso de que el formulario sea validado
     def form_valid(self, form, action):
+        
+        # 1. Interceptar los archivos subidos y forzar el Content-Type
+        if self.request.FILES:
+            for key, uploaded_file in self.request.FILES.items():
+                if uploaded_file.name and uploaded_file.name.lower().endswith('.mp4'):
+                    uploaded_file.content_type = 'video/mp4'
+
         # Mensajes de éxito según el formulario
         forms_success_msj = {
             "update_thumbnail_form": "La miniatura se ha cargado correctamente.",
             "update_video_form": "El vídeo ha sido modificado exitosamente.",
         }
+        
+        # 2. Guardar el formulario con los metadatos de archivo corregidos
         form.save()
+        
         if action in forms_success_msj:
             messages.success(self.request, forms_success_msj.get(action))
+        
         return redirect(self.request.path)
 
 
@@ -296,28 +308,23 @@ class AccessToMediaFiles(
         config = self.get_media_access_config(alias)
         # Objeto gracias al queryset efectuado al modelo y según los permisos necesarios para recuperarlo.
         obj = self.get_object()
-        archivo = None
-        if obj and config:
-            # Obtención del archivo según la configuración (el nombre de su campo dodne está la url de acceso).
-            archivo = getattr(obj, config.file_field, None)
+        
+        archivo = getattr(obj, config.file_field, None) if obj and config else None
+        
         if not archivo:
-            raise Http404(
-                "El archivo no fue encontrado."
-            )  # WARNING: Error 404 si no se ha obtenido el archivo.
-        # Recuperación de su Mime type para pasarlo en los cabeceros
-        content_type, encoding = mimetypes.guess_type(archivo.path)
+            raise Http404("El archivo no fue encontrado.")  # WARNING: Error 404 si no se ha obtenido el archivo.
+
+        # 1. CORRECCIÓN: Usar .name en lugar de .path para compatibilidad con Storage en la Nube (Supabase)
+        content_type, encoding = mimetypes.guess_type(archivo.name)
         mime_type = (
             content_type or "application/octet-stream"
-        )  # Si no se consigue su mime type, queda como desconocido y destinado a ejecutar desde una aplicación externa.
+        ) 
 
         # Uso del servidor de Django para servir el archivo
         if settings.DEBUG:
-            return FileResponse(archivo.open("rb"), content_type=content_type)
-        response = HttpResponse()
-        # Cabecera que garantiza el acceso rápido e interno (redirección interna) mediante la configuración Nginx para carpetas denominadas "internal".
-        response["X-Accel-Redirect"] = (
-            "ruta_ficticia"  # TEST: Esto debería de estar accediendo a una dirección dentro del .env con la dirección privada (internal) de los recursos en el servidor de producción Nginx.
-        )
-
-        response["Content-type"] = mime_type
-        return response
+            return FileResponse(archivo.open("rb"), content_type=mime_type)
+            
+        # 2. CORRECCIÓN PRODUCCIÓN: Redirigir a la URL de Supabase
+        # Como los archivos no son locales, Nginx (X-Accel-Redirect) no puede servirlos.
+        # Redirigimos la petición autorizada a la URL pública/firmada del bucket.
+        return redirect(archivo.url)
