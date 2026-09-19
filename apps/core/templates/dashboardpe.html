@@ -95,8 +95,7 @@
             {% for video in contenidos.ultimos_videos %}
             <a href="{% url 'detalles-videos' id_video=video.id %}" class="estudiante-card-link">
                 <article class="estudiante-card">
-                    <img class="estudiante-card-img" src="{% url 'consumir-media-files' 'thumbnail_video' video.id %}"
-                        alt="Miniatura del vídeo">
+                    <img class="estudiante-card-img" src="{% if video.thumbnail %}{{ video.thumbnail.url }}{% else %}{% static 'img/placeholders/placeholder-images.webp' %}{% endif %}" alt="Miniatura del vídeo">
 
                     <div class="estudiante-card-info">
                         <h3>{{ video.titulo }}</h3>
@@ -128,8 +127,7 @@
             {% for tema in contenidos.ultimos_temas %}
             <a href="{% url 'detalles-temas' id_tema=tema.id %}" class="estudiante-card-link">
                 <article class="estudiante-card estudiante-card-tema">
-                    <img class="estudiante-card-img" src="{% url 'consumir-media-files' 'img_tema' tema.id %}"
-                        alt="Miniatura del tema">
+                    <img class="estudiante-card-img" src="{% if tema.imagen %}{{ tema.imagen.url }}{% else %}{% static 'img/placeholders/placeholder-images.webp' %}{% endif %}" alt="Miniatura del tema">
                     <div class="estudiante-card-info">
                         <h3>{{ tema.titulo }}</h3>
                         <p>{{ tema.curso.materia.carrera.nombre }}</p>
