@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
+import mimetypes
 
 
 load_dotenv()  # Esto carga las variables del archivo .env a os.environ
@@ -159,6 +160,10 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
+# Configuración de tipos MIME para archivos de video
+mimetypes.add_type("video/mp4", ".mp4", True)
+mimetypes.add_type("video/webm", ".webm", True)
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
