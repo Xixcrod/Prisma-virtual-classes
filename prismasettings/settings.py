@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'django_cleanup.apps.CleanupConfig', # Módulo para limpiar en disco las actualizaciones de archivos cuando se les reemplaza por otro.
     'haystack', # Módulo de búsqueda
+    'storages', # Módulo para manejar almacenamiento en la nube (Supabase)
 ]
 
 MIDDLEWARE = [
@@ -153,7 +154,7 @@ SUPABASE_MEDIA_BUCKET = os.getenv('SUPABASE_BUCKET_NAME')
 STORAGES = {
     "default": {
         # Los archivos subidos por los usuarios (Media) van a Supabase
-        "BACKEND": "django_supabase_storage.SupabaseStorage",
+        "BACKEND": "prismasettings.custom_storages.SupabaseMediaStorage",
     },
     "staticfiles": {
         # Los CSS, JS y Bootstrap los sirve WhiteNoise directamente en Render
