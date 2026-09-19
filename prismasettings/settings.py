@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'django_cleanup.apps.CleanupConfig', # Módulo para limpiar en disco las actualizaciones de archivos cuando se les reemplaza por otro.
     'haystack', # Módulo de búsqueda
-    'storages', # Módulo para manejar almacenamiento en la nube (Supabase)
 ]
 
 MIDDLEWARE = [
