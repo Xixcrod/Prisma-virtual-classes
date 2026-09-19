@@ -21,12 +21,8 @@
     {% for curso in cursos.cursos_estudiante %}
     <a href="{% url 'detalles-cursos' id_curso=curso.id %}" class="estudiante-card-link">
     <article class="estudiante-card">
-        {% if curso.imagen %}
-        <img src="{{ curso.imagen.url }}" alt="{{ curso.materia.nombre }}" class ="estudiante-card-img">
-        {% else %}
-        <!-- Asegúrate de tener una imagen de respaldo en tu carpeta static/img/ -->
-        <img src="{% static 'img/placeholders/placeholder-images.webp' %}" alt="Imagen por defecto" class="estudiante-card-img">
-        {% endif %}
+        
+        <img src="{% if curso.imagen %}{{ curso.imagen.url }}{% else %}{% static 'img/placeholders/placeholder-images.webp' %}{% endif %}" alt="{{ curso.materia.nombre }}" class="estudiante-card-img">
 
         <div class="estudiante-card-info">
         <p>{{ curso.materia.nombre }}</p>

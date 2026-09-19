@@ -19,19 +19,13 @@
 </div>
 {% endif %}
 
-{% if tema.imagen %}
-    {% url "consumir-media-files" "img_tema" tema.id as img_url %}
-{% else %}
-    {% static 'img/placeholders/placeholder-images.webp' as img_url %}
-{% endif %}
-
-<div class="hero-simple" style="background-image: url('{{ img_url }}')">
+<div class="hero-simple" style="background-image: url('{% if tema.imagen %}{{ tema.imagen.url }}{% else %}{% static "img/placeholders/placeholder-images.webp" %}{% endif %}')">
   <div class="overlay"></div>
   <div class="container content">
     <div class="row">
       <div class="col-12 col-md-4">
         <div class="image-container mt-2">
-          <img src="{{ img_url }}" alt="Imagen del tema" class="img-fluid">
+          <img src="{% if tema.imagen %}{{ tema.imagen.url }}{% else %}{% static 'img/placeholders/placeholder-images.webp' %}{% endif %}" alt="Imagen del tema" class="img-fluid">
         </div>
         <div class="filtrado-seccion mt-4 text-center">
           {% if es_profesor %}
