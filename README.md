@@ -64,7 +64,7 @@ Plataforma virtual universitaria diseñada para la gestión integral de clases, 
 
 ### 1. Inicio de Sesión
 Interfaz de autenticación con diseño estilizado y validación por cédula y contraseña.
-![Inicio de sesión](assets/img/prisma1.jpg)
+![Inicio de sesión](assets/img/prisma1.png)
 
 ### 2. Panel del Profesor
 Vista general de bienvenida para el docente, mostrando métricas de cursos activos, temas y videos subidos.
@@ -72,23 +72,23 @@ Vista general de bienvenida para el docente, mostrando métricas de cursos activ
 
 ### 3. Sección de Clases y Últimos Videos
 Visualización dinámica del contenido audiovisual reciente disponible en la plataforma.
-![Últimos videos añadidos](assets/img/prisma3.jpg)
+![Últimos videos añadidos](assets/img/prisma3.png)
 
 ### 4. Catálogo de Cursos y Filtros
 Buscador avanzado y filtros por semestre, materia, profesor u orden de preferencia.
-![Catálogo de cursos](assets/img/prisma4.jpg)
+![Catálogo de cursos](assets/img/prisma4.png)
 
 ### 5. Gestión de Solicitudes
 Panel donde los profesores pueden aprobar o rechazar las solicitudes de inscripción de los estudiantes.
-![Gestión de solicitudes](assets/img/prisma5.jpg)
+![Gestión de solicitudes](assets/img/prisma5.png)
 
 ### 6. Detalle del Curso y Listado de Temas
 Administración interna de un curso (ej. Matemática I), con desglose de información general y unidades temáticas.
-![Detalle del curso](assets/img/prisma6.jpg)
+![Detalle del curso](assets/img/prisma6.png)
 
 ### 7. Contenido del Tema y Videos
 Gestión de unidades específicas y los videos instructivos asociados dentro del tema.
-![Detalle de tema y videos](assets/img/prisma7.jpg)
+![Detalle de tema y videos](assets/img/prisma7.png)
 
 ---
 
